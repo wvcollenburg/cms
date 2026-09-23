@@ -1,0 +1,15 @@
+{% extends '_skeleton.html' %}
+{% from '_macros.html' import flashes %}
+{% set noindex = true %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block body %}
+<main class="auth-box">
+  <a class="brand" href="{{ front_url('home') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="48" height="48">
+    <span>{{ setting('site_name', default='Broedplaats de Createur') }}</span></a>
+  {{ flashes() }}
+  {% block content %}{% endblock %}
+  {% set other = 'en' if ui_lang == 'nl' else 'nl' %}
+  <p class="small center"><a href="{{ url_for('public.set_lang', code=other, next=request.path) }}" lang="{{ other }}">{{ 'English' if other == 'en' else 'Nederlands' }}</a></p>
+</main>
+{% endblock %}

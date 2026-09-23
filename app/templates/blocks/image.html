@@ -1,0 +1,10 @@
+{% from '_macros.html' import picture %}
+{% set m = media.get(b.data.media_id) %}
+{% if m %}
+<figure>
+  {% if b.data.link %}<a href="{{ b.data.link }}">{% endif %}
+  {{ picture(m, sizes='(min-width: 1100px) 1040px, 100vw') }}
+  {% if b.data.link %}</a>{% endif %}
+  {% if b.data.caption %}<figcaption>{{ b.data.caption }}</figcaption>{% endif %}
+</figure>
+{% endif %}

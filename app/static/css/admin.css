@@ -1,0 +1,73 @@
+/* Admin: phone first (makers upload from the workshop, §6). */
+.admin { --accent: #8a4a26; }
+.admin-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .6rem 16px; background: #2b2118; color: #fff; }
+.admin-header .brand { display: flex; align-items: center; gap: .5rem; color: #fff; text-decoration: none; font-weight: 700; }
+.admin-nav { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem 1rem; }
+.admin-nav a, .admin-nav .linklike { color: #f1e3d0; text-decoration: none; padding: .35em 0; }
+.admin-nav a:hover { text-decoration: underline; }
+.admin-main { max-width: 820px; margin: 0 auto; padding: 1.2rem 16px 4rem; }
+.admin-main h1 { font-size: clamp(1.5rem, 5vw, 2rem); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin: 0 0 1rem; }
+.card h2 { font-size: 1.2rem; }
+.stack { display: flex; flex-direction: column; gap: .9rem; }
+.inline { display: inline; }
+label { display: flex; flex-direction: column; gap: .3rem; font-weight: 600; }
+label.radio { flex-direction: row; align-items: center; gap: .5rem; font-weight: 400; min-height: 36px; }
+input:not([type=radio]):not([type=checkbox]):not([type=color]), textarea, select {
+  font: inherit; font-weight: 400; padding: .6em .7em; border: 1px solid #cbbfb1; border-radius: 8px; background: #fff; width: 100%; min-height: 44px;
+}
+input[type=color] { width: 72px; height: 44px; padding: 2px; border: 1px solid #cbbfb1; border-radius: 8px; }
+fieldset { border: 1px solid var(--line); border-radius: 8px; padding: .6rem .9rem; margin: 0; }
+legend { font-weight: 600; padding: 0 .3rem; }
+.field-error { color: var(--danger); margin: -.5rem 0 0; }
+.rich { background: #fff; border-radius: 8px; min-height: 9em; font-weight: 400; }
+trix-toolbar .trix-button-group--file-tools { display: none; }
+
+.page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: .6rem; }
+.row-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.status-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; border-left: 6px solid var(--warn); }
+.status-card.is-live { border-left-color: var(--ok); }
+.status-card p { margin: 0; }
+.badge { display: inline-block; font-size: .78rem; font-weight: 600; padding: .1em .6em; border-radius: 999px; background: #efe6da; color: var(--ink); vertical-align: middle; }
+.badge-ok { background: var(--ok-bg); color: var(--ok); }
+.badge-muted { background: #eee9e3; color: var(--muted); }
+.badge-warn { background: var(--warn-bg); color: var(--warn); }
+.tabs { display: flex; gap: .3rem; margin: 0 0 1rem; border-bottom: 2px solid var(--line); }
+.tabs a { padding: .5em 1em; text-decoration: none; color: var(--muted); border-radius: 8px 8px 0 0; }
+.tabs a[aria-current] { background: var(--surface); color: var(--ink); font-weight: 700; border: 2px solid var(--line); border-bottom-color: var(--surface); margin-bottom: -2px; }
+
+.block-list { list-style: none; padding: 0; margin: 0 0 1.2rem; display: flex; flex-direction: column; gap: .6rem; }
+.block-item { display: grid; grid-template-columns: auto 1fr; gap: .4rem .6rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .7rem; }
+.block-item.is-hidden { opacity: .7; border-style: dashed; }
+.block-item.sortable-ghost { opacity: .35; }
+.block-summary p { margin: .2rem 0 0; }
+.block-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .4rem; }
+.handle { cursor: grab; color: var(--muted); display: flex; align-items: center; padding: 0 .2rem; touch-action: none; }
+.empty { color: var(--muted); padding: 1rem; border: 1px dashed var(--line); border-radius: var(--radius); }
+.thumbs { display: flex; gap: 4px; margin-top: .3rem; flex-wrap: wrap; }
+.thumbs img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; }
+.add-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .5rem; }
+
+.gallery-edit { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; }
+.gallery-edit li { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: .4rem; cursor: grab; }
+.gallery-edit img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; margin-bottom: .3rem; }
+.edit-preview { max-height: 260px; width: auto; border-radius: 8px; }
+.avatar-preview { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: .5rem; }
+.cover-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: .5rem; }
+.photos { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.upload-status:empty { display: none; }
+.upload-status.error { color: var(--danger); font-weight: 600; }
+.danger-zone { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .6rem; }
+.list-row, .space-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .8rem; }
+.space-row { border: 0; padding: .4rem 0; }
+.members { list-style: none; padding: 0; margin: .3rem 0 0; }
+
+.auth-page { display: flex; min-height: 100vh; flex-direction: column; }
+.auth-box { width: 100%; max-width: 420px; margin: 2rem auto; padding: 0 16px; }
+.auth-box .brand { display: flex; align-items: center; gap: .6rem; color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; margin-bottom: 1.5rem; }
+.pw-login { margin-top: 1.5rem; }
+.pw-login summary { cursor: pointer; color: var(--muted); }
+.pw-login form { margin-top: .8rem; }
+.demo-note { margin-top: 1.5rem; padding: .6rem .9rem; background: #fff4cf; border-radius: 8px; }

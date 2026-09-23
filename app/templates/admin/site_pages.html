@@ -1,0 +1,22 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('Website') }}{% endblock %}
+{% block content %}
+<h1>{{ _('General pages') }}</h1>
+<p>{{ _('These pages are about the collective. Each page has a Dutch and an English version.') }}</p>
+<ul class="list">
+  {% for p in pages %}{% set nl = p.translation('nl') %}{% set en = p.translation('en') %}
+  <li class="list-row">
+    <div>
+      <strong>{{ nl.title if nl else p.slug }}</strong>
+      {% if p.slug == 'home' %}<span class="badge">{{ _('front page') }}</span>{% endif %}
+      {% if p.status != 'published' %}<span class="badge badge-muted">{{ _('not visible yet') }}</span>{% endif %}
+      {% if not en %}<span class="badge badge-muted">{{ _('no English yet') }}</span>{% endif %}
+    </div>
+    <div class="row-actions">
+      <a class="button button-small" href="{{ url_for('admin.editor', kind='page', oid=p.id, lang='nl') }}">{{ _('Edit') }} NL</a>
+      <a class="button button-small button-secondary" href="{{ url_for('admin.editor', kind='page', oid=p.id, lang='en') }}">{{ _('Edit') }} EN</a>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

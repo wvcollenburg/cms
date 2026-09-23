@@ -1,0 +1,31 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('Take offline') }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{{ url_for('admin.makers') }}">← {{ _('Makers') }}</a></p>
+<h1>{{ _('Take %(name)s offline', name=user.display_name) }}</h1>
+<div class="card">
+  <p>{{ _('This is what happens:') }}</p>
+  <ul>
+    <li>{{ _('%(name)s can no longer log in.', name=user.display_name) }}</li>
+    {% for s in affected %}
+      {% if s.members|length > 1 %}
+      <li>{{ _('"%(space)s" stays online for the other makers of that page.', space=s.name) }}</li>
+      {% else %}
+      <li>{{ _('"%(space)s" goes offline. Visitors see a message that the page is no longer active.', space=s.name) }}</li>
+      {% endif %}
+    {% endfor %}
+    <li>{{ _('After %(days)s days everything is deleted for good. Until then a key holder can put it back.', days=purge_days) }}</li>
+    <li>{{ _('%(name)s gets an e-mail about this.', name=user.display_name) }}</li>
+  </ul>
+</div>
+<form method="post" class="card stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>{{ _('Why? (this is recorded)') }}
+    <textarea name="reason" rows="3" required>{{ request.form.reason }}</textarea></label>
+  {% if errors.reason %}<p class="field-error">{{ errors.reason }}</p>{% endif %}
+  <label>{{ _('To confirm, type the web address of the page: %(slug)s', slug=space.slug) }}
+    <input name="confirm_slug" autocomplete="off" autocapitalize="none" spellcheck="false" required></label>
+  {% if errors.confirm_slug %}<p class="field-error">{{ errors.confirm_slug }}</p>{% endif %}
+  <button class="button button-danger" type="submit">{{ _('Take offline') }}</button>
+</form>
+{% endblock %}

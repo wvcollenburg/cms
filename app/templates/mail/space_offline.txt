@@ -1,0 +1,9 @@
+{{ _('Hello %(name)s,', name=user.display_name) }}
+
+{{ _('Your page at Broedplaats de Createur is offline. Visitors now see a message that it is no longer active.') }}
+{% for s in spaces %}
+- {{ s.name }} ({{ config.BASE_URL }}/{{ s.slug }}): {{ _('will be deleted for good on %(date)s', date=s.purge_at.strftime('%d-%m-%Y')) }}
+{% endfor %}
+{{ _('Is this a mistake, or do you want a copy of your photos? Contact us before that date: %(contact)s', contact=contact) }}
+
+Broedplaats de Createur

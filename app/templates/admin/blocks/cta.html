@@ -1,0 +1,6 @@
+<label>{{ _('Text on the button') }}<input name="label" value="{{ block.data.label }}" maxlength="80" placeholder="{{ _('e.g. Book a workshop') }}"></label>
+<label>{{ _('Where the button goes (web address or e-mail address)') }}<input name="url" value="{{ block.data.url | replace('mailto:', '') }}" placeholder="https://"></label>
+<fieldset><legend>{{ _('Style') }}</legend>
+  <label class="radio"><input type="radio" name="style" value="primary" {{ 'checked' if block.data.style != 'secondary' }}> {{ _('Coloured') }}</label>
+  <label class="radio"><input type="radio" name="style" value="secondary" {{ 'checked' if block.data.style == 'secondary' }}> {{ _('Outline') }}</label>
+</fieldset>

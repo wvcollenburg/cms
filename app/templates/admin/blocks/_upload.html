@@ -1,0 +1,10 @@
+{# Photo upload: the browser shrinks each photo before sending it (§5). Expects upload_url, multiple. #}
+<div class="upload" data-upload-url="{{ upload_url }}" data-then="{{ then or 'reload' }}"
+     data-msg-busy="{{ _('Uploading…') }}" data-msg-progress="{{ _('Photo {n} of {total}…') }}"
+     data-msg-error="{{ _('Something went wrong. Please try again.') }}" data-msg-offline="{{ _('No connection. Please try again.') }}">
+  <label class="button {{ 'button-secondary' if secondary }}">
+    <input type="file" accept="image/*" {{ 'multiple' if multiple }} hidden>
+    {{ label }}
+  </label>
+  <p class="upload-status small" aria-live="polite"></p>
+</div>

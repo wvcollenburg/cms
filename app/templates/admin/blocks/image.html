@@ -1,0 +1,7 @@
+{% set m = media.get(block.data.media_id) %}
+{% if m %}<img class="edit-preview" src="{{ img_src(m, 800) }}" alt="">{% endif %}
+{% set upload_url = target.url('admin.upload_to_block', bid=block.id) %}{% set multiple = false %}{% set then = 'submit' %}
+{% set label = _('Choose another photo') if m else _('Choose a photo') %}{% set secondary = m %}
+{% include 'admin/blocks/_upload.html' %}
+<label>{{ _('Caption') }}<input name="caption" value="{{ block.data.caption }}" maxlength="300"></label>
+<label>{{ _('Link (not required)') }}<input name="link" value="{{ block.data.link }}" placeholder="https://"></label>

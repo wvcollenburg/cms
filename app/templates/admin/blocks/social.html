@@ -1,0 +1,7 @@
+{% set labels = {'instagram': 'Instagram', 'youtube': 'YouTube', 'tiktok': 'TikTok', 'facebook': 'Facebook', 'website': _('Your own website'), 'email': _('E-mail address')} %}
+{% set current = {} %}{% for l in block.data.links %}{% if current.update({l.platform: l.url}) %}{% endif %}{% endfor %}
+<p class="small">{{ _('Fill in only what you use. Empty fields are left out.') }}</p>
+{% for p in SOCIAL_PLATFORMS %}
+<input type="hidden" name="platform" value="{{ p }}">
+<label>{{ labels[p] }}<input name="url" value="{{ (current.get(p, '')) | replace('mailto:', '') }}" {% if p == 'email' %}inputmode="email" placeholder="naam@voorbeeld.nl"{% else %}inputmode="url" placeholder="https://"{% endif %}></label>
+{% endfor %}

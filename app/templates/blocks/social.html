@@ -1,0 +1,7 @@
+{% from '_macros.html' import icon %}
+{% set labels = {'instagram': 'Instagram', 'youtube': 'YouTube', 'tiktok': 'TikTok', 'facebook': 'Facebook', 'website': _('Website'), 'email': _('E-mail')} %}
+<ul class="social">
+  {% for l in b.data.links %}
+  <li><a href="{{ l.url }}" rel="noopener me" {% if l.platform != 'email' %}target="_blank"{% endif %}>{{ icon(l.platform) }}<span>{{ labels[l.platform] }}</span></a></li>
+  {% endfor %}
+</ul>

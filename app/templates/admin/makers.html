@@ -1,0 +1,32 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('Makers') }}{% endblock %}
+{% block content %}
+<h1>{{ _('Makers') }}</h1>
+<p class="small">{{ _("You manage who is on the website. You can't change the makers' own pages: only the makers themselves can.") }}</p>
+<ul class="list">
+  {% for s in spaces %}
+  <li class="list-row">
+    <div>
+      <strong>{{ s.name }}</strong>
+      {% if s.status == 'published' %}<span class="badge badge-ok">{{ _('visible') }}</span>
+      {% elif s.status == 'draft' %}<span class="badge badge-muted">{{ _('not visible yet') }}</span>
+      {% else %}<span class="badge badge-warn">{{ _('offline') }}</span>{% endif %}
+      <br><span class="small">/{{ s.slug }}</span>
+      <ul class="members small">
+        {% for m in s.members %}
+        <li>{{ m.user.display_name }} &lt;{{ m.user.email }}&gt;
+          {% if s.status != 'hidden' and m.user.is_active and m.user_id != current_user.id %}
+            · <a href="{{ url_for('admin.remove', space_id=s.id, user_id=m.user_id) }}">{{ _('Take offline') }}</a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="row-actions">
+      {% if s.status == 'published' %}<a class="button button-small button-secondary" href="{{ url_for('public.resolve', slug=s.slug) }}" target="_blank">{{ _('View') }}</a>{% endif %}
+      {% if policy.can_edit_space(current_user, s) %}<a class="button button-small" href="{{ url_for('admin.editor', kind='space', oid=s.id) }}">{{ _('Edit (your own page)') }}</a>{% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

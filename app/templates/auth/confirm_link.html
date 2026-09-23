@@ -1,0 +1,15 @@
+{% extends 'auth/layout.html' %}
+{% block title %}{{ _('Log in') }}{% endblock %}
+{% block content %}
+{% if valid %}
+<h1>{{ _('Welcome back') }}</h1>
+<form method="post" class="stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="button button-big" type="submit">{{ _('Log in now') }}</button>
+</form>
+{% else %}
+<h1>{{ _('This login link no longer works') }}</h1>
+<p>{{ _('A login link works only once and only for a short time. Ask for a new one.') }}</p>
+<p><a class="button" href="{{ url_for('auth.login') }}">{{ _('Send me a new login link') }}</a></p>
+{% endif %}
+{% endblock %}

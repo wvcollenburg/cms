@@ -1,0 +1,953 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-09-23 10:58+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: app/__init__.py:33
+msgid "Please log in first."
+msgstr ""
+
+#: app/admin/dashboard.py:39
+msgid "Choose a password of at least 10 characters."
+msgstr ""
+
+#: app/admin/dashboard.py:43 app/admin/editor.py:166 app/admin/site.py:59
+#: app/admin/space.py:48
+msgid "Saved."
+msgstr ""
+
+#: app/admin/dashboard.py:53
+msgid "You are logged out on all devices."
+msgstr ""
+
+#: app/admin/editor.py:24
+msgid "This photo is too large (max. 15 MB)."
+msgstr ""
+
+#: app/admin/editor.py:25
+msgid "This file isn't a photo we can use. Use JPEG, PNG or WebP."
+msgstr ""
+
+#: app/admin/editor.py:26
+msgid "Your page is full (1 GB). Remove some photos first."
+msgstr ""
+
+#: app/admin/editor.py:177
+msgid ""
+"We don't recognise this video link. Copy the link from YouTube or Vimeo "
+"(the address bar or the Share button)."
+msgstr ""
+
+#: app/admin/editor.py:179
+msgid ""
+"One of the web addresses isn't valid. Check for typos, e.g. "
+"https://www.example.nl"
+msgstr ""
+
+#: app/admin/editor.py:180
+msgid "Something in this form isn't right. Please check it."
+msgstr ""
+
+#: app/admin/editor.py:207
+msgid "Removed."
+msgstr ""
+
+#: app/admin/editor.py:276
+msgid "The English version already has content."
+msgstr ""
+
+#: app/admin/editor.py:286
+msgid "Copied the Dutch version. Now translate each part."
+msgstr ""
+
+#: app/admin/site.py:87
+msgid "Type the web address exactly as shown."
+msgstr ""
+
+#: app/admin/site.py:89 app/admin/site.py:122
+msgid "Please give a reason."
+msgstr ""
+
+#: app/admin/site.py:98
+msgid "Your page at Broedplaats de Createur is offline"
+msgstr ""
+
+#: app/admin/site.py:100
+#, python-format
+msgid "%(name)s is offline."
+msgstr ""
+
+#: app/admin/site.py:131
+msgid "Your page at Broedplaats de Createur is back"
+msgstr ""
+
+#: app/admin/site.py:132
+#, python-format
+msgid "%(name)s is back. The page is not visible yet: the maker decides when."
+msgstr ""
+
+#: app/admin/space.py:34
+msgid "Your page needs a name."
+msgstr ""
+
+#: app/admin/space.py:92
+msgid "Your page is now visible to everyone."
+msgstr ""
+
+#: app/admin/space.py:93
+msgid "Your page is hidden from visitors for now."
+msgstr ""
+
+#: app/auth/routes.py:68
+msgid "Please enter your e-mail address."
+msgstr ""
+
+#: app/auth/routes.py:71 app/auth/routes.py:118
+msgid "Too many attempts. Please wait 15 minutes and try again."
+msgstr ""
+
+#: app/auth/routes.py:83
+msgid "Your login link for Broedplaats de Createur"
+msgstr ""
+
+#: app/auth/routes.py:130
+msgid "That e-mail address and password don't match."
+msgstr ""
+
+#: app/auth/routes.py:143
+msgid "You are logged out."
+msgstr ""
+
+#: app/auth/routes.py:155
+msgid "Maker A (Jan, furniture maker)"
+msgstr ""
+
+#: app/auth/routes.py:156
+msgid "Maker B (Sanne, shares a page with Bo)"
+msgstr ""
+
+#: app/auth/routes.py:157
+msgid "Maker + webmaster (Noor)"
+msgstr ""
+
+#: app/auth/routes.py:158
+msgid "Key holder (superadmin)"
+msgstr ""
+
+#: app/blocks/__init__.py:199 app/templates/admin/blocks/text.html:1
+msgid "Text"
+msgstr ""
+
+#: app/blocks/__init__.py:200
+msgid "Photo album"
+msgstr ""
+
+#: app/blocks/__init__.py:201
+msgid "Photo"
+msgstr ""
+
+#: app/blocks/__init__.py:202
+msgid "Video"
+msgstr ""
+
+#: app/blocks/__init__.py:203
+msgid "Social media buttons"
+msgstr ""
+
+#: app/blocks/__init__.py:204
+msgid "Button"
+msgstr ""
+
+#: app/lifecycle/__init__.py:89
+msgid "You can't take yourself offline."
+msgstr ""
+
+#: app/lifecycle/__init__.py:90
+msgid "This person is a key holder. Remove that role first."
+msgstr ""
+
+#: app/lifecycle/__init__.py:91
+msgid "This person isn't a member of this maker page."
+msgstr ""
+
+#: app/lifecycle/__init__.py:92
+msgid "This maker page isn't offline."
+msgstr ""
+
+#: app/templates/_skeleton.html:15
+msgid "Demo — not the real website"
+msgstr ""
+
+#: app/templates/admin/_summary.html:2 app/templates/admin/_summary.html:13
+#: app/templates/admin/_summary.html:15
+msgid "(empty)"
+msgstr ""
+
+#: app/templates/admin/_summary.html:6
+#, python-format
+msgid "%(num)s photo"
+msgid_plural "%(num)s photos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/admin/_summary.html:9
+msgid "(no photo yet)"
+msgstr ""
+
+#: app/templates/admin/_summary.html:11
+msgid "(no video yet)"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:2 app/templates/admin/layout.html:16
+msgid "Start"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:4
+#, python-format
+msgid "Hello %(name)s"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:8 app/templates/admin/layout.html:14
+msgid "My page"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:8
+msgid "My pages"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:13 app/templates/admin/makers.html:11
+msgid "visible"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:13 app/templates/admin/editor.html:72
+#: app/templates/admin/makers.html:12 app/templates/admin/site_pages.html:12
+msgid "not visible yet"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:17
+msgid "Edit my page"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:18 app/templates/admin/editor.html:19
+#: app/templates/admin/makers.html:26
+msgid "View"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:27 app/templates/admin/editor.html:31
+#: app/templates/admin/layout.html:18 app/templates/admin/site_pages.html:2
+#: app/templates/blocks/social.html:2
+msgid "Website"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:28
+msgid ""
+"The general pages of the collective, in Dutch and English, and the list "
+"of makers."
+msgstr ""
+
+#: app/templates/admin/dashboard.html:30
+msgid "Edit the general pages"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:31 app/templates/admin/layout.html:19
+#: app/templates/admin/makers.html:2 app/templates/admin/makers.html:4
+#: app/templates/admin/remove.html:4 app/templates/public/layout.html:17
+#: app/templates/public/makers.html:4 app/templates/public/makers.html:12
+msgid "Makers"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:38
+msgid "Key holder"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:40
+#, python-format
+msgid "%(num)s maker page is offline."
+msgid_plural "%(num)s maker pages are offline."
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/admin/dashboard.html:41 app/templates/admin/offline.html:17
+msgid "No maker pages are offline."
+msgstr ""
+
+#: app/templates/admin/dashboard.html:42 app/templates/admin/offline.html:2
+#: app/templates/admin/offline.html:4
+msgid "Offline makers"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:47
+msgid "You don't have a page yet. Ask a webmaster."
+msgstr ""
+
+#: app/templates/admin/edit_block.html:11 app/templates/admin/editor.html:53
+#: app/templates/admin/profile.html:18
+#: app/templates/admin/space_settings.html:40
+msgid "Save"
+msgstr ""
+
+#: app/templates/admin/edit_block.html:12
+msgid "Save and make visible"
+msgstr ""
+
+#: app/templates/admin/edit_block.html:15
+msgid "Remove this part for good?"
+msgstr ""
+
+#: app/templates/admin/edit_block.html:17
+msgid "Remove this part"
+msgstr ""
+
+#: app/templates/admin/editor.html:9 app/templates/admin/space_settings.html:39
+msgid "Web address"
+msgstr ""
+
+#: app/templates/admin/editor.html:12 app/templates/admin/space_settings.html:3
+#: app/templates/admin/space_settings.html:6
+msgid "Name, photo and colour"
+msgstr ""
+
+#: app/templates/admin/editor.html:13 app/templates/admin/editor.html:35
+msgid "Preview"
+msgstr ""
+
+#: app/templates/admin/editor.html:19
+msgid "Your page is visible to everyone."
+msgstr ""
+
+#: app/templates/admin/editor.html:21
+msgid "Hide my page for now"
+msgstr ""
+
+#: app/templates/admin/editor.html:23
+msgid "Your page is not visible yet."
+msgstr ""
+
+#: app/templates/admin/editor.html:23
+msgid "Only you can see it, in the preview."
+msgstr ""
+
+#: app/templates/admin/editor.html:25
+msgid "Make my page visible"
+msgstr ""
+
+#: app/templates/admin/editor.html:38
+msgid "Language"
+msgstr ""
+
+#: app/templates/admin/editor.html:46
+msgid "Title"
+msgstr ""
+
+#: app/templates/admin/editor.html:47
+msgid ""
+"No English title yet: visitors of the English page see the Dutch version "
+"with a notice."
+msgstr ""
+
+#: app/templates/admin/editor.html:48
+msgid "Short description for search engines"
+msgstr ""
+
+#: app/templates/admin/editor.html:50
+msgid "Page is visible"
+msgstr ""
+
+#: app/templates/admin/editor.html:51
+msgid "Show in the menu"
+msgstr ""
+
+#: app/templates/admin/editor.html:58
+msgid "The English version is still empty."
+msgstr ""
+
+#: app/templates/admin/editor.html:59
+msgid "Copy the Dutch version to translate it"
+msgstr ""
+
+#: app/templates/admin/editor.html:64
+msgid "Parts of the page"
+msgstr ""
+
+#: app/templates/admin/editor.html:65
+msgid "Drag a part by its handle to move it up or down."
+msgstr ""
+
+#: app/templates/admin/editor.html:69
+msgid "Drag to move"
+msgstr ""
+
+#: app/templates/admin/editor.html:76 app/templates/admin/site_pages.html:16
+#: app/templates/admin/site_pages.html:17
+msgid "Edit"
+msgstr ""
+
+#: app/templates/admin/editor.html:79
+msgid "Hide"
+msgstr ""
+
+#: app/templates/admin/editor.html:79
+msgid "Make visible"
+msgstr ""
+
+#: app/templates/admin/editor.html:84
+msgid "Nothing here yet. Add a first part below."
+msgstr ""
+
+#: app/templates/admin/editor.html:89
+msgid "Add a part"
+msgstr ""
+
+#: app/templates/admin/layout.html:14
+msgid "Manage"
+msgstr ""
+
+#: app/templates/admin/layout.html:21
+msgid "Offline"
+msgstr ""
+
+#: app/templates/admin/layout.html:22 app/templates/admin/profile.html:2
+#: app/templates/admin/profile.html:4
+msgid "Me"
+msgstr ""
+
+#: app/templates/admin/layout.html:25
+msgid "Log out"
+msgstr ""
+
+#: app/templates/admin/makers.html:5
+msgid ""
+"You manage who is on the website. You can't change the makers' own pages:"
+" only the makers themselves can."
+msgstr ""
+
+#: app/templates/admin/makers.html:13
+msgid "offline"
+msgstr ""
+
+#: app/templates/admin/makers.html:19 app/templates/admin/remove.html:2
+#: app/templates/admin/remove.html:29
+msgid "Take offline"
+msgstr ""
+
+#: app/templates/admin/makers.html:27
+msgid "Edit (your own page)"
+msgstr ""
+
+#: app/templates/admin/offline.html:8
+#, python-format
+msgid "Offline since %(date)s. Will be deleted for good on %(purge)s."
+msgstr ""
+
+#: app/templates/admin/offline.html:9
+msgid "Reason"
+msgstr ""
+
+#: app/templates/admin/offline.html:12
+msgid "Why are you putting this page back? (this is recorded)"
+msgstr ""
+
+#: app/templates/admin/offline.html:13
+msgid "Put back"
+msgstr ""
+
+#: app/templates/admin/profile.html:7
+msgid "Your name"
+msgstr ""
+
+#: app/templates/admin/blocks/social.html:1 app/templates/admin/profile.html:8
+#: app/templates/auth/login.html:16
+msgid "E-mail address"
+msgstr ""
+
+#: app/templates/admin/profile.html:9
+msgid "Language of these screens"
+msgstr ""
+
+#: app/templates/admin/profile.html:13
+msgid "Password (not required)"
+msgstr ""
+
+#: app/templates/admin/profile.html:14
+msgid "You can always log in with a login link by e-mail. A password is extra."
+msgstr ""
+
+#: app/templates/admin/profile.html:15
+msgid "New password"
+msgstr ""
+
+#: app/templates/admin/profile.html:16
+msgid "Remove my password"
+msgstr ""
+
+#: app/templates/admin/profile.html:22
+msgid "Lost your phone, or logged in on someone else’s computer?"
+msgstr ""
+
+#: app/templates/admin/profile.html:23
+msgid "Log out on all devices"
+msgstr ""
+
+#: app/templates/admin/remove.html:5
+#, python-format
+msgid "Take %(name)s offline"
+msgstr ""
+
+#: app/templates/admin/remove.html:7
+msgid "This is what happens:"
+msgstr ""
+
+#: app/templates/admin/remove.html:9
+#, python-format
+msgid "%(name)s can no longer log in."
+msgstr ""
+
+#: app/templates/admin/remove.html:12
+#, python-format
+msgid "\"%(space)s\" stays online for the other makers of that page."
+msgstr ""
+
+#: app/templates/admin/remove.html:14
+#, python-format
+msgid ""
+"\"%(space)s\" goes offline. Visitors see a message that the page is no "
+"longer active."
+msgstr ""
+
+#: app/templates/admin/remove.html:17
+#, python-format
+msgid ""
+"After %(days)s days everything is deleted for good. Until then a key "
+"holder can put it back."
+msgstr ""
+
+#: app/templates/admin/remove.html:18
+#, python-format
+msgid "%(name)s gets an e-mail about this."
+msgstr ""
+
+#: app/templates/admin/remove.html:23
+msgid "Why? (this is recorded)"
+msgstr ""
+
+#: app/templates/admin/remove.html:26
+#, python-format
+msgid "To confirm, type the web address of the page: %(slug)s"
+msgstr ""
+
+#: app/templates/admin/site_pages.html:4
+msgid "General pages"
+msgstr ""
+
+#: app/templates/admin/site_pages.html:5
+msgid ""
+"These pages are about the collective. Each page has a Dutch and an "
+"English version."
+msgstr ""
+
+#: app/templates/admin/site_pages.html:11
+msgid "front page"
+msgstr ""
+
+#: app/templates/admin/site_pages.html:13
+msgid "no English yet"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:10
+msgid "Profile photo"
+msgstr ""
+
+#: app/templates/admin/blocks/image.html:4
+#: app/templates/admin/space_settings.html:13
+msgid "Choose a photo"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:17
+msgid "Cover photo"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:18
+msgid "A wide photo across the top of your page."
+msgstr ""
+
+#: app/templates/admin/space_settings.html:28
+msgid "Name on your page"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:29
+msgid "What you make, in a few words"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:29
+msgid "e.g. Furniture maker"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:30
+msgid "One sentence about your work"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:31
+msgid "Short introduction"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:34
+msgid "Language you write your page in"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:38
+msgid "Your colour"
+msgstr ""
+
+#: app/templates/admin/space_settings.html:39
+msgid "want a different one? Ask a webmaster."
+msgstr ""
+
+#: app/templates/admin/blocks/_upload.html:3
+msgid "Uploading…"
+msgstr ""
+
+#: app/templates/admin/blocks/_upload.html:3
+#, python-brace-format
+msgid "Photo {n} of {total}…"
+msgstr ""
+
+#: app/templates/admin/blocks/_upload.html:4
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: app/templates/admin/blocks/_upload.html:4
+msgid "No connection. Please try again."
+msgstr ""
+
+#: app/templates/admin/blocks/cta.html:1
+msgid "Text on the button"
+msgstr ""
+
+#: app/templates/admin/blocks/cta.html:1
+msgid "e.g. Book a workshop"
+msgstr ""
+
+#: app/templates/admin/blocks/cta.html:2
+msgid "Where the button goes (web address or e-mail address)"
+msgstr ""
+
+#: app/templates/admin/blocks/cta.html:3
+msgid "Style"
+msgstr ""
+
+#: app/templates/admin/blocks/cta.html:4
+msgid "Coloured"
+msgstr ""
+
+#: app/templates/admin/blocks/cta.html:5
+msgid "Outline"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:2
+msgid "Add photos"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:4
+msgid "You can choose several photos at once. Drag photos to change the order."
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:10
+#: app/templates/admin/blocks/image.html:6
+#: app/templates/admin/blocks/video.html:4
+msgid "Caption"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:11
+msgid "Remove"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:15
+msgid "How to show the photos"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:16
+msgid "Grid"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:16
+msgid "Mosaic"
+msgstr ""
+
+#: app/templates/admin/blocks/gallery.html:16
+msgid "Swipe one by one"
+msgstr ""
+
+#: app/templates/admin/blocks/image.html:4
+msgid "Choose another photo"
+msgstr ""
+
+#: app/templates/admin/blocks/image.html:7
+msgid "Link (not required)"
+msgstr ""
+
+#: app/templates/admin/blocks/social.html:1
+msgid "Your own website"
+msgstr ""
+
+#: app/templates/admin/blocks/social.html:3
+msgid "Fill in only what you use. Empty fields are left out."
+msgstr ""
+
+#: app/templates/admin/blocks/video.html:1
+msgid "Link to the video on YouTube or Vimeo"
+msgstr ""
+
+#: app/templates/admin/blocks/video.html:3
+msgid "Tip: open the video, tap Share and copy the link."
+msgstr ""
+
+#: app/templates/auth/check_mail.html:2 app/templates/auth/check_mail.html:4
+msgid "Check your e-mail"
+msgstr ""
+
+#: app/templates/auth/check_mail.html:5
+#, python-format
+msgid ""
+"If %(email)s is known to us, you will get an e-mail with a login link "
+"within a minute."
+msgstr ""
+
+#: app/templates/auth/check_mail.html:6 app/templates/mail/login_link.txt:7
+#, python-format
+msgid "The link works once, for %(minutes)s minutes."
+msgstr ""
+
+#: app/templates/auth/check_mail.html:7
+msgid ""
+"No e-mail? Look in your spam folder, or ask a webmaster whether your "
+"address is right."
+msgstr ""
+
+#: app/templates/auth/check_mail.html:8
+msgid "Try again"
+msgstr ""
+
+#: app/templates/auth/confirm_link.html:2 app/templates/auth/login.html:2
+#: app/templates/auth/login.html:4 app/templates/auth/login.html:18
+msgid "Log in"
+msgstr ""
+
+#: app/templates/auth/confirm_link.html:5
+msgid "Welcome back"
+msgstr ""
+
+#: app/templates/auth/confirm_link.html:8
+msgid "Log in now"
+msgstr ""
+
+#: app/templates/auth/confirm_link.html:11
+msgid "This login link no longer works"
+msgstr ""
+
+#: app/templates/auth/confirm_link.html:12
+msgid "A login link works only once and only for a short time. Ask for a new one."
+msgstr ""
+
+#: app/templates/auth/confirm_link.html:13
+msgid "Send me a new login link"
+msgstr ""
+
+#: app/templates/auth/demo.html:2 app/templates/auth/demo.html:4
+msgid "Demo login"
+msgstr ""
+
+#: app/templates/auth/demo.html:5
+msgid "Choose who you want to be. This only exists in the demo."
+msgstr ""
+
+#: app/templates/auth/demo.html:14
+#, python-format
+msgid "Demo password for every demo user: %(pw)s"
+msgstr ""
+
+#: app/templates/auth/login.html:5
+msgid ""
+"Enter your e-mail address. We'll send you a login link: click it and "
+"you're in. No password needed."
+msgstr ""
+
+#: app/templates/auth/login.html:8
+msgid "Your e-mail address"
+msgstr ""
+
+#: app/templates/auth/login.html:10
+msgid "Send me a login link"
+msgstr ""
+
+#: app/templates/auth/login.html:13
+msgid "Log in with a password instead"
+msgstr ""
+
+#: app/templates/auth/login.html:17
+msgid "Password"
+msgstr ""
+
+#: app/templates/auth/login.html:20
+msgid "You only have a password if you set one yourself."
+msgstr ""
+
+#: app/templates/auth/login.html:22
+msgid "Demo: log in as a demo user with one click"
+msgstr ""
+
+#: app/templates/blocks/social.html:2
+msgid "E-mail"
+msgstr ""
+
+#: app/templates/blocks/video.html:12
+msgid "Play video"
+msgstr ""
+
+#: app/templates/blocks/video.html:13
+#, python-format
+msgid "This loads the video from %(provider)s."
+msgstr ""
+
+#: app/templates/errors/403.html:3
+msgid "Not allowed"
+msgstr ""
+
+#: app/templates/errors/403.html:6
+msgid "You can't change this"
+msgstr ""
+
+#: app/templates/errors/403.html:7
+msgid ""
+"Only the makers of a page can change it. Not even the webmasters can do "
+"that. Ask the maker if something needs to change."
+msgstr ""
+
+#: app/templates/errors/403.html:8 app/templates/public/layout.html:24
+msgid "Back"
+msgstr ""
+
+#: app/templates/errors/404.html:3 app/templates/errors/404.html:6
+msgid "Page not found"
+msgstr ""
+
+#: app/templates/errors/404.html:7
+msgid ""
+"We can't find this page. Maybe the web address has a typo, or the page "
+"has moved."
+msgstr ""
+
+#: app/templates/errors/404.html:8 app/templates/public/inactive.html:16
+msgid "To the home page"
+msgstr ""
+
+#: app/templates/mail/login_link.txt:1 app/templates/mail/space_offline.txt:1
+#: app/templates/mail/space_restored.txt:1
+#, python-format
+msgid "Hello %(name)s,"
+msgstr ""
+
+#: app/templates/mail/login_link.txt:3
+msgid "Click the link below to log in to Broedplaats de Createur:"
+msgstr ""
+
+#: app/templates/mail/login_link.txt:8
+msgid "Didn't ask for this? Then you can ignore this e-mail."
+msgstr ""
+
+#: app/templates/mail/space_offline.txt:3
+msgid ""
+"Your page at Broedplaats de Createur is offline. Visitors now see a "
+"message that it is no longer active."
+msgstr ""
+
+#: app/templates/mail/space_offline.txt:5
+#, python-format
+msgid "will be deleted for good on %(date)s"
+msgstr ""
+
+#: app/templates/mail/space_offline.txt:7
+#, python-format
+msgid ""
+"Is this a mistake, or do you want a copy of your photos? Contact us "
+"before that date: %(contact)s"
+msgstr ""
+
+#: app/templates/mail/space_restored.txt:3
+#, python-format
+msgid "Good news: your page \"%(space)s\" is back and you can log in again."
+msgstr ""
+
+#: app/templates/mail/space_restored.txt:4
+msgid ""
+"Your page is not visible to visitors yet. Log in and make it visible when"
+" you are ready:"
+msgstr ""
+
+#: app/templates/public/home.html:15 app/templates/public/page.html:9
+msgid "This page is only available in Dutch."
+msgstr ""
+
+#: app/templates/public/home.html:20
+msgid "Our makers"
+msgstr ""
+
+#: app/templates/public/home.html:22
+msgid "All makers"
+msgstr ""
+
+#: app/templates/public/inactive.html:4
+msgid "No longer active"
+msgstr ""
+
+#: app/templates/public/inactive.html:8 app/templates/public/inactive.html:12
+msgid "This maker page is no longer active"
+msgstr ""
+
+#: app/templates/public/inactive.html:9
+#, python-format
+msgid "The space of %(name)s at %(site)s is no longer active."
+msgstr ""
+
+#: app/templates/public/inactive.html:10
+#, python-format
+msgid "Want to get in touch with %(name)s? Please reach out to them another way."
+msgstr ""
+
+#: app/templates/public/inactive.html:15
+msgid "See all makers"
+msgstr ""
+
+#: app/templates/public/layout.html:16
+msgid "Main menu"
+msgstr ""
+
+#: app/templates/public/layout.html:24
+msgid "Preview: this is how visitors will see it."
+msgstr ""
+
+#: app/templates/public/layout.html:36
+msgid "Privacy"
+msgstr ""
+
+#: app/templates/public/layout.html:37
+msgid "Log in for makers"
+msgstr ""
+
+#: app/templates/public/makers.html:13
+msgid "Maker pages are coming soon."
+msgstr ""
+

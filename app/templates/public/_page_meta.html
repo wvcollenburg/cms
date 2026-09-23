@@ -1,0 +1,12 @@
+{% set base = config.BASE_URL %}
+{% if t.meta_description %}<meta name="description" content="{{ t.meta_description }}">{% endif %}
+{% set path_nl = '/' if page.slug == 'home' else '/' ~ page.slug %}
+{% set path_en = '/en/' if page.slug == 'home' else '/en/' ~ page.slug %}
+<link rel="canonical" href="{{ base }}{{ path_en if content_lang == 'en' else path_nl }}">
+{% if page.translation('en') %}
+<link rel="alternate" hreflang="nl" href="{{ base }}{{ path_nl }}">
+<link rel="alternate" hreflang="en" href="{{ base }}{{ path_en }}">
+{% endif %}
+{% if page.slug == 'home' %}
+<script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "Organization", "name": setting('site_name', default='Broedplaats de Createur'), "url": base ~ "/"} | tojson }}</script>
+{% endif %}

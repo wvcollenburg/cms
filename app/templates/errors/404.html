@@ -1,0 +1,10 @@
+{% extends 'public/layout.html' %}
+{% set noindex = true %}
+{% block title %}{{ _('Page not found') }}{% endblock %}
+{% block content %}
+<div class="wrap content">
+  <h1>{{ _('Page not found') }}</h1>
+  <p>{{ _("We can't find this page. Maybe the web address has a typo, or the page has moved.") }}</p>
+  <p class="actions"><a class="button" href="{{ front_url('home') }}">{{ _('To the home page') }}</a></p>
+</div>
+{% endblock %}

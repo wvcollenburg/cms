@@ -1,0 +1,41 @@
+{% extends '_skeleton.html' %}
+{% from '_macros.html' import icon %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
+{% endblock %}
+{% block body %}
+{% set other = 'en' if ui_lang == 'nl' else 'nl' %}
+{% set alt = (alt_urls or {}).get(other, request.path) %}
+<header class="site-header" lang="{{ ui_lang }}">
+  <div class="wrap header-inner">
+    <a class="brand" href="{{ front_url('home') }}">
+      <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="36" height="36">
+      <span>{{ setting('site_name', default='Broedplaats de Createur') }}</span>
+    </a>
+    <nav class="site-nav" aria-label="{{ _('Main menu') }}">
+      <a href="{{ front_url('makers') }}">{{ _('Makers') }}</a>
+      {% for p in nav_pages(ui_lang) %}<a href="{{ front_url(p.slug) }}">{{ p.title }}</a>{% endfor %}
+      <a class="lang-toggle" href="{{ url_for('public.set_lang', code=other, next=alt) }}" hreflang="{{ other }}" lang="{{ other }}">
+        {{ 'English' if other == 'en' else 'Nederlands' }}</a>
+    </nav>
+  </div>
+</header>
+{% if preview %}<div class="preview-banner">{{ _('Preview: this is how visitors will see it.') }} <a href="javascript:history.back()">{{ _('Back') }}</a></div>{% endif %}
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+<footer class="site-footer" lang="{{ ui_lang }}">
+  <div class="wrap footer-inner">
+    <div>
+      <strong>{{ setting('site_name', default='Broedplaats de Createur') }}</strong><br>
+      {{ setting('address', default='') }}<br>
+      {% set mail = setting('contact_email') %}{% if mail %}<a href="mailto:{{ mail }}">{{ mail }}</a>{% endif %}
+    </div>
+    <div class="footer-links">
+      <a href="{{ front_url('privacy') }}">{{ _('Privacy') }}</a>
+      <a href="{{ url_for('auth.login') }}">{{ _('Log in for makers') }}</a>
+    </div>
+  </div>
+</footer>
+{% endblock %}

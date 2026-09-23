@@ -1,0 +1,19 @@
+{% extends 'public/layout.html' %}
+{% set noindex = true %}
+{% set site = setting('site_name', default='Broedplaats de Createur') %}
+{% block title %}{{ _('No longer active') }} · {{ site }}{% endblock %}
+{% block content %}
+<div class="wrap content inactive">
+  {% if display_name %}
+    <h1>{{ _('This maker page is no longer active') }}</h1>
+    <p class="lead">{{ _('The space of %(name)s at %(site)s is no longer active.', name=display_name, site=site) }}</p>
+    <p>{{ _('Want to get in touch with %(name)s? Please reach out to them another way.', name=display_name) }}</p>
+  {% else %}
+    <h1>{{ _('This maker page is no longer active') }}</h1>
+  {% endif %}
+  <p class="actions">
+    <a class="button" href="{{ front_url('makers') }}">{{ _('See all makers') }}</a>
+    <a class="button button-secondary" href="{{ front_url('home') }}">{{ _('To the home page') }}</a>
+  </p>
+</div>
+{% endblock %}

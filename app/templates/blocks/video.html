@@ -1,0 +1,18 @@
+{% from '_macros.html' import icon %}
+{% if b.data.video_id %}
+{% if b.data.provider == 'youtube' %}
+  {% set embed = 'https://www.youtube-nocookie.com/embed/' ~ b.data.video_id ~ '?autoplay=1&rel=0' %}{% set provider = 'YouTube' %}
+{% else %}
+  {% set embed = 'https://player.vimeo.com/video/' ~ b.data.video_id ~ '?dnt=1&autoplay=1' ~ ('&h=' ~ b.data.vimeo_hash if b.data.vimeo_hash else '') %}{% set provider = 'Vimeo' %}
+{% endif %}
+<figure>
+  <div class="video" data-embed="{{ embed }}" data-title="{{ b.data.caption or provider }}">
+    <button type="button" class="video-play">
+      {{ icon('play') }}
+      <span>{{ _('Play video') }}</span>
+      <small>{{ _('This loads the video from %(provider)s.', provider=provider) }}</small>
+    </button>
+  </div>
+  {% if b.data.caption %}<figcaption>{{ b.data.caption }}</figcaption>{% endif %}
+</figure>
+{% endif %}

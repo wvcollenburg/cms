@@ -1,0 +1,9 @@
+{% extends 'auth/layout.html' %}
+{% block title %}{{ _('Check your e-mail') }}{% endblock %}
+{% block content %}
+<h1>{{ _('Check your e-mail') }}</h1>
+<p>{{ _('If %(email)s is known to us, you will get an e-mail with a login link within a minute.', email=email) }}</p>
+<p>{{ _('The link works once, for %(minutes)s minutes.', minutes=config.MAGIC_LINK_MINUTES) }}</p>
+<p class="small">{{ _('No e-mail? Look in your spam folder, or ask a webmaster whether your address is right.') }}</p>
+<p><a href="{{ url_for('auth.login') }}">{{ _('Try again') }}</a></p>
+{% endblock %}

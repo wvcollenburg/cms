@@ -1,0 +1,49 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('Start') }}{% endblock %}
+{% block content %}
+<h1>{{ _('Hello %(name)s', name=current_user.display_name) }}</h1>
+
+{% if spaces %}
+<section class="card">
+  <h2>{{ _('My page') if spaces|length == 1 else _('My pages') }}</h2>
+  {% for s in spaces %}
+  <div class="space-row">
+    <div>
+      <strong>{{ s.name }}</strong>
+      <span class="badge {{ 'badge-ok' if s.status == 'published' else 'badge-muted' }}">{{ _('visible') if s.status == 'published' else _('not visible yet') }}</span><br>
+      <span class="small">{{ config.BASE_URL | replace('https://', '') | replace('http://', '') }}/{{ s.slug }}</span>
+    </div>
+    <div class="row-actions">
+      <a class="button" href="{{ url_for('admin.editor', kind='space', oid=s.id) }}">{{ _('Edit my page') }}</a>
+      {% if s.status == 'published' %}<a class="button button-secondary" href="{{ url_for('public.resolve', slug=s.slug) }}" target="_blank">{{ _('View') }}</a>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if policy.can_edit_site(current_user) %}
+<section class="card">
+  <h2>{{ _('Website') }}</h2>
+  <p>{{ _('The general pages of the collective, in Dutch and English, and the list of makers.') }}</p>
+  <p class="row-actions">
+    <a class="button" href="{{ url_for('admin.site_pages') }}">{{ _('Edit the general pages') }}</a>
+    <a class="button button-secondary" href="{{ url_for('admin.makers') }}">{{ _('Makers') }}</a>
+  </p>
+</section>
+{% endif %}
+
+{% if policy.can_manage_lifecycle(current_user) %}
+<section class="card">
+  <h2>{{ _('Key holder') }}</h2>
+  {% if hidden %}
+  <p>{{ ngettext('%(num)s maker page is offline.', '%(num)s maker pages are offline.', hidden|length) }}</p>
+  {% else %}<p>{{ _('No maker pages are offline.') }}</p>{% endif %}
+  <p><a class="button button-secondary" href="{{ url_for('admin.offline') }}">{{ _('Offline makers') }}</a></p>
+</section>
+{% endif %}
+
+{% if not spaces and not policy.can_edit_site(current_user) and not policy.can_manage_lifecycle(current_user) %}
+<p>{{ _("You don't have a page yet. Ask a webmaster.") }}</p>
+{% endif %}
+{% endblock %}

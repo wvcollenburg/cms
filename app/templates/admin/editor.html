@@ -1,0 +1,97 @@
+{% extends 'admin/layout.html' %}
+{% from '_macros.html' import icon %}
+{% block title %}{{ target.title }}{% endblock %}
+{% block content %}
+{% if target.kind == 'space' %}{% set space = target.obj %}
+<div class="page-head">
+  <div>
+    <h1>{{ space.name }}</h1>
+    <p class="small">{{ _('Web address') }}: {{ config.BASE_URL | replace('https://', '') | replace('http://', '') }}/{{ space.slug }}</p>
+  </div>
+  <div class="row-actions">
+    <a class="button button-secondary" href="{{ url_for('admin.space_settings', space_id=space.id) }}">{{ _('Name, photo and colour') }}</a>
+    <a class="button button-secondary" href="{{ target.url('admin.preview') }}">{{ _('Preview') }}</a>
+  </div>
+</div>
+<form method="post" action="{{ url_for('admin.space_visibility', space_id=space.id) }}" class="card status-card {{ 'is-live' if space.status == 'published' }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% if space.status == 'published' %}
+    <p><strong>{{ _('Your page is visible to everyone.') }}</strong> <a href="{{ url_for('public.resolve', slug=space.slug) }}" target="_blank">{{ _('View') }}</a></p>
+    <input type="hidden" name="visible" value="0">
+    <button class="button button-secondary" type="submit">{{ _('Hide my page for now') }}</button>
+  {% else %}
+    <p><strong>{{ _('Your page is not visible yet.') }}</strong> {{ _('Only you can see it, in the preview.') }}</p>
+    <input type="hidden" name="visible" value="1">
+    <button class="button" type="submit">{{ _('Make my page visible') }}</button>
+  {% endif %}
+</form>
+{% else %}{% set page = target.obj %}{% set tr = page.translation(target.lang) %}
+<div class="page-head">
+  <div>
+    <p class="small"><a href="{{ url_for('admin.site_pages') }}">← {{ _('Website') }}</a></p>
+    <h1>{{ target.title }}</h1>
+  </div>
+  <div class="row-actions">
+    <a class="button button-secondary" href="{{ target.url('admin.preview') }}">{{ _('Preview') }}</a>
+  </div>
+</div>
+<nav class="tabs" aria-label="{{ _('Language') }}">
+  {% for l, label in [('nl', 'Nederlands'), ('en', 'English')] %}
+  <a href="{{ url_for('admin.editor', kind='page', oid=page.id, lang=l) }}" {% if l == target.lang %}aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+<form method="post" action="{{ url_for('admin.page_meta', page_id=page.id) }}" class="card stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="lang" value="{{ target.lang }}">
+  <label>{{ _('Title') }} ({{ target.lang | upper }})<input name="title" value="{{ tr.title if tr else '' }}" {{ 'required' if target.lang == 'nl' }}></label>
+  {% if target.lang == 'en' and not tr %}<p class="small">{{ _('No English title yet: visitors of the English page see the Dutch version with a notice.') }}</p>{% endif %}
+  <label>{{ _('Short description for search engines') }}<input name="meta_description" value="{{ tr.meta_description if tr else '' }}" maxlength="300"></label>
+  {% if target.lang == 'nl' %}
+  <label class="radio"><input type="checkbox" name="status" value="published" {{ 'checked' if page.status == 'published' }}> {{ _('Page is visible') }}</label>
+  {% if page.slug != 'home' %}<label class="radio"><input type="checkbox" name="show_in_nav" value="1" {{ 'checked' if page.show_in_nav }}> {{ _('Show in the menu') }}</label>{% endif %}
+  {% endif %}
+  <button class="button button-secondary" type="submit">{{ _('Save') }}</button>
+</form>
+{% if target.lang == 'en' and not blocks and other_lang_count %}
+<form method="post" action="{{ target.url('admin.copy_nl') }}" class="card">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <p>{{ _('The English version is still empty.') }}</p>
+  <button class="button" type="submit">{{ _('Copy the Dutch version to translate it') }}</button>
+</form>
+{% endif %}
+{% endif %}
+
+<h2>{{ _('Parts of the page') }}</h2>
+{% if blocks %}<p class="small">{{ _('Drag a part by its handle to move it up or down.') }}</p>{% endif %}
+<ol class="block-list" data-sortable data-order-url="{{ target.url('admin.order_blocks') }}">
+  {% for b in blocks %}
+  <li class="block-item {{ 'is-hidden' if not b.is_visible }}" id="block-{{ b.id }}" data-id="{{ b.id }}">
+    <span class="handle" title="{{ _('Drag to move') }}">{{ icon('grip') }}</span>
+    <div class="block-summary">
+      <strong>{{ BLOCK_TYPES[b.type].label }}</strong>
+      {% if not b.is_visible %}<span class="badge badge-muted">{{ _('not visible yet') }}</span>{% endif %}
+      {% include 'admin/_summary.html' %}
+    </div>
+    <div class="block-actions">
+      <a class="button button-small" href="{{ target.url('admin.edit_block', bid=b.id) }}">{{ _('Edit') }}</a>
+      <form method="post" action="{{ target.url('admin.toggle_block', bid=b.id) }}" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="button button-small button-secondary" type="submit">{{ _('Hide') if b.is_visible else _('Make visible') }}</button>
+      </form>
+    </div>
+  </li>
+  {% else %}
+  <li class="empty">{{ _('Nothing here yet. Add a first part below.') }}</li>
+  {% endfor %}
+</ol>
+
+<section class="card">
+  <h2>{{ _('Add a part') }}</h2>
+  <form method="post" action="{{ target.url('admin.add_block') }}" class="add-grid">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for key, bt in BLOCK_TYPES.items() %}
+    <button class="button button-secondary" type="submit" name="type" value="{{ key }}">+ {{ bt.label }}</button>
+    {% endfor %}
+  </form>
+</section>
+{% endblock %}

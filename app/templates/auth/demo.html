@@ -1,0 +1,15 @@
+{% extends 'auth/layout.html' %}
+{% block title %}{{ _('Demo login') }}{% endblock %}
+{% block content %}
+<h1>{{ _('Demo login') }}</h1>
+<p>{{ _('Choose who you want to be. This only exists in the demo.') }}</p>
+<div class="stack">
+{% for u in users %}{% set key = u.email.split('@')[0] %}
+  <form method="post" action="{{ url_for('auth.demo_login', user_id=u.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="button button-big button-secondary" type="submit">{{ labels.get(key, u.display_name) }}</button>
+  </form>
+{% endfor %}
+</div>
+<p class="small">{{ _('Demo password for every demo user: %(pw)s', pw=config.DEMO_PASSWORD) }}</p>
+{% endblock %}

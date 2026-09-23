@@ -1,0 +1,19 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ btype.label }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{{ target.url('admin.editor') }}">← {{ target.title }}{% if target.lang %} ({{ target.lang|upper }}){% endif %}</a></p>
+<h1>{{ btype.label }}</h1>
+{% if error %}<div class="flash flash-error" role="alert">{{ error }}</div>{% endif %}
+<form method="post" class="card stack" id="block-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% include 'admin/blocks/' ~ block.type ~ '.html' %}
+  <div class="row-actions">
+    <button class="button" type="submit">{{ _('Save') }}</button>
+    {% if not block.is_visible %}<button class="button button-secondary" type="submit" name="make_visible" value="1">{{ _('Save and make visible') }}</button>{% endif %}
+  </div>
+</form>
+<form method="post" action="{{ target.url('admin.delete_block', bid=block.id) }}" class="danger-zone" data-confirm="{{ _('Remove this part for good?') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="button button-danger button-small" type="submit">{{ _('Remove this part') }}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('Me') }}{% endblock %}
+{% block content %}
+<h1>{{ _('Me') }}</h1>
+<form method="post" class="card stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>{{ _('Your name') }}<input name="display_name" value="{{ current_user.display_name }}" required></label>
+  <p class="small">{{ _('E-mail address') }}: {{ current_user.email }}</p>
+  <fieldset><legend>{{ _('Language of these screens') }}</legend>
+    <label class="radio"><input type="radio" name="ui_lang" value="nl" {{ 'checked' if current_user.ui_lang == 'nl' }}> Nederlands</label>
+    <label class="radio"><input type="radio" name="ui_lang" value="en" {{ 'checked' if current_user.ui_lang == 'en' }}> English</label>
+  </fieldset>
+  <fieldset><legend>{{ _('Password (not required)') }}</legend>
+    <p class="small">{{ _('You can always log in with a login link by e-mail. A password is extra.') }}</p>
+    <label>{{ _('New password') }}<input type="password" name="password" autocomplete="new-password" minlength="10"></label>
+    {% if current_user.password_hash %}<label class="radio"><input type="checkbox" name="remove_password" value="1"> {{ _('Remove my password') }}</label>{% endif %}
+  </fieldset>
+  <button class="button" type="submit">{{ _('Save') }}</button>
+</form>
+<form method="post" action="{{ url_for('admin.logout_everywhere') }}" class="card">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <p>{{ _('Lost your phone, or logged in on someone else’s computer?') }}</p>
+  <button class="button button-secondary" type="submit">{{ _('Log out on all devices') }}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% from '_macros.html' import picture %}
+<ul class="maker-cards">
+  {% for s in makers %}
+  <li class="maker-card" style="--accent: {{ s.accent_color }}">
+    <a href="{{ url_for('public.resolve', slug=s.slug) }}">
+      {% if s.cover %}{{ picture(s.cover, sizes='(min-width: 900px) 33vw, 100vw') }}{% else %}<div class="card-placeholder"></div>{% endif %}
+      <span class="card-body">
+        <strong lang="{{ s.lang }}">{{ s.name }}</strong>
+        {% if s.discipline %}<span lang="{{ s.lang }}">{{ s.discipline }}</span>{% endif %}
+      </span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>

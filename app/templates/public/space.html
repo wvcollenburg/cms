@@ -1,0 +1,27 @@
+{% extends 'public/layout.html' %}
+{% from '_macros.html' import picture %}
+{% block html_lang %}{{ space.lang }}{% endblock %}
+{% block title %}{{ space.name }} · {{ setting('site_name', default='Broedplaats de Createur') }}{% endblock %}
+{% block meta %}
+{% if space.tagline %}<meta name="description" content="{{ space.tagline }}">{% endif %}
+<link rel="canonical" href="{{ config.BASE_URL }}/{{ space.slug }}">
+<script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "Person", "name": space.name, "jobTitle": space.discipline, "url": config.BASE_URL ~ "/" ~ space.slug, "memberOf": {"@type": "Organization", "name": setting('site_name', default='Broedplaats de Createur')}} | tojson }}</script>
+{% endblock %}
+{% block body_class %}maker-page{% endblock %}
+{% block content %}
+<div class="maker" style="--accent: {{ space.accent_color }}">
+  <div class="maker-cover">{% if space.cover %}{{ picture(space.cover, loading='eager') }}{% endif %}</div>
+  <div class="wrap maker-head">
+    {% if space.avatar %}<div class="maker-avatar">{{ picture(space.avatar, sizes='160px', loading='eager') }}</div>{% endif %}
+    <div>
+      <h1>{{ space.name }}</h1>
+      {% if space.discipline %}<p class="discipline">{{ space.discipline }}</p>{% endif %}
+      {% if space.tagline %}<p class="lead">{{ space.tagline }}</p>{% endif %}
+    </div>
+  </div>
+  <div class="wrap content">
+    {% if space.bio_html %}<div class="prose bio">{{ space.bio_html | safe }}</div>{% endif %}
+    {% include 'public/_blocks.html' %}
+  </div>
+</div>
+{% endblock %}

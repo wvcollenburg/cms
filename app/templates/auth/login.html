@@ -1,0 +1,23 @@
+{% extends 'auth/layout.html' %}
+{% block title %}{{ _('Log in') }}{% endblock %}
+{% block content %}
+<h1>{{ _('Log in') }}</h1>
+<p>{{ _("Enter your e-mail address. We'll send you a login link: click it and you're in. No password needed.") }}</p>
+<form method="post" action="{{ url_for('auth.request_link') }}" class="stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>{{ _('Your e-mail address') }}
+    <input type="email" name="email" autocomplete="email" required autofocus inputmode="email"></label>
+  <button class="button button-big" type="submit">{{ _('Send me a login link') }}</button>
+</form>
+<details class="pw-login">
+  <summary>{{ _('Log in with a password instead') }}</summary>
+  <form method="post" action="{{ url_for('auth.password_login') }}" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>{{ _('E-mail address') }}<input type="email" name="email" autocomplete="username" required></label>
+    <label>{{ _('Password') }}<input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="button button-secondary" type="submit">{{ _('Log in') }}</button>
+  </form>
+  <p class="small">{{ _('You only have a password if you set one yourself.') }}</p>
+</details>
+{% if demo_mode %}<p class="demo-note"><a href="{{ url_for('auth.demo') }}">{{ _('Demo: log in as a demo user with one click') }}</a></p>{% endif %}
+{% endblock %}

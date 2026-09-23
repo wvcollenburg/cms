@@ -1,0 +1,15 @@
+{% extends 'public/layout.html' %}
+{% set alt_urls = {'nl': '/makers', 'en': '/en/makers'} %}
+{% set makers = spaces %}
+{% block title %}{{ _('Makers') }} · {{ setting('site_name', default='Broedplaats de Createur') }}{% endblock %}
+{% block meta %}
+<link rel="canonical" href="{{ config.BASE_URL }}{{ front_url('makers') }}">
+<link rel="alternate" hreflang="nl" href="{{ config.BASE_URL }}/makers">
+<link rel="alternate" hreflang="en" href="{{ config.BASE_URL }}/en/makers">
+{% endblock %}
+{% block content %}
+<div class="wrap content">
+  <h1>{{ _('Makers') }}</h1>
+  {% if makers %}{% include 'public/_maker_cards.html' %}{% else %}<p>{{ _('Maker pages are coming soon.') }}</p>{% endif %}
+</div>
+{% endblock %}

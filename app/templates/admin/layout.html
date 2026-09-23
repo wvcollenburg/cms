@@ -1,0 +1,33 @@
+{% extends '_skeleton.html' %}
+{% from '_macros.html' import flashes, icon %}
+{% set noindex = true %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/trix.css') }}">
+  <script src="{{ url_for('static', filename='vendor/trix.umd.min.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='vendor/Sortable.min.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+{% endblock %}
+{% block body_class %}admin{% endblock %}
+{% block body %}
+<header class="admin-header">
+  <a class="brand" href="{{ url_for('admin.dashboard') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32"><span>{{ _('My page') if not policy.can_edit_site(current_user) else _('Manage') }}</span></a>
+  <nav class="admin-nav">
+    <a href="{{ url_for('admin.dashboard') }}">{{ _('Start') }}</a>
+    {% if policy.can_edit_site(current_user) %}
+      <a href="{{ url_for('admin.site_pages') }}">{{ _('Website') }}</a>
+      <a href="{{ url_for('admin.makers') }}">{{ _('Makers') }}</a>
+    {% endif %}
+    {% if policy.can_manage_lifecycle(current_user) %}<a href="{{ url_for('admin.offline') }}">{{ _('Offline') }}</a>{% endif %}
+    <a href="{{ url_for('admin.profile') }}">{{ _('Me') }}</a>
+    <form method="post" action="{{ url_for('auth.logout') }}" class="inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="linklike">{{ _('Log out') }}</button>
+    </form>
+  </nav>
+</header>
+<main class="admin-main">
+  {{ flashes() }}
+  {% block content %}{% endblock %}
+</main>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% from '_macros.html' import picture %}
+<div class="gallery gallery-{{ b.data.layout }}">
+  {% for item in b.data['items'] %}{% set m = media.get(item.media_id) %}{% if m %}
+  <figure>
+    <a href="{{ img_src(m, 2400) }}" class="gallery-link">{{ picture(m, sizes=('90vw' if b.data.layout == 'carousel' else '(min-width: 900px) 33vw, 50vw')) }}</a>
+    {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}{% endfor %}
+</div>

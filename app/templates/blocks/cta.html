@@ -1,0 +1,3 @@
+{% if b.data.label and b.data.url %}
+<p class="cta"><a class="button {{ 'button-secondary' if b.data.style == 'secondary' }}" href="{{ b.data.url }}">{{ b.data.label }}</a></p>
+{% endif %}

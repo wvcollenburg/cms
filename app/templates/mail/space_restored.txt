@@ -1,0 +1,8 @@
+{{ _('Hello %(name)s,', name=user.display_name) }}
+
+{{ _('Good news: your page "%(space)s" is back and you can log in again.', space=space.name) }}
+{{ _('Your page is not visible to visitors yet. Log in and make it visible when you are ready:') }}
+
+{{ config.BASE_URL }}{{ url_for('auth.login') }}
+
+Broedplaats de Createur

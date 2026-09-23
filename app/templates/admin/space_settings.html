@@ -1,0 +1,42 @@
+{% extends 'admin/layout.html' %}
+{% from '_macros.html' import picture %}
+{% block title %}{{ _('Name, photo and colour') }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{{ url_for('admin.editor', kind='space', oid=space.id) }}">← {{ space.name }}</a></p>
+<h1>{{ _('Name, photo and colour') }}</h1>
+
+<section class="card photos">
+  <div>
+    <h2>{{ _('Profile photo') }}</h2>
+    {% if space.avatar %}<img class="avatar-preview" src="{{ img_src(space.avatar, 400) }}" alt="">{% endif %}
+    {% set upload_url = url_for('admin.space_photo', space_id=space.id, which='avatar') %}{% set multiple = false %}{% set then = 'reload' %}
+    {% set label = _('Choose a photo') %}{% set secondary = space.avatar %}
+    {% include 'admin/blocks/_upload.html' %}
+  </div>
+  <div>
+    <h2>{{ _('Cover photo') }}</h2>
+    <p class="small">{{ _('A wide photo across the top of your page.') }}</p>
+    {% if space.cover %}<img class="cover-preview" src="{{ img_src(space.cover, 800) }}" alt="">{% endif %}
+    {% set upload_url = url_for('admin.space_photo', space_id=space.id, which='cover') %}
+    {% set secondary = space.cover %}
+    {% include 'admin/blocks/_upload.html' %}
+  </div>
+</section>
+
+<form method="post" class="card stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>{{ _('Name on your page') }}<input name="name" value="{{ space.name }}" required maxlength="120"></label>
+  <label>{{ _('What you make, in a few words') }}<input name="discipline" value="{{ space.discipline }}" maxlength="80" placeholder="{{ _('e.g. Furniture maker') }}"></label>
+  <label>{{ _('One sentence about your work') }}<input name="tagline" value="{{ space.tagline }}" maxlength="200"></label>
+  <label for="bio">{{ _('Short introduction') }}</label>
+  <input type="hidden" name="bio_html" id="bio" value="{{ space.bio_html }}">
+  <trix-editor input="bio" class="rich"></trix-editor>
+  <fieldset><legend>{{ _('Language you write your page in') }}</legend>
+    <label class="radio"><input type="radio" name="lang" value="nl" {{ 'checked' if space.lang == 'nl' }}> Nederlands</label>
+    <label class="radio"><input type="radio" name="lang" value="en" {{ 'checked' if space.lang == 'en' }}> English</label>
+  </fieldset>
+  <label>{{ _('Your colour') }}<input type="color" name="accent_color" value="{{ space.accent_color }}"></label>
+  <p class="small">{{ _('Web address') }}: {{ config.BASE_URL | replace('https://', '') | replace('http://', '') }}/{{ space.slug }} — {{ _('want a different one? Ask a webmaster.') }}</p>
+  <button class="button" type="submit">{{ _('Save') }}</button>
+</form>
+{% endblock %}

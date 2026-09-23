@@ -1,0 +1,10 @@
+{{ _('Hello %(name)s,', name=user.display_name) }}
+
+{{ _('Click the link below to log in to Broedplaats de Createur:') }}
+
+{{ link }}
+
+{{ _('The link works once, for %(minutes)s minutes.', minutes=minutes) }}
+{{ _("Didn't ask for this? Then you can ignore this e-mail.") }}
+
+Broedplaats de Createur

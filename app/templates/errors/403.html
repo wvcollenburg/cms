@@ -1,0 +1,10 @@
+{% extends 'admin/layout.html' if current_user.is_authenticated else 'public/layout.html' %}
+{% set noindex = true %}
+{% block title %}{{ _('Not allowed') }}{% endblock %}
+{% block content %}
+<div class="wrap content">
+  <h1>{{ _("You can't change this") }}</h1>
+  <p>{{ _('Only the makers of a page can change it. Not even the webmasters can do that. Ask the maker if something needs to change.') }}</p>
+  <p class="actions"><a class="button" href="{{ url_for('admin.dashboard') if current_user.is_authenticated else front_url('home') }}">{{ _('Back') }}</a></p>
+</div>
+{% endblock %}

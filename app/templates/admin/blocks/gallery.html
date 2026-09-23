@@ -1,0 +1,19 @@
+{% set upload_url = target.url('admin.upload_to_block', bid=block.id) %}{% set multiple = true %}{% set then = 'submit' %}
+{% set label = _('Add photos') %}
+{% include 'admin/blocks/_upload.html' %}
+<p class="small">{{ _('You can choose several photos at once. Drag photos to change the order.') }}</p>
+<ul class="gallery-edit" data-sortable-form>
+  {% for it in block.data['items'] %}{% set m = media.get(it.media_id) %}{% if m %}
+  <li>
+    <input type="hidden" name="item_id" value="{{ it.media_id }}">
+    <img src="{{ img_src(m, 400) }}" alt="">
+    <label class="small">{{ _('Caption') }}<input name="item_caption" value="{{ it.caption }}" maxlength="300"></label>
+    <label class="radio small"><input type="checkbox" name="remove" value="{{ it.media_id }}"> {{ _('Remove') }}</label>
+  </li>
+  {% endif %}{% endfor %}
+</ul>
+<fieldset><legend>{{ _('How to show the photos') }}</legend>
+  {% for key, label in [('grid', _('Grid')), ('masonry', _('Mosaic')), ('carousel', _('Swipe one by one'))] %}
+  <label class="radio"><input type="radio" name="layout" value="{{ key }}" {{ 'checked' if block.data.layout == key }}> {{ label }}</label>
+  {% endfor %}
+</fieldset>

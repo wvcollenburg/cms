@@ -1,0 +1,25 @@
+{% extends 'public/layout.html' %}
+{% from '_macros.html' import picture %}
+{% set alt_urls = {'nl': '/', 'en': '/en/'} %}
+{% block html_lang %}{{ content_lang }}{% endblock %}
+{% block title %}{{ t.title }}{% endblock %}
+{% block meta %}{% include 'public/_page_meta.html' %}{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="wrap">
+    <h1>{{ setting('site_name', default='Broedplaats de Createur') }}</h1>
+    <p class="lead">{{ setting('tagline', ui_lang, default='') }}</p>
+  </div>
+</div>
+<div class="wrap content">
+  {% if only_dutch %}<p class="notice" lang="en">{{ _('This page is only available in Dutch.') }}</p>{% endif %}
+  {% include 'public/_blocks.html' %}
+</div>
+{% if makers %}
+<section class="wrap makers-strip">
+  <h2>{{ _('Our makers') }}</h2>
+  {% include 'public/_maker_cards.html' %}
+  <p><a class="button button-secondary" href="{{ front_url('makers') }}">{{ _('All makers') }}</a></p>
+</section>
+{% endif %}
+{% endblock %}
