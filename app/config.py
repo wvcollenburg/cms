@@ -40,7 +40,9 @@ class Config:
     REMEMBER_COOKIE_SECURE = SESSION_COOKIE_SECURE
 
     BABEL_DEFAULT_LOCALE = "nl"
-    BABEL_TRANSLATION_DIRECTORIES = "translations"
+    # Relative to app/, or absolute. The dev container compiles into /tmp so the mounted code stays clean.
+    BABEL_TRANSLATION_DIRECTORIES = os.environ.get("BABEL_TRANSLATION_DIRECTORIES", "translations")
+    TEMPLATES_AUTO_RELOAD = _bool("TEMPLATES_AUTO_RELOAD")
     LANGUAGES = ("nl", "en")
 
     MAGIC_LINK_MINUTES = 15

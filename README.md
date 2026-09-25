@@ -20,6 +20,20 @@ Settings you may want to override in the shell or in `.env`: `APP_PORT`, `MAILPI
 include that hostname, or the app refuses to start), `PROXY_HOPS=1` behind a reverse proxy,
 `SECRET_KEY`, `DB_PASSWORD`.
 
+### While developing: no rebuild per update
+
+`compose.dev.yaml` mounts `app/` and `migrations/` from the checkout (read-only) and runs Gunicorn
+with `--reload`:
+
+```bash
+docker compose -f compose.yaml -f compose.dev.yaml up -d --build   # first time
+git pull                                                          # code/templates/CSS: live
+docker compose restart app                                        # after .po or migration changes
+docker compose up -d --build                                      # only when dependencies change
+```
+
+Tip: put `COMPOSE_FILE=compose.yaml:compose.dev.yaml` in `.env`, then plain `docker compose` uses both.
+
 ## Local development without Docker
 
 Tonight's setup runs on SQLite; the STRATO-like VM with MariaDB comes next (PLAN §10b).

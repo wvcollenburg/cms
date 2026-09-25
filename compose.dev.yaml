@@ -1,0 +1,19 @@
+# Dev override: run the code from your checkout instead of the image, with auto-reload.
+#   docker compose -f compose.yaml -f compose.dev.yaml up -d
+# Or put COMPOSE_FILE=compose.yaml:compose.dev.yaml in .env and use plain `docker compose up -d`.
+#
+# After a `git pull`:
+#   Python code, templates, CSS/JS  → picked up automatically, nothing to do
+#   translations (.po)              → docker compose restart app
+#   new migration                   → docker compose restart app   (runs `flask db upgrade`)
+#   pyproject.toml / uv.lock        → docker compose up -d --build  (only then a rebuild)
+services:
+  app:
+    environment:
+      DEV_RELOAD: "1"
+      TEMPLATES_AUTO_RELOAD: "1"
+    volumes:
+      - ./app:/srv/createur/app:ro
+      - ./migrations:/srv/createur/migrations:ro
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "60",
+              "--reload", "--reload-engine", "poll", "--access-logfile", "-", "app:create_app()"]
