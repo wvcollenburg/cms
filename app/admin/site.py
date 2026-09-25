@@ -13,7 +13,7 @@ from app.auth import policy
 from app.extensions import db
 from app.lifecycle import REMOVE_ERRORS, LifecycleError, hidden_spaces, remove_maker, restore_space
 from app.mail import send_template
-from app.models import MakerSpace, Page, PageTranslation, User
+from app.models import MakerSpace, Page, PageTranslation, SiteSetting, User
 
 
 def _require(check) -> None:
@@ -58,6 +58,59 @@ def page_meta(page_id):
     _touch(Target("page", page, lang))
     flash(_("Saved."), "success")
     return redirect(url_for("admin.editor", kind="page", oid=page.id, lang=lang))
+
+
+# ------------------------------------------------------------------ site settings
+
+# (key, per language?) Everything a webmaster can change site-wide.
+SETTINGS = (("tagline", True), ("marquee", True), ("address", False), ("contact_email", False))
+
+
+def _get_setting_row(key: str, lang: str) -> SiteSetting | None:
+    return db.session.scalar(select(SiteSetting).where(SiteSetting.key == key, SiteSetting.lang == lang))
+
+
+def _set_setting(key: str, lang: str, value) -> None:
+    row = _get_setting_row(key, lang)
+    if value in (None, "", []):
+        if row is not None:
+            db.session.delete(row)
+        return
+    if row is None:
+        db.session.add(SiteSetting(key=key, lang=lang, value=value))
+    else:
+        row.value = value
+
+
+@bp.route("/website/instellingen", methods=["GET", "POST"])
+@login_required
+def site_settings():
+    _require(policy.can_edit_site)
+    langs = current_app.config["LANGUAGES"]
+    if request.method == "POST":
+        before = {}
+        for key, per_lang in SETTINGS:
+            for lang in (langs if per_lang else ("",)):
+                field = f"{key}_{lang}" if lang else key
+                raw = request.form.get(field, "").strip()
+                if key == "marquee":
+                    value = [w.strip()[:40] for w in raw.splitlines() if w.strip()][:12]
+                else:
+                    value = raw[:300]
+                row = _get_setting_row(key, lang)
+                before[field] = row.value if row else None
+                _set_setting(key, lang, value)
+        audit("site.settings", "site", "settings", {"before": before})
+        db.session.commit()
+        flash(_("Saved."), "success")
+        return redirect(url_for("admin.site_settings"))
+    values = {}
+    for key, per_lang in SETTINGS:
+        for lang in (langs if per_lang else ("",)):
+            row = _get_setting_row(key, lang)
+            v = row.value if row else ""
+            values[f"{key}_{lang}" if lang else key] = "\n".join(v) if isinstance(v, list) else (v or "")
+    return render_template("admin/site_settings.html", values=values)
 
 
 # ------------------------------------------------------------------ makers

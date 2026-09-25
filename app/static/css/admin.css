@@ -74,3 +74,4 @@ trix-toolbar .trix-button-group--file-tools { display: none; }
 .pw-login summary { cursor: pointer; color: var(--muted); }
 .pw-login form { margin-top: .8rem; }
 .demo-note { margin-top: 1.5rem; padding: .6rem .9rem; background: #fff4cf; border-radius: 8px; }
+.two-col { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }

@@ -1,7 +1,10 @@
 {% extends 'admin/layout.html' %}
 {% block title %}{{ _('Website') }}{% endblock %}
 {% block content %}
-<h1>{{ _('General pages') }}</h1>
+<div class="page-head">
+  <h1>{{ _('General pages') }}</h1>
+  <a class="button button-secondary" href="{{ url_for('admin.site_settings') }}">{{ _('Site settings') }}</a>
+</div>
 <p>{{ _('These pages are about the collective. Each page has a Dutch and an English version.') }}</p>
 <ul class="list">
   {% for p in pages %}{% set nl = p.translation('nl') %}{% set en = p.translation('en') %}

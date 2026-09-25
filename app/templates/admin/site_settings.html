@@ -1,0 +1,29 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('Site settings') }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{{ url_for('admin.site_pages') }}">← {{ _('Website') }}</a></p>
+<h1>{{ _('Site settings') }}</h1>
+<form method="post" class="stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <section class="card stack">
+    <h2>{{ _('Big sentence on the front page') }}</h2>
+    <p class="small">{{ _('Shown in large letters over the photo at the top of the front page.') }}</p>
+    <label>Nederlands<input name="tagline_nl" value="{{ values.tagline_nl }}" maxlength="300"></label>
+    <label>English<input name="tagline_en" value="{{ values.tagline_en }}" maxlength="300"></label>
+  </section>
+  <section class="card stack">
+    <h2>{{ _('Moving words under the photo') }}</h2>
+    <p class="small">{{ _('One word or a few words per line. Leave empty for the standard words.') }}</p>
+    <div class="two-col">
+      <label>Nederlands<textarea name="marquee_nl" rows="7">{{ values.marquee_nl }}</textarea></label>
+      <label>English<textarea name="marquee_en" rows="7">{{ values.marquee_en }}</textarea></label>
+    </div>
+  </section>
+  <section class="card stack">
+    <h2>{{ _('Contact details at the bottom of every page') }}</h2>
+    <label>{{ _('Address') }}<input name="address" value="{{ values.address }}" maxlength="300"></label>
+    <label>{{ _('E-mail address') }}<input type="email" name="contact_email" value="{{ values.contact_email }}" maxlength="300"></label>
+  </section>
+  <p><button class="button" type="submit">{{ _('Save') }}</button></p>
+</form>
+{% endblock %}

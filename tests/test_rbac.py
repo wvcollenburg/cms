@@ -123,3 +123,18 @@ def test_lifecycle_is_superadmin_only(world, login, who, expected):
 def test_anonymous_is_sent_to_login(world, client):
     r = client.get(f"/beheer/space/{world['s_jan'].id}/")
     assert r.status_code == 302 and "/auth/login" in r.headers["Location"]
+
+
+@pytest.mark.parametrize("who,expected", [("jan", 403), ("web", 200), ("boss", 200)])
+def test_site_settings(world, login, who, expected):
+    from app.models import SiteSetting
+    c = login(world[who])
+    assert c.get("/beheer/website/instellingen").status_code == expected
+    r = c.post("/beheer/website/instellingen", data={"tagline_nl": "Makers in hout", "marquee_nl": "hout\n\nsnijplanken\n"})
+    assert r.status_code == (302 if expected == 200 else 403)
+    row = db.session.query(SiteSetting).filter_by(key="marquee", lang="nl").one_or_none()
+    if expected == 200:
+        assert row.value == ["hout", "snijplanken"]
+        assert "Makers in hout" in c.get("/").get_data(as_text=True)  # the front page's big sentence
+    else:
+        assert row is None

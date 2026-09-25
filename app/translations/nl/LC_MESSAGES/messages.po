@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-25 15:40+0200\n"
+"POT-Creation-Date: 2026-09-25 15:48+0200\n"
 "PO-Revision-Date: 2026-09-23 10:58+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -26,7 +26,8 @@ msgstr "Log eerst in."
 msgid "Choose a password of at least 10 characters."
 msgstr "Kies een wachtwoord van minstens 10 tekens."
 
-#: app/admin/dashboard.py:43 app/admin/editor.py:166 app/admin/site.py:59 app/admin/space.py:48
+#: app/admin/dashboard.py:43 app/admin/editor.py:166 app/admin/site.py:59 app/admin/site.py:105
+#: app/admin/space.py:48
 msgid "Saved."
 msgstr "Opgeslagen."
 
@@ -76,28 +77,28 @@ msgstr "De Engelse versie heeft al inhoud."
 msgid "Copied the Dutch version. Now translate each part."
 msgstr "De Nederlandse versie is gekopieerd. Vertaal nu elk onderdeel."
 
-#: app/admin/site.py:87
+#: app/admin/site.py:140
 msgid "Type the web address exactly as shown."
 msgstr "Typ het webadres precies zoals het er staat."
 
-#: app/admin/site.py:89 app/admin/site.py:122
+#: app/admin/site.py:142 app/admin/site.py:175
 msgid "Please give a reason."
 msgstr "Geef een reden op."
 
-#: app/admin/site.py:98
+#: app/admin/site.py:151
 msgid "Your page at Broedplaats de Createur is offline"
 msgstr "Je pagina bij Broedplaats de Createur staat offline"
 
-#: app/admin/site.py:100
+#: app/admin/site.py:153
 #, python-format
 msgid "%(name)s is offline."
 msgstr "%(name)s staat offline."
 
-#: app/admin/site.py:131
+#: app/admin/site.py:184
 msgid "Your page at Broedplaats de Createur is back"
 msgstr "Je pagina bij Broedplaats de Createur is terug"
 
-#: app/admin/site.py:132
+#: app/admin/site.py:185
 #, python-format
 msgid "%(name)s is back. The page is not visible yet: the maker decides when."
 msgstr "%(name)s is terug. De pagina is nog niet zichtbaar: de maker bepaalt wanneer."
@@ -236,7 +237,7 @@ msgid "visible"
 msgstr "zichtbaar"
 
 #: app/templates/admin/dashboard.html:13 app/templates/admin/editor.html:72
-#: app/templates/admin/makers.html:12 app/templates/admin/site_pages.html:12
+#: app/templates/admin/makers.html:12 app/templates/admin/site_pages.html:15
 msgid "not visible yet"
 msgstr "nog niet zichtbaar"
 
@@ -251,7 +252,7 @@ msgstr "Bekijken"
 
 #: app/templates/admin/dashboard.html:27 app/templates/admin/editor.html:31
 #: app/templates/admin/layout.html:18 app/templates/admin/site_pages.html:2
-#: app/templates/blocks/social.html:2
+#: app/templates/admin/site_settings.html:4 app/templates/blocks/social.html:2
 msgid "Website"
 msgstr "Website"
 
@@ -296,7 +297,8 @@ msgid "You don't have a page yet. Ask a webmaster."
 msgstr "Je hebt nog geen pagina. Vraag het een webmaster."
 
 #: app/templates/admin/edit_block.html:11 app/templates/admin/editor.html:53
-#: app/templates/admin/profile.html:18 app/templates/admin/space_settings.html:40
+#: app/templates/admin/profile.html:18 app/templates/admin/site_settings.html:27
+#: app/templates/admin/space_settings.html:40
 msgid "Save"
 msgstr "Opslaan"
 
@@ -391,8 +393,8 @@ msgstr "Sleep een onderdeel aan het handvat om het omhoog of omlaag te zetten."
 msgid "Drag to move"
 msgstr "Slepen om te verplaatsen"
 
-#: app/templates/admin/editor.html:76 app/templates/admin/site_pages.html:16
-#: app/templates/admin/site_pages.html:17
+#: app/templates/admin/editor.html:76 app/templates/admin/site_pages.html:19
+#: app/templates/admin/site_pages.html:20
 msgid "Edit"
 msgstr "Bewerken"
 
@@ -476,7 +478,7 @@ msgid "Your name"
 msgstr "Je naam"
 
 #: app/templates/admin/blocks/social.html:1 app/templates/admin/profile.html:8
-#: app/templates/auth/login.html:16
+#: app/templates/admin/site_settings.html:25 app/templates/auth/login.html:16
 msgid "E-mail address"
 msgstr "E-mailadres"
 
@@ -553,21 +555,50 @@ msgstr "Waarom? (dit wordt bewaard)"
 msgid "To confirm, type the web address of the page: %(slug)s"
 msgstr "Typ ter bevestiging het webadres van de pagina: %(slug)s"
 
-#: app/templates/admin/site_pages.html:4
+#: app/templates/admin/site_pages.html:5
 msgid "General pages"
 msgstr "Algemene pagina’s"
 
-#: app/templates/admin/site_pages.html:5
+#: app/templates/admin/site_pages.html:6 app/templates/admin/site_settings.html:2
+#: app/templates/admin/site_settings.html:5
+msgid "Site settings"
+msgstr "Algemene instellingen"
+
+#: app/templates/admin/site_pages.html:8
 msgid "These pages are about the collective. Each page has a Dutch and an English version."
 msgstr "Deze pagina’s gaan over het collectief. Elke pagina heeft een Nederlandse en een Engelse versie."
 
-#: app/templates/admin/site_pages.html:11
+#: app/templates/admin/site_pages.html:14
 msgid "front page"
 msgstr "voorpagina"
 
-#: app/templates/admin/site_pages.html:13
+#: app/templates/admin/site_pages.html:16
 msgid "no English yet"
 msgstr "nog geen Engels"
+
+#: app/templates/admin/site_settings.html:9
+msgid "Big sentence on the front page"
+msgstr "Grote zin op de voorpagina"
+
+#: app/templates/admin/site_settings.html:10
+msgid "Shown in large letters over the photo at the top of the front page."
+msgstr "Staat in grote letters over de foto bovenaan de voorpagina."
+
+#: app/templates/admin/site_settings.html:15
+msgid "Moving words under the photo"
+msgstr "Bewegende woorden onder de foto"
+
+#: app/templates/admin/site_settings.html:16
+msgid "One word or a few words per line. Leave empty for the standard words."
+msgstr "Eén woord of een paar woorden per regel. Laat leeg voor de standaardwoorden."
+
+#: app/templates/admin/site_settings.html:23
+msgid "Contact details at the bottom of every page"
+msgstr "Contactgegevens onderaan elke pagina"
+
+#: app/templates/admin/site_settings.html:24
+msgid "Address"
+msgstr "Adres"
 
 #: app/templates/admin/space_settings.html:10
 msgid "Profile photo"
