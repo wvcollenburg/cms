@@ -1,6 +1,5 @@
 {% extends 'public/layout.html' %}
 {% set alt_urls = {'nl': '/makers', 'en': '/en/makers'} %}
-{% set makers = spaces %}
 {% block title %}{{ _('Makers') }} · {{ setting('site_name', default='Broedplaats de Createur') }}{% endblock %}
 {% block meta %}
 <link rel="canonical" href="{{ config.BASE_URL }}{{ front_url('makers') }}">
@@ -8,8 +7,16 @@
 <link rel="alternate" hreflang="en" href="{{ config.BASE_URL }}/en/makers">
 {% endblock %}
 {% block content %}
-<div class="wrap content">
+<section class="wrap page-head">
+  <p class="eyebrow">{{ setting('site_name', default='Broedplaats de Createur') }}</p>
   <h1>{{ _('Makers') }}</h1>
-  {% if makers %}{% include 'public/_maker_cards.html' %}{% else %}<p>{{ _('Maker pages are coming soon.') }}</p>{% endif %}
-</div>
+  {% if spaces %}<p class="lead">{{ ngettext('%(num)s maker under one roof.', '%(num)s makers under one roof.', spaces|length) }}</p>{% endif %}
+</section>
+{% if spaces %}
+<ul class="wrap bento">
+  {% for s in spaces %}{% include 'public/_maker_card.html' %}{% endfor %}
+</ul>
+{% else %}
+<div class="wrap content"><p>{{ _('Maker pages are coming soon.') }}</p></div>
+{% endif %}
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-23 10:58+0200\n"
+"POT-Creation-Date: 2026-09-25 11:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/__init__.py:33
+#: app/__init__.py:38
 msgid "Please log in first."
 msgstr ""
 
@@ -266,7 +266,8 @@ msgstr ""
 #: app/templates/admin/dashboard.html:31 app/templates/admin/layout.html:19
 #: app/templates/admin/makers.html:2 app/templates/admin/makers.html:4
 #: app/templates/admin/remove.html:4 app/templates/public/layout.html:17
-#: app/templates/public/makers.html:4 app/templates/public/makers.html:12
+#: app/templates/public/layout.html:38 app/templates/public/makers.html:3
+#: app/templates/public/makers.html:12
 msgid "Makers"
 msgstr ""
 
@@ -836,7 +837,7 @@ msgid ""
 "that. Ask the maker if something needs to change."
 msgstr ""
 
-#: app/templates/errors/403.html:8 app/templates/public/layout.html:24
+#: app/templates/errors/403.html:8 app/templates/public/layout.html:23
 msgid "Back"
 msgstr ""
 
@@ -897,15 +898,43 @@ msgid ""
 " you are ready:"
 msgstr ""
 
-#: app/templates/public/home.html:15 app/templates/public/page.html:9
+#: app/templates/public/_marquee.html:2
+msgid "wood"
+msgstr ""
+
+#: app/templates/public/_marquee.html:2
+msgid "clay"
+msgstr ""
+
+#: app/templates/public/_marquee.html:2
+msgid "textiles"
+msgstr ""
+
+#: app/templates/public/_marquee.html:2
+msgid "metal"
+msgstr ""
+
+#: app/templates/public/_marquee.html:2
+msgid "craft"
+msgstr ""
+
+#: app/templates/public/_marquee.html:2
+msgid "workshop"
+msgstr ""
+
+#: app/templates/public/home.html:16
+msgid "Scroll down"
+msgstr ""
+
+#: app/templates/public/home.html:24 app/templates/public/page.html:12
 msgid "This page is only available in Dutch."
 msgstr ""
 
-#: app/templates/public/home.html:20
+#: app/templates/public/home.html:32
 msgid "Our makers"
 msgstr ""
 
-#: app/templates/public/home.html:22
+#: app/templates/public/home.html:33 app/templates/public/space.html:33
 msgid "All makers"
 msgstr ""
 
@@ -935,19 +964,34 @@ msgstr ""
 msgid "Main menu"
 msgstr ""
 
-#: app/templates/public/layout.html:24
+#: app/templates/public/layout.html:23
 msgid "Preview: this is how visitors will see it."
 msgstr ""
 
-#: app/templates/public/layout.html:36
+#: app/templates/public/layout.html:37
+msgid "More"
+msgstr ""
+
+#: app/templates/public/layout.html:40
 msgid "Privacy"
 msgstr ""
 
-#: app/templates/public/layout.html:37
+#: app/templates/public/layout.html:41
 msgid "Log in for makers"
 msgstr ""
 
 #: app/templates/public/makers.html:13
+#, python-format
+msgid "%(num)s maker under one roof."
+msgid_plural "%(num)s makers under one roof."
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/public/makers.html:20
 msgid "Maker pages are coming soon."
+msgstr ""
+
+#: app/templates/public/space.html:32
+msgid "More makers"
 msgstr ""
 

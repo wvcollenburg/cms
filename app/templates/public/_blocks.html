@@ -1,6 +1,6 @@
 {# Expects: blocks, media. Each block template sees `b` and `media`. #}
 {% for b in blocks %}
-<section class="block block-{{ b.type }}" id="b{{ b.id }}">
+<section class="block block-{{ b.type }} reveal" id="b{{ b.id }}">
   {% include 'blocks/' ~ b.type ~ '.html' %}
 </section>
 {% endfor %}

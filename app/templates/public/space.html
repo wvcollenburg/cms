@@ -10,18 +10,31 @@
 {% block body_class %}maker-page{% endblock %}
 {% block content %}
 <div class="maker" style="--accent: {{ space.accent_color }}">
-  <div class="maker-cover">{% if space.cover %}{{ picture(space.cover, loading='eager') }}{% endif %}</div>
-  <div class="wrap maker-head">
-    {% if space.avatar %}<div class="maker-avatar">{{ picture(space.avatar, sizes='160px', loading='eager') }}</div>{% endif %}
-    <div>
-      <h1>{{ space.name }}</h1>
-      {% if space.discipline %}<p class="discipline">{{ space.discipline }}</p>{% endif %}
-      {% if space.tagline %}<p class="lead">{{ space.tagline }}</p>{% endif %}
+  <header class="maker-hero">
+    <div class="maker-cover" style="view-transition-name: maker-{{ space.id }}">{% if space.cover %}{{ picture(space.cover, loading='eager') }}{% endif %}</div>
+    <div class="wrap maker-hero-text">
+      {% if space.avatar %}<div class="maker-avatar">{{ picture(space.avatar, sizes='160px', loading='eager') }}</div>{% endif %}
+      <div>
+        {% if space.discipline %}<p class="eyebrow">{{ space.discipline }}</p>{% endif %}
+        <h1>{{ space.name }}</h1>
+        {% if space.tagline %}<p class="lead">{{ space.tagline }}</p>{% endif %}
+      </div>
     </div>
-  </div>
+  </header>
   <div class="wrap content">
-    {% if space.bio_html %}<div class="prose bio">{{ space.bio_html | safe }}</div>{% endif %}
+    {% if space.bio_html %}<div class="prose bio reveal">{{ space.bio_html | safe }}</div>{% endif %}
     {% include 'public/_blocks.html' %}
   </div>
 </div>
+{% if others %}
+<section class="band band-soft" aria-labelledby="more-title" lang="{{ ui_lang }}">
+  <div class="wrap band-head">
+    <h2 id="more-title" class="reveal">{{ _('More makers') }}</h2>
+    <a class="button button-secondary" href="{{ front_url('makers') }}">{{ _('All makers') }} →</a>
+  </div>
+  <ul class="maker-strip">
+    {% for s in others %}{% include 'public/_maker_card.html' %}{% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% endblock %}

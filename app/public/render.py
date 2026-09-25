@@ -52,7 +52,9 @@ def published_spaces() -> list[MakerSpace]:
 
 def render_space(space: MakerSpace, *, preview: bool = False):
     blocks, media = load_blocks("space", space.id, None)
-    return render_template("public/space.html", space=space, blocks=blocks, media=media, preview=preview)
+    others = [s for s in published_spaces() if s.id != space.id][:8]
+    return render_template("public/space.html", space=space, blocks=blocks, media=media, preview=preview,
+                           others=others)
 
 
 def render_page(page: Page, lang: str, *, preview: bool = False):
@@ -62,7 +64,13 @@ def render_page(page: Page, lang: str, *, preview: bool = False):
     t = t or page.translation("nl")
     blocks, media = load_blocks("page", page.id, content_lang)
     template = "public/home.html" if page.slug == "home" else "public/page.html"
-    extra = {"makers": published_spaces()[:6]} if page.slug == "home" else {}
+    extra = {}
+    if page.slug == "home":
+        # The first photo on the front page is shown full-screen at the top instead of in the flow.
+        hero = next((b for b in blocks if b.type == "image" and media.get(b.data.get("media_id"))), None)
+        if hero:
+            blocks = [b for b in blocks if b is not hero]
+        extra = {"makers": published_spaces(), "hero": hero, "hero_media": media.get(hero.data["media_id"]) if hero else None}
     return render_template(
         template, page=page, t=t, blocks=blocks, media=media, content_lang=content_lang,
         only_dutch=content_lang != lang, preview=preview, **extra,

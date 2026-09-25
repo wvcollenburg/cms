@@ -1,0 +1,14 @@
+{# One maker card. Expects `s`. The photo shares a view-transition name with the maker page's
+   cover, so the browser can morph the card into the page when you click it. #}
+{% from '_macros.html' import picture %}
+<li class="maker-card reveal" style="--accent: {{ s.accent_color }}">
+  <a href="{{ url_for('public.resolve', slug=s.slug) }}">
+    <div class="card-media" style="view-transition-name: maker-{{ s.id }}">
+      {% if s.cover %}{{ picture(s.cover, sizes='(min-width: 900px) 40vw, 85vw') }}{% endif %}
+    </div>
+    <div class="card-body">
+      {% if s.discipline %}<span class="card-kicker" lang="{{ s.lang }}">{{ s.discipline }}</span>{% endif %}
+      <strong lang="{{ s.lang }}">{{ s.name }}</strong>
+    </div>
+  </a>
+</li>

@@ -1,25 +1,40 @@
 {% extends 'public/layout.html' %}
 {% from '_macros.html' import picture %}
 {% set alt_urls = {'nl': '/', 'en': '/en/'} %}
+{% set site = setting('site_name', default='Broedplaats de Createur') %}
 {% block html_lang %}{{ content_lang }}{% endblock %}
 {% block title %}{{ t.title }}{% endblock %}
 {% block meta %}{% include 'public/_page_meta.html' %}{% endblock %}
+{% block body_class %}home{% endblock %}
 {% block content %}
-<div class="hero">
-  <div class="wrap">
-    <h1>{{ setting('site_name', default='Broedplaats de Createur') }}</h1>
-    <p class="lead">{{ setting('tagline', ui_lang, default='') }}</p>
+<section class="hero{{ ' has-photo' if hero_media }}">
+  {% if hero_media %}<div class="hero-media">{{ picture(hero_media, sizes='100vw', loading='eager') }}</div>{% endif %}
+  <div class="wrap hero-text">
+    <p class="eyebrow">{{ site }}</p>
+    <h1>{{ setting('tagline', ui_lang, default='') or site }}</h1>
   </div>
-</div>
-<div class="wrap content">
+  <a class="scroll-cue" href="#intro" aria-label="{{ _('Scroll down') }}">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+  </a>
+</section>
+
+{% include 'public/_marquee.html' %}
+
+<div class="wrap content" id="intro">
   {% if only_dutch %}<p class="notice" lang="en">{{ _('This page is only available in Dutch.') }}</p>{% endif %}
   {% include 'public/_blocks.html' %}
 </div>
+
 {% if makers %}
-<section class="wrap makers-strip">
-  <h2>{{ _('Our makers') }}</h2>
-  {% include 'public/_maker_cards.html' %}
-  <p><a class="button button-secondary" href="{{ front_url('makers') }}">{{ _('All makers') }}</a></p>
+<section class="band band-brand" aria-labelledby="makers-title">
+  <img class="band-mark" src="{{ url_for('static', filename='img/brand/beeldmerk.svg') }}" alt="" width="280" height="280">
+  <div class="wrap band-head">
+    <h2 id="makers-title" class="reveal">{{ _('Our makers') }}</h2>
+    <a class="button button-light" href="{{ front_url('makers') }}">{{ _('All makers') }} →</a>
+  </div>
+  <ul class="maker-strip">
+    {% for s in makers %}{% include 'public/_maker_card.html' %}{% endfor %}
+  </ul>
 </section>
 {% endif %}
 {% endblock %}

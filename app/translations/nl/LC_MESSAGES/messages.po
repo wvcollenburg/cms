@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-23 10:58+0200\n"
+"POT-Creation-Date: 2026-09-25 11:06+0200\n"
 "PO-Revision-Date: 2026-09-23 10:58+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/__init__.py:33
+#: app/__init__.py:38
 msgid "Please log in first."
 msgstr "Log eerst in."
 
@@ -266,7 +266,8 @@ msgstr "Algemene pagina’s bewerken"
 #: app/templates/admin/dashboard.html:31 app/templates/admin/layout.html:19
 #: app/templates/admin/makers.html:2 app/templates/admin/makers.html:4
 #: app/templates/admin/remove.html:4 app/templates/public/layout.html:17
-#: app/templates/public/makers.html:4 app/templates/public/makers.html:12
+#: app/templates/public/layout.html:38 app/templates/public/makers.html:3
+#: app/templates/public/makers.html:12
 msgid "Makers"
 msgstr "Makers"
 
@@ -831,7 +832,7 @@ msgstr ""
 "Alleen de makers van een pagina kunnen die veranderen. Ook webmasters kunnen dat niet. Vraag het "
 "de maker als er iets moet veranderen."
 
-#: app/templates/errors/403.html:8 app/templates/public/layout.html:24
+#: app/templates/errors/403.html:8 app/templates/public/layout.html:23
 msgid "Back"
 msgstr "Terug"
 
@@ -894,15 +895,43 @@ msgstr ""
 "Je pagina is nog niet zichtbaar voor bezoekers. Log in en maak hem zichtbaar als je er klaar voor"
 " bent:"
 
-#: app/templates/public/home.html:15 app/templates/public/page.html:9
+#: app/templates/public/_marquee.html:2
+msgid "wood"
+msgstr "hout"
+
+#: app/templates/public/_marquee.html:2
+msgid "clay"
+msgstr "klei"
+
+#: app/templates/public/_marquee.html:2
+msgid "textiles"
+msgstr "textiel"
+
+#: app/templates/public/_marquee.html:2
+msgid "metal"
+msgstr "metaal"
+
+#: app/templates/public/_marquee.html:2
+msgid "craft"
+msgstr "vakmanschap"
+
+#: app/templates/public/_marquee.html:2
+msgid "workshop"
+msgstr "werkplaats"
+
+#: app/templates/public/home.html:16
+msgid "Scroll down"
+msgstr "Naar beneden"
+
+#: app/templates/public/home.html:24 app/templates/public/page.html:12
 msgid "This page is only available in Dutch."
 msgstr "Deze pagina is alleen in het Nederlands beschikbaar."
 
-#: app/templates/public/home.html:20
+#: app/templates/public/home.html:32
 msgid "Our makers"
 msgstr "Onze makers"
 
-#: app/templates/public/home.html:22
+#: app/templates/public/home.html:33 app/templates/public/space.html:33
 msgid "All makers"
 msgstr "Alle makers"
 
@@ -932,19 +961,34 @@ msgstr "Bekijk alle makers"
 msgid "Main menu"
 msgstr "Hoofdmenu"
 
-#: app/templates/public/layout.html:24
+#: app/templates/public/layout.html:23
 msgid "Preview: this is how visitors will see it."
 msgstr "Voorbeeld: zo zien bezoekers het."
 
-#: app/templates/public/layout.html:36
+#: app/templates/public/layout.html:37
+msgid "More"
+msgstr "Meer"
+
+#: app/templates/public/layout.html:40
 msgid "Privacy"
 msgstr "Privacy"
 
-#: app/templates/public/layout.html:37
+#: app/templates/public/layout.html:41
 msgid "Log in for makers"
 msgstr "Inloggen voor makers"
 
 #: app/templates/public/makers.html:13
+#, python-format
+msgid "%(num)s maker under one roof."
+msgid_plural "%(num)s makers under one roof."
+msgstr[0] "%(num)s maker onder één dak."
+msgstr[1] "%(num)s makers onder één dak."
+
+#: app/templates/public/makers.html:20
 msgid "Maker pages are coming soon."
 msgstr "De pagina’s van de makers komen binnenkort."
+
+#: app/templates/public/space.html:32
+msgid "More makers"
+msgstr "Meer makers"
 

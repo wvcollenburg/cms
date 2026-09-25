@@ -1,6 +1,7 @@
 {% extends '_skeleton.html' %}
 {% from '_macros.html' import icon %}
 {% block head %}
+  <link rel="preload" href="{{ url_for('static', filename='fonts/outfit-latin-wght-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
   <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
 {% endblock %}
@@ -15,8 +16,7 @@
     <nav class="site-nav" aria-label="{{ _('Main menu') }}">
       <a href="{{ front_url('makers') }}">{{ _('Makers') }}</a>
       {% for p in nav_pages(ui_lang) %}<a href="{{ front_url(p.slug) }}">{{ p.title }}</a>{% endfor %}
-      <a class="lang-toggle" href="{{ url_for('public.set_lang', code=other, next=alt) }}" hreflang="{{ other }}" lang="{{ other }}">
-        {{ 'English' if other == 'en' else 'Nederlands' }}</a>
+      <a class="lang-toggle" href="{{ url_for('public.set_lang', code=other, next=alt) }}" hreflang="{{ other }}" lang="{{ other }}">{{ 'EN' if other == 'en' else 'NL' }}<span class="visually-hidden"> — {{ 'English' if other == 'en' else 'Nederlands' }}</span></a>
     </nav>
   </div>
 </header>
@@ -27,17 +27,19 @@
 <footer class="site-footer" lang="{{ ui_lang }}">
   <div class="wrap footer-inner">
     <div class="footer-brand">
-      <img src="{{ url_for('static', filename='img/brand/beeldmerk.svg') }}" alt="" width="56" height="56">
+      <img src="{{ url_for('static', filename='img/brand/beeldmerk.svg') }}" alt="" width="64" height="64">
       <div>
-      <strong>{{ setting('site_name', default='Broedplaats de Createur') }}</strong><br>
-      {{ setting('address', default='') }}<br>
-      {% set mail = setting('contact_email') %}{% if mail %}<a href="mailto:{{ mail }}">{{ mail }}</a>{% endif %}
+        <strong>{{ setting('site_name', default='Broedplaats de Createur') }}</strong><br>
+        {{ setting('address', default='') }}<br>
+        {% set mail = setting('contact_email') %}{% if mail %}<a href="mailto:{{ mail }}">{{ mail }}</a>{% endif %}
       </div>
     </div>
-    <div class="footer-links">
+    <nav class="footer-links" aria-label="{{ _('More') }}">
+      <a href="{{ front_url('makers') }}">{{ _('Makers') }}</a>
+      {% for p in nav_pages(ui_lang) %}<a href="{{ front_url(p.slug) }}">{{ p.title }}</a>{% endfor %}
       <a href="{{ front_url('privacy') }}">{{ _('Privacy') }}</a>
       <a href="{{ url_for('auth.login') }}">{{ _('Log in for makers') }}</a>
-    </div>
+    </nav>
   </div>
 </footer>
 {% endblock %}

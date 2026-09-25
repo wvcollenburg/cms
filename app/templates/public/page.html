@@ -4,8 +4,11 @@
 {% block title %}{{ t.title }} · {{ setting('site_name', default='Broedplaats de Createur') }}{% endblock %}
 {% block meta %}{% include 'public/_page_meta.html' %}{% endblock %}
 {% block content %}
-<div class="wrap content">
+<section class="wrap page-head">
+  <p class="eyebrow">{{ setting('site_name', default='Broedplaats de Createur') }}</p>
   <h1>{{ t.title }}</h1>
+</section>
+<div class="wrap content content-tight">
   {% if only_dutch %}<p class="notice" lang="en">{{ _('This page is only available in Dutch.') }}</p>{% endif %}
   {% include 'public/_blocks.html' %}
 </div>
