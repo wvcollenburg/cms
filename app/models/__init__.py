@@ -83,6 +83,26 @@ class LoginToken(db.Model):
     user: Mapped[User] = relationship()
 
 
+class Invite(db.Model):
+    """Invite-only sign-up (§7). The webmaster creates the (draft) space up front; accepting the
+    invite creates or links the user and makes them a member. Only the token's hash is stored."""
+    __tablename__ = "invites"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(254), index=True)  # lowercased
+    display_name: Mapped[str] = mapped_column(String(120))
+    ui_lang: Mapped[str] = mapped_column(String(2), default="nl")
+    space_id: Mapped[int | None] = mapped_column(ForeignKey("maker_spaces.id", ondelete="CASCADE"))
+    grants_webmaster: Mapped[bool] = mapped_column(Boolean, default=False)
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    expires_at: Mapped[datetime] = mapped_column(DateTime)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime)
+    invited_by: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+
+    space: Mapped["MakerSpace | None"] = relationship()
+
+
 # ---------------------------------------------------------------- maker spaces
 
 SPACE_STATUSES = ("draft", "published", "hidden")

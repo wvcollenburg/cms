@@ -13,7 +13,9 @@ from app.auth import policy
 from app.extensions import db
 from app.lifecycle import REMOVE_ERRORS, LifecycleError, hidden_spaces, remove_maker, restore_space
 from app.mail import send_template
-from app.models import MakerSpace, Page, PageTranslation, SiteSetting, User
+from app import invites
+from app.models import Invite, MakerSpace, Page, PageTranslation, SiteSetting, User, utcnow
+from app.slugs import check_space_slug
 
 
 def _require(check) -> None:
@@ -120,7 +122,83 @@ def site_settings():
 def makers():
     _require(policy.can_edit_site)
     spaces = db.session.scalars(select(MakerSpace).order_by(MakerSpace.status == "hidden", MakerSpace.name)).all()
-    return render_template("admin/makers.html", spaces=spaces)
+    return render_template("admin/makers.html", spaces=spaces, pending=invites.pending_for(s.id for s in spaces),
+                           now=utcnow())
+
+
+SLUG_ERRORS = {
+    "format": lambda: _("Use 3 to 40 lowercase letters, digits or hyphens, e.g. jan-de-vries."),
+    "reserved": lambda: _("This web address is reserved for the website itself. Choose another."),
+    "taken": lambda: _("This web address is already in use. Choose another."),
+}
+
+
+@bp.route("/makers/nieuw", methods=["GET", "POST"])
+@login_required
+def new_maker():
+    _require(policy.can_invite)
+    form = {"lang": "nl"}
+    errors = {}
+    if request.method == "POST":
+        form = {k: request.form.get(k, "").strip() for k in ("space_name", "display_name", "email", "slug", "lang")}
+        form["email"] = form["email"].lower()
+        form["slug"] = form["slug"].lower()
+        if not form["space_name"]:
+            errors["space_name"] = _("Please fill this in.")
+        if not form["display_name"]:
+            errors["display_name"] = _("Please fill this in.")
+        if "@" not in form["email"] or "." not in form["email"].split("@")[-1]:
+            errors["email"] = _("This doesn't look like an e-mail address.")
+        else:
+            existing = db.session.scalar(select(User).where(User.email == form["email"]))
+            if existing is not None and not existing.is_active:
+                errors["email"] = _("This person was taken offline. A key holder can put them back.")
+        slug_error = check_space_slug(form["slug"])
+        if slug_error:
+            errors["slug"] = SLUG_ERRORS[slug_error]()
+        if form["lang"] not in current_app.config["LANGUAGES"]:
+            form["lang"] = "nl"
+        if not errors:
+            grant = request.form.get("grants_webmaster") == "1" and policy.can_manage_roles(current_user)
+            invite, token = invites.create(
+                current_user, email=form["email"], display_name=form["display_name"][:120], ui_lang=form["lang"],
+                space_name=form["space_name"][:120], slug=form["slug"], grants_webmaster=grant,
+            )
+            db.session.commit()
+            invites.send(invite, token, current_user)
+            flash(_("Invitation sent to %(email)s.", email=invite.email), "success")
+            return redirect(url_for("admin.makers"))
+    return render_template("admin/new_maker.html", form=form, errors=errors), (400 if errors else 200)
+
+
+def _pending_invite_or_404(invite_id: int) -> Invite:
+    invite = db.get_or_404(Invite, invite_id)
+    if invite.used_at is not None:
+        abort(404)
+    return invite
+
+
+@bp.post("/makers/uitnodiging/<int:invite_id>/opnieuw")
+@login_required
+def resend_invite(invite_id):
+    _require(policy.can_invite)
+    invite = _pending_invite_or_404(invite_id)
+    token = invites.resend(current_user, invite)
+    db.session.commit()
+    invites.send(invite, token, current_user)
+    flash(_("Invitation sent to %(email)s.", email=invite.email), "success")
+    return redirect(url_for("admin.makers"))
+
+
+@bp.post("/makers/uitnodiging/<int:invite_id>/intrekken")
+@login_required
+def withdraw_invite(invite_id):
+    _require(policy.can_invite)
+    invite = _pending_invite_or_404(invite_id)
+    invites.withdraw(current_user, invite)
+    db.session.commit()
+    flash(_("Invitation withdrawn."), "success")
+    return redirect(url_for("admin.makers"))
 
 
 @bp.route("/makers/<int:space_id>/offline/<int:user_id>", methods=["GET", "POST"])

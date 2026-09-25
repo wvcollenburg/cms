@@ -1,0 +1,23 @@
+{% extends 'auth/layout.html' %}
+{% block title %}{{ _('Your invitation') }}{% endblock %}
+{% block content %}
+{% if state == 'ok' %}
+<h1>{{ _('Welcome, %(name)s', name=invite.display_name) }}</h1>
+<p>{{ _('You are invited to make your own page on the website of Broedplaats de Createur.') }}</p>
+{% if invite.space %}<p class="small">{{ _('Your page will be at:') }} {{ config.BASE_URL | replace('https://', '') | replace('http://', '') }}/{{ invite.space.slug }}</p>{% endif %}
+<form method="post" class="stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="button button-big" type="submit">{{ _('Start my page') }}</button>
+</form>
+{% elif state == 'expired' %}
+<h1>{{ _('This invitation has expired') }}</h1>
+<p>{{ _('Ask a webmaster to send you a new one.') }}</p>
+{% elif state == 'inactive_user' %}
+<h1>{{ _("This invitation can't be used") }}</h1>
+<p>{{ _('Your account is switched off. Ask a webmaster for help.') }}</p>
+{% else %}
+<h1>{{ _('This invitation has already been used') }}</h1>
+<p>{{ _('Already have a page? Then just log in with your e-mail address.') }}</p>
+<p><a class="button" href="{{ url_for('auth.login') }}">{{ _('Log in') }}</a></p>
+{% endif %}
+{% endblock %}

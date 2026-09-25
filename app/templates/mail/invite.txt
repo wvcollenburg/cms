@@ -1,0 +1,16 @@
+{{ _('Hello %(name)s,', name=user.display_name) }}
+
+{{ _('%(inviter)s invites you to make your own page on the website of Broedplaats de Createur.', inviter=inviter) }}
+
+{{ _('Click this link to start:') }}
+
+{{ link }}
+
+{{ _('The link works for %(days)s days.', days=days) }}
+
+{{ _('Your page will be at %(url)s. Visitors can only see it once you make it visible.', url=page_url) }}
+
+{{ _('How to log in later:') }}
+{{ _('Go to %(url)s and fill in your e-mail address. You will get an e-mail with a login link: click it and you are in. You do not need a password.', url=login_url) }}
+
+Broedplaats de Createur

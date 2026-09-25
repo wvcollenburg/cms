@@ -1,0 +1,30 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('New maker') }}{% endblock %}
+{% macro err(name) %}{% if errors[name] %}<p class="field-error">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+{% block content %}
+<p class="small"><a href="{{ url_for('admin.makers') }}">← {{ _('Makers') }}</a></p>
+<h1>{{ _('New maker') }}</h1>
+<p>{{ _("The maker gets an e-mail with a link. With it they log in straight away and land on their own page, which isn't visible to visitors until they're ready.") }}</p>
+<form method="post" class="card stack">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>{{ _('Name of the page') }}
+    <input name="space_name" value="{{ form.space_name }}" required maxlength="120" data-slug-source placeholder="{{ _('e.g. Jan de Vries or Studio Eik') }}"></label>
+  {{ err('space_name') }}
+  <label>{{ _('Web address') }}
+    <span class="slug-field"><span class="slug-prefix">{{ config.BASE_URL | replace('https://', '') | replace('http://', '') }}/</span><input name="slug" value="{{ form.slug }}" required maxlength="40" pattern="[a-z0-9-]{3,40}" autocapitalize="none" spellcheck="false" data-slug-target></span></label>
+  <p class="small">{{ _('Lowercase letters, digits and hyphens. The maker can ask for a different one later.') }}</p>
+  {{ err('slug') }}
+  <label>{{ _('Name of the person') }}<input name="display_name" value="{{ form.display_name }}" required maxlength="120" autocomplete="off"></label>
+  {{ err('display_name') }}
+  <label>{{ _('Their e-mail address') }}<input type="email" name="email" value="{{ form.email }}" required inputmode="email" autocomplete="off"></label>
+  {{ err('email') }}
+  <fieldset><legend>{{ _('Language of the e-mail and the screens') }}</legend>
+    <label class="radio"><input type="radio" name="lang" value="nl" {{ 'checked' if form.lang != 'en' }}> Nederlands</label>
+    <label class="radio"><input type="radio" name="lang" value="en" {{ 'checked' if form.lang == 'en' }}> English</label>
+  </fieldset>
+  {% if policy.can_manage_roles(current_user) %}
+  <label class="radio"><input type="checkbox" name="grants_webmaster" value="1"> {{ _('Also make this person webmaster') }}</label>
+  {% endif %}
+  <p><button class="button" type="submit">{{ _('Send invitation') }}</button></p>
+</form>
+{% endblock %}

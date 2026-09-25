@@ -101,7 +101,7 @@ def _seed():
     jan = user("jan", "Jan de Schaaf")
     sanne = user("sanne", "Sanne Draaijer", lang="en")
     bo = user("bo", "Bo Eikelenboom")
-    noor = user("noor", "Noor Weverink", roles=("webmaster",))
+    noor = user("noor", "Noor Esch", roles=("webmaster",))
     sleutel = user("sleutel", "Demo sleutelhouder", roles=("superadmin",))
     pieter = user("pieter", "Pieter Smid", active=False)
     db.session.flush()

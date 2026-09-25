@@ -1,7 +1,10 @@
 {% extends 'admin/layout.html' %}
 {% block title %}{{ _('Makers') }}{% endblock %}
 {% block content %}
-<h1>{{ _('Makers') }}</h1>
+<div class="page-head">
+  <h1>{{ _('Makers') }}</h1>
+  <a class="button" href="{{ url_for('admin.new_maker') }}">+ {{ _('New maker') }}</a>
+</div>
 <p class="small">{{ _("You manage who is on the website. You can't change the makers' own pages: only the makers themselves can.") }}</p>
 <ul class="list">
   {% for s in spaces %}
@@ -12,6 +15,23 @@
       {% elif s.status == 'draft' %}<span class="badge badge-muted">{{ _('not visible yet') }}</span>
       {% else %}<span class="badge badge-warn">{{ _('offline') }}</span>{% endif %}
       <br><span class="small">/{{ s.slug }}</span>
+      {% set inv = pending.get(s.id) %}
+      {% if inv %}
+      <p class="small invite-row">
+        {{ _('Invited: %(email)s', email=inv.email) }} ·
+        {% if inv.expires_at < now %}<strong>{{ _('expired') }}</strong>{% else %}{{ _('link works until %(date)s', date=inv.expires_at.strftime('%d-%m')) }}{% endif %}
+      </p>
+      <div class="row-actions">
+        <form method="post" action="{{ url_for('admin.resend_invite', invite_id=inv.id) }}" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="button button-small button-secondary" type="submit">{{ _('Send again') }}</button>
+        </form>
+        <form method="post" action="{{ url_for('admin.withdraw_invite', invite_id=inv.id) }}" class="inline" data-confirm="{{ _('Withdraw this invitation? The page is removed too if nobody has joined it.') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="button button-small button-secondary" type="submit">{{ _('Withdraw') }}</button>
+        </form>
+      </div>
+      {% endif %}
       <ul class="members small">
         {% for m in s.members %}
         <li>{{ m.user.display_name }} &lt;{{ m.user.email }}&gt;

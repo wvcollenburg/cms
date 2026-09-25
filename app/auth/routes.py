@@ -178,3 +178,32 @@ def demo_login(user_id):
         abort(404)
     _do_login(user)
     return redirect(url_for("admin.dashboard"))
+
+
+# ------------------------------------------------------------------ invites (§7)
+
+@bp.get("/uitnodiging/<token>")
+def invite(token):
+    from app.invites import find
+    inv = find(token)
+    state = "ok"
+    if inv is None or inv.used_at is not None:
+        state = "used"
+    elif inv.expires_at < utcnow():
+        state = "expired"
+    return render_template("auth/invite.html", token=token, invite=inv, state=state)
+
+
+@bp.post("/uitnodiging/<token>")
+def accept_invite(token):
+    from app.invites import InviteError, accept
+    try:
+        user, inv = accept(token)
+    except InviteError as e:
+        db.session.rollback()
+        return render_template("auth/invite.html", token=token, invite=None, state=e.code), 400
+    _do_login(user)  # also commits
+    flash(_("Welcome! This is your own page. Visitors can't see it yet: you decide when it's ready."), "success")
+    if inv.space_id:
+        return redirect(url_for("admin.editor", kind="space", oid=inv.space_id))
+    return redirect(url_for("admin.dashboard"))

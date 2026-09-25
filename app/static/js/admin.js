@@ -78,6 +78,19 @@
     f.addEventListener("submit", function (e) { if (!confirm(f.dataset.confirm)) e.preventDefault(); });
   });
 
+  // Suggest a web address from the page name until the webmaster types one themselves.
+  var slugSource = document.querySelector("[data-slug-source]");
+  var slugTarget = document.querySelector("[data-slug-target]");
+  if (slugSource && slugTarget) {
+    var touched = slugTarget.value !== "";
+    slugTarget.addEventListener("input", function () { touched = true; });
+    slugSource.addEventListener("input", function () {
+      if (touched) return;
+      slugTarget.value = slugSource.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+        .replace(/&/g, "-en-").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40).replace(/-+$/, "");
+    });
+  }
+
   // No file attachments in rich text: photos go in a photo album instead.
   document.addEventListener("trix-file-accept", function (e) { e.preventDefault(); });
 })();

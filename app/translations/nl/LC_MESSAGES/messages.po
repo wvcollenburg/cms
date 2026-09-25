@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-25 15:48+0200\n"
+"POT-Creation-Date: 2026-09-25 16:03+0200\n"
 "PO-Revision-Date: 2026-09-23 10:58+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -22,11 +22,15 @@ msgstr ""
 msgid "Please log in first."
 msgstr "Log eerst in."
 
+#: app/invites.py:112
+msgid "Your own page at Broedplaats de Createur"
+msgstr "Je eigen pagina bij Broedplaats de Createur"
+
 #: app/admin/dashboard.py:39
 msgid "Choose a password of at least 10 characters."
 msgstr "Kies een wachtwoord van minstens 10 tekens."
 
-#: app/admin/dashboard.py:43 app/admin/editor.py:166 app/admin/site.py:59 app/admin/site.py:105
+#: app/admin/dashboard.py:43 app/admin/editor.py:166 app/admin/site.py:61 app/admin/site.py:107
 #: app/admin/space.py:48
 msgid "Saved."
 msgstr "Opgeslagen."
@@ -77,28 +81,61 @@ msgstr "De Engelse versie heeft al inhoud."
 msgid "Copied the Dutch version. Now translate each part."
 msgstr "De Nederlandse versie is gekopieerd. Vertaal nu elk onderdeel."
 
-#: app/admin/site.py:140
+#: app/admin/site.py:130
+msgid "Use 3 to 40 lowercase letters, digits or hyphens, e.g. jan-de-vries."
+msgstr "Gebruik 3 tot 40 kleine letters, cijfers of streepjes, bijvoorbeeld jan-de-vries."
+
+#: app/admin/site.py:131
+msgid "This web address is reserved for the website itself. Choose another."
+msgstr "Dit webadres is gereserveerd voor de website zelf. Kies een ander."
+
+#: app/admin/site.py:132
+msgid "This web address is already in use. Choose another."
+msgstr "Dit webadres is al in gebruik. Kies een ander."
+
+#: app/admin/site.py:147 app/admin/site.py:149
+msgid "Please fill this in."
+msgstr "Vul dit in."
+
+#: app/admin/site.py:151
+msgid "This doesn't look like an e-mail address."
+msgstr "Dit lijkt geen e-mailadres."
+
+#: app/admin/site.py:155
+msgid "This person was taken offline. A key holder can put them back."
+msgstr "Deze persoon is offline gehaald. Een sleutelhouder kan hem of haar terugzetten."
+
+#: app/admin/site.py:169 app/admin/site.py:189
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr "Uitnodiging verstuurd naar %(email)s."
+
+#: app/admin/site.py:200
+msgid "Invitation withdrawn."
+msgstr "Uitnodiging ingetrokken."
+
+#: app/admin/site.py:218
 msgid "Type the web address exactly as shown."
 msgstr "Typ het webadres precies zoals het er staat."
 
-#: app/admin/site.py:142 app/admin/site.py:175
+#: app/admin/site.py:220 app/admin/site.py:253
 msgid "Please give a reason."
 msgstr "Geef een reden op."
 
-#: app/admin/site.py:151
+#: app/admin/site.py:229
 msgid "Your page at Broedplaats de Createur is offline"
 msgstr "Je pagina bij Broedplaats de Createur staat offline"
 
-#: app/admin/site.py:153
+#: app/admin/site.py:231
 #, python-format
 msgid "%(name)s is offline."
 msgstr "%(name)s staat offline."
 
-#: app/admin/site.py:184
+#: app/admin/site.py:262
 msgid "Your page at Broedplaats de Createur is back"
 msgstr "Je pagina bij Broedplaats de Createur is terug"
 
-#: app/admin/site.py:185
+#: app/admin/site.py:263
 #, python-format
 msgid "%(name)s is back. The page is not visible yet: the maker decides when."
 msgstr "%(name)s is terug. De pagina is nog niet zichtbaar: de maker bepaalt wanneer."
@@ -150,6 +187,10 @@ msgstr "Maker + webmaster (Noor)"
 #: app/auth/routes.py:158
 msgid "Key holder (superadmin)"
 msgstr "Sleutelhouder"
+
+#: app/auth/routes.py:206
+msgid "Welcome! This is your own page. Visitors can't see it yet: you decide when it's ready."
+msgstr "Welkom! Dit is je eigen pagina. Bezoekers zien hem nog niet: jij bepaalt wanneer hij klaar is."
 
 #: app/blocks/__init__.py:199 app/templates/admin/blocks/text.html:1
 msgid "Text"
@@ -232,12 +273,12 @@ msgstr "Mijn pagina"
 msgid "My pages"
 msgstr "Mijn pagina’s"
 
-#: app/templates/admin/dashboard.html:13 app/templates/admin/makers.html:11
+#: app/templates/admin/dashboard.html:13 app/templates/admin/makers.html:14
 msgid "visible"
 msgstr "zichtbaar"
 
 #: app/templates/admin/dashboard.html:13 app/templates/admin/editor.html:72
-#: app/templates/admin/makers.html:12 app/templates/admin/site_pages.html:15
+#: app/templates/admin/makers.html:15 app/templates/admin/site_pages.html:15
 msgid "not visible yet"
 msgstr "nog niet zichtbaar"
 
@@ -246,7 +287,7 @@ msgid "Edit my page"
 msgstr "Mijn pagina bewerken"
 
 #: app/templates/admin/dashboard.html:18 app/templates/admin/editor.html:19
-#: app/templates/admin/makers.html:26
+#: app/templates/admin/makers.html:46
 msgid "View"
 msgstr "Bekijken"
 
@@ -265,10 +306,10 @@ msgid "Edit the general pages"
 msgstr "Algemene pagina’s bewerken"
 
 #: app/templates/admin/dashboard.html:31 app/templates/admin/layout.html:19
-#: app/templates/admin/makers.html:2 app/templates/admin/makers.html:4
-#: app/templates/admin/remove.html:4 app/templates/public/layout.html:17
-#: app/templates/public/layout.html:38 app/templates/public/makers.html:3
-#: app/templates/public/makers.html:12
+#: app/templates/admin/makers.html:2 app/templates/admin/makers.html:5
+#: app/templates/admin/new_maker.html:5 app/templates/admin/remove.html:4
+#: app/templates/public/layout.html:17 app/templates/public/layout.html:38
+#: app/templates/public/makers.html:3 app/templates/public/makers.html:12
 msgid "Makers"
 msgstr "Makers"
 
@@ -314,7 +355,8 @@ msgstr "Dit onderdeel definitief weghalen?"
 msgid "Remove this part"
 msgstr "Dit onderdeel weghalen"
 
-#: app/templates/admin/editor.html:9 app/templates/admin/space_settings.html:39
+#: app/templates/admin/editor.html:9 app/templates/admin/new_maker.html:13
+#: app/templates/admin/space_settings.html:39
 msgid "Web address"
 msgstr "Webadres"
 
@@ -435,7 +477,12 @@ msgstr "Bekijk de website"
 msgid "Log out"
 msgstr "Uitloggen"
 
-#: app/templates/admin/makers.html:5
+#: app/templates/admin/makers.html:6 app/templates/admin/new_maker.html:2
+#: app/templates/admin/new_maker.html:6
+msgid "New maker"
+msgstr "Nieuwe maker"
+
+#: app/templates/admin/makers.html:8
 msgid ""
 "You manage who is on the website. You can't change the makers' own pages: only the makers "
 "themselves can."
@@ -443,18 +490,84 @@ msgstr ""
 "Jij regelt wie er op de website staat. De pagina’s van makers kun je niet veranderen: dat kunnen "
 "alleen de makers zelf."
 
-#: app/templates/admin/makers.html:13
+#: app/templates/admin/makers.html:16
 msgid "offline"
 msgstr "offline"
 
-#: app/templates/admin/makers.html:19 app/templates/admin/remove.html:2
+#: app/templates/admin/makers.html:21
+#, python-format
+msgid "Invited: %(email)s"
+msgstr "Uitgenodigd: %(email)s"
+
+#: app/templates/admin/makers.html:22
+msgid "expired"
+msgstr "verlopen"
+
+#: app/templates/admin/makers.html:22
+#, python-format
+msgid "link works until %(date)s"
+msgstr "link werkt tot %(date)s"
+
+#: app/templates/admin/makers.html:27
+msgid "Send again"
+msgstr "Opnieuw sturen"
+
+#: app/templates/admin/makers.html:29
+msgid "Withdraw this invitation? The page is removed too if nobody has joined it."
+msgstr "Deze uitnodiging intrekken? De pagina verdwijnt ook als er nog niemand bij is."
+
+#: app/templates/admin/makers.html:31
+msgid "Withdraw"
+msgstr "Intrekken"
+
+#: app/templates/admin/makers.html:39 app/templates/admin/remove.html:2
 #: app/templates/admin/remove.html:29
 msgid "Take offline"
 msgstr "Offline halen"
 
-#: app/templates/admin/makers.html:27
+#: app/templates/admin/makers.html:47
 msgid "Edit (your own page)"
 msgstr "Bewerken (je eigen pagina)"
+
+#: app/templates/admin/new_maker.html:7
+msgid ""
+"The maker gets an e-mail with a link. With it they log in straight away and land on their own "
+"page, which isn't visible to visitors until they're ready."
+msgstr ""
+"De maker krijgt een mail met een link. Daarmee is hij of zij meteen ingelogd en komt op de eigen "
+"pagina, die pas zichtbaar is voor bezoekers als de maker er klaar voor is."
+
+#: app/templates/admin/new_maker.html:10
+msgid "Name of the page"
+msgstr "Naam van de pagina"
+
+#: app/templates/admin/new_maker.html:11
+msgid "e.g. Jan de Vries or Studio Eik"
+msgstr "bijv. Jan de Vries of Studio Eik"
+
+#: app/templates/admin/new_maker.html:15
+msgid "Lowercase letters, digits and hyphens. The maker can ask for a different one later."
+msgstr "Kleine letters, cijfers en streepjes. De maker kan later om een ander webadres vragen."
+
+#: app/templates/admin/new_maker.html:17
+msgid "Name of the person"
+msgstr "Naam van de persoon"
+
+#: app/templates/admin/new_maker.html:19
+msgid "Their e-mail address"
+msgstr "E-mailadres van deze persoon"
+
+#: app/templates/admin/new_maker.html:21
+msgid "Language of the e-mail and the screens"
+msgstr "Taal van de mail en de schermen"
+
+#: app/templates/admin/new_maker.html:26
+msgid "Also make this person webmaster"
+msgstr "Maak deze persoon ook webmaster"
+
+#: app/templates/admin/new_maker.html:28
+msgid "Send invitation"
+msgstr "Uitnodiging versturen"
 
 #: app/templates/admin/offline.html:8
 #, python-format
@@ -768,8 +881,8 @@ msgstr "Geen mail? Kijk in je spammap, of vraag een webmaster of je adres klopt.
 msgid "Try again"
 msgstr "Opnieuw proberen"
 
-#: app/templates/auth/confirm_link.html:2 app/templates/auth/login.html:2
-#: app/templates/auth/login.html:4 app/templates/auth/login.html:18
+#: app/templates/auth/confirm_link.html:2 app/templates/auth/invite.html:21
+#: app/templates/auth/login.html:2 app/templates/auth/login.html:4 app/templates/auth/login.html:18
 msgid "Log in"
 msgstr "Inloggen"
 
@@ -805,6 +918,51 @@ msgstr "Kies wie je wilt zijn. Dit bestaat alleen in de demo."
 #, python-format
 msgid "Demo password for every demo user: %(pw)s"
 msgstr "Demowachtwoord voor alle demogebruikers: %(pw)s"
+
+#: app/templates/auth/invite.html:2
+msgid "Your invitation"
+msgstr "Je uitnodiging"
+
+#: app/templates/auth/invite.html:5
+#, python-format
+msgid "Welcome, %(name)s"
+msgstr "Welkom, %(name)s"
+
+#: app/templates/auth/invite.html:6
+msgid "You are invited to make your own page on the website of Broedplaats de Createur."
+msgstr "Je bent uitgenodigd om een eigen pagina te maken op de website van Broedplaats de Createur."
+
+#: app/templates/auth/invite.html:7
+msgid "Your page will be at:"
+msgstr "Je pagina komt op:"
+
+#: app/templates/auth/invite.html:10
+msgid "Start my page"
+msgstr "Begin met mijn pagina"
+
+#: app/templates/auth/invite.html:13
+msgid "This invitation has expired"
+msgstr "Deze uitnodiging is verlopen"
+
+#: app/templates/auth/invite.html:14
+msgid "Ask a webmaster to send you a new one."
+msgstr "Vraag een webmaster om een nieuwe."
+
+#: app/templates/auth/invite.html:16
+msgid "This invitation can't be used"
+msgstr "Deze uitnodiging kan niet gebruikt worden"
+
+#: app/templates/auth/invite.html:17
+msgid "Your account is switched off. Ask a webmaster for help."
+msgstr "Je account staat uit. Vraag een webmaster om hulp."
+
+#: app/templates/auth/invite.html:19
+msgid "This invitation has already been used"
+msgstr "Deze uitnodiging is al gebruikt"
+
+#: app/templates/auth/invite.html:20
+msgid "Already have a page? Then just log in with your e-mail address."
+msgstr "Heb je al een pagina? Log dan gewoon in met je e-mailadres."
 
 #: app/templates/auth/login.html:5
 msgid ""
@@ -885,11 +1043,43 @@ msgstr ""
 msgid "To the home page"
 msgstr "Naar de voorpagina"
 
-#: app/templates/mail/login_link.txt:1 app/templates/mail/space_offline.txt:1
-#: app/templates/mail/space_restored.txt:1
+#: app/templates/mail/invite.txt:1 app/templates/mail/login_link.txt:1
+#: app/templates/mail/space_offline.txt:1 app/templates/mail/space_restored.txt:1
 #, python-format
 msgid "Hello %(name)s,"
 msgstr "Hallo %(name)s,"
+
+#: app/templates/mail/invite.txt:3
+#, python-format
+msgid "%(inviter)s invites you to make your own page on the website of Broedplaats de Createur."
+msgstr "%(inviter)s nodigt je uit om een eigen pagina te maken op de website van Broedplaats de Createur."
+
+#: app/templates/mail/invite.txt:5
+msgid "Click this link to start:"
+msgstr "Klik op deze link om te beginnen:"
+
+#: app/templates/mail/invite.txt:9
+#, python-format
+msgid "The link works for %(days)s days."
+msgstr "De link werkt %(days)s dagen."
+
+#: app/templates/mail/invite.txt:11
+#, python-format
+msgid "Your page will be at %(url)s. Visitors can only see it once you make it visible."
+msgstr "Je pagina komt op %(url)s. Bezoekers zien hem pas als jij hem zichtbaar maakt."
+
+#: app/templates/mail/invite.txt:13
+msgid "How to log in later:"
+msgstr "Zo log je later in:"
+
+#: app/templates/mail/invite.txt:14
+#, python-format
+msgid ""
+"Go to %(url)s and fill in your e-mail address. You will get an e-mail with a login link: click it"
+" and you are in. You do not need a password."
+msgstr ""
+"Ga naar %(url)s en vul je e-mailadres in. Je krijgt een mail met een inloglink: klik erop en je "
+"bent binnen. Je hebt geen wachtwoord nodig."
 
 #: app/templates/mail/login_link.txt:3
 msgid "Click the link below to log in to Broedplaats de Createur:"
