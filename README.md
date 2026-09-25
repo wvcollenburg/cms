@@ -15,6 +15,15 @@ docker compose up --build -d
 - Reset the demo: `docker compose exec app flask seed-demo --reset`
 - Start from scratch, including the database: `docker compose down -v`
 
+On a machine other than your own, put at least this in the `.env` next to `compose.yaml` (login
+links in the mails are built from `POC_BASE_URL`):
+
+```
+APP_PORT=8088
+POC_BASE_URL=http://<hostname-or-ip>:8088
+DEMO_HOSTS=localhost,127.0.0.1,<hostname-or-ip>
+```
+
 Settings you may want to override in the shell or in `.env`: `APP_PORT`, `MAILPIT_PORT`,
 `POC_BASE_URL` (the public URL, e.g. `https://createur.<demolabs-domain>`), `DEMO_HOSTS` (must
 include that hostname, or the app refuses to start), `PROXY_HOPS=1` behind a reverse proxy,

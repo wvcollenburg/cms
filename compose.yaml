@@ -20,7 +20,8 @@ services:
       - "${APP_PORT:-8080}:8000"
     environment:
       SECRET_KEY: ${SECRET_KEY:-poc-change-me}
-      BASE_URL: ${POC_BASE_URL:-http://localhost:8080}
+      # Used to build the links in e-mails: set it to the address people type in the browser.
+      BASE_URL: ${POC_BASE_URL:-http://localhost:${APP_PORT:-8080}}
       DATABASE_URL: mysql+pymysql://createur:${DB_PASSWORD:-createur-poc}@db/createur?charset=utf8mb4
       MAIL_SERVER: mailpit
       MAIL_PORT: "1025"
