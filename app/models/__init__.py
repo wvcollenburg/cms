@@ -109,7 +109,7 @@ class MakerSpace(db.Model):
     bio_html: Mapped[str] = mapped_column(Text, default="")
     discipline: Mapped[str] = mapped_column(String(80), default="")
     lang: Mapped[str] = mapped_column(String(2), default="nl")
-    accent_color: Mapped[str] = mapped_column(String(7), default="#b5562f")
+    accent_color: Mapped[str] = mapped_column(String(7), default="#00709c")
     avatar_media_id: Mapped[int | None] = mapped_column(ForeignKey("media.id", ondelete="SET NULL"))
     cover_media_id: Mapped[int | None] = mapped_column(ForeignKey("media.id", ondelete="SET NULL"))
     status: Mapped[str] = mapped_column(String(10), default="draft")

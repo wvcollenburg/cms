@@ -7,7 +7,7 @@
   {% block meta %}{% endblock %}
   {% if demo_mode or noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='img/brand/beeldmerk.svg') }}" type="image/svg+xml">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   {% block head %}{% endblock %}
 </head>

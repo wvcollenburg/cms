@@ -10,8 +10,7 @@
 <header class="site-header" lang="{{ ui_lang }}">
   <div class="wrap header-inner">
     <a class="brand" href="{{ front_url('home') }}">
-      <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="36" height="36">
-      <span>{{ setting('site_name', default='Broedplaats de Createur') }}</span>
+      <img src="{{ url_for('static', filename='img/brand/logo.svg') }}" alt="{{ setting('site_name', default='Broedplaats de Createur') }}" width="235" height="50">
     </a>
     <nav class="site-nav" aria-label="{{ _('Main menu') }}">
       <a href="{{ front_url('makers') }}">{{ _('Makers') }}</a>
@@ -27,10 +26,13 @@
 </main>
 <footer class="site-footer" lang="{{ ui_lang }}">
   <div class="wrap footer-inner">
-    <div>
+    <div class="footer-brand">
+      <img src="{{ url_for('static', filename='img/brand/beeldmerk.svg') }}" alt="" width="56" height="56">
+      <div>
       <strong>{{ setting('site_name', default='Broedplaats de Createur') }}</strong><br>
       {{ setting('address', default='') }}<br>
       {% set mail = setting('contact_email') %}{% if mail %}<a href="mailto:{{ mail }}">{{ mail }}</a>{% endif %}
+      </div>
     </div>
     <div class="footer-links">
       <a href="{{ front_url('privacy') }}">{{ _('Privacy') }}</a>

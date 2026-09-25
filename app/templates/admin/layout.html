@@ -11,7 +11,7 @@
 {% block body_class %}admin{% endblock %}
 {% block body %}
 <header class="admin-header">
-  <a class="brand" href="{{ url_for('admin.dashboard') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32"><span>{{ _('My page') if not policy.can_edit_site(current_user) else _('Manage') }}</span></a>
+  <a class="brand" href="{{ url_for('admin.dashboard') }}"><img src="{{ url_for('static', filename='img/brand/beeldmerk.svg') }}" alt="" width="32" height="32"><span>{{ _('My page') if not policy.can_edit_site(current_user) else _('Manage') }}</span></a>
   <nav class="admin-nav">
     <a href="{{ url_for('admin.dashboard') }}">{{ _('Start') }}</a>
     {% if policy.can_edit_site(current_user) %}

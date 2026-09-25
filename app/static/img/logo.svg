@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Broedplaats de Createur">
-  <rect width="64" height="64" rx="12" fill="#2b2118"/>
-  <!-- two boards joined by a dovetail -->
-  <path d="M10 36h44v18H10z" fill="#c98a4b"/>
-  <path d="M10 10h44v26H43l4-14H35l4 14H25l4-14H17l4 14H10z" fill="#e7c18f"/>
-  <path d="M21 36l-4-14h12l-4 14zM39 36l-4-14h12l-4 14z" fill="#c98a4b"/>
-</svg>

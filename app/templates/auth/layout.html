@@ -5,8 +5,7 @@
 {% block body_class %}auth-page{% endblock %}
 {% block body %}
 <main class="auth-box">
-  <a class="brand" href="{{ front_url('home') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="48" height="48">
-    <span>{{ setting('site_name', default='Broedplaats de Createur') }}</span></a>
+  <a class="brand" href="{{ front_url('home') }}"><img src="{{ url_for('static', filename='img/brand/logo.svg') }}" alt="{{ setting('site_name', default='Broedplaats de Createur') }}" width="300" height="64"></a>
   {{ flashes() }}
   {% block content %}{% endblock %}
   {% set other = 'en' if ui_lang == 'nl' else 'nl' %}

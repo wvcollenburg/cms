@@ -6,3 +6,4 @@ instance/
 tools/
 *.mo
 .pytest_cache/
+.DS_Store
