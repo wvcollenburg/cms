@@ -18,6 +18,11 @@ def create_app(overrides: dict | None = None) -> Flask:
     if app.config["DEMO_MODE"] and not demo_host_allowed(app.config["BASE_URL"], app.config["DEMO_HOSTS"]):
         raise RuntimeError("DEMO_MODE is on but BASE_URL is not a demo host; refusing to start.")
 
+    if app.config["PROXY_HOPS"]:
+        from werkzeug.middleware.proxy_fix import ProxyFix
+        n = app.config["PROXY_HOPS"]
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=n, x_proto=n, x_host=n)
+
     from app.extensions import babel, csrf, db, login_manager, migrate
     from app.i18n import select_locale
 

@@ -25,6 +25,9 @@ class Config:
     MAIL_FROM = os.environ.get("MAIL_FROM", "Broedplaats de Createur <noreply@example.org>")
     MAIL_SUPPRESS = False
 
+    # Number of reverse proxies in front of the app whose X-Forwarded-* headers we trust (0 = none).
+    PROXY_HOPS = int(os.environ.get("PROXY_HOPS", "0"))
+
     DEMO_MODE = _bool("DEMO_MODE")
     DEMO_HOSTS = [h.strip() for h in os.environ.get("DEMO_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
     DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "createur-demo")

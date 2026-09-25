@@ -26,8 +26,9 @@ def init_db():
 
 @click.command("seed-demo")
 @click.option("--reset", is_flag=True, help="Drop all data and media first.")
+@click.option("--if-empty", is_flag=True, help="Do nothing (and exit 0) when there is already data.")
 @with_appcontext
-def seed_demo(reset):
+def seed_demo(reset, if_empty):
     """Load demo content (§10b): front pages NL/EN, 3 live maker spaces, one hidden, one tombstone."""
     from app.media import storage
     if reset:
@@ -37,6 +38,9 @@ def seed_demo(reset):
     db.create_all()
     from app.models import User
     if db.session.query(User).count():
+        if if_empty:
+            click.echo("Database already has data; not seeding.")
+            return
         raise click.ClickException("Database isn't empty. Use --reset to start over.")
     _seed()
     click.echo("Demo data loaded. Demo password for all demo users: " + current_app.config["DEMO_PASSWORD"])

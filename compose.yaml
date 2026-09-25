@@ -1,0 +1,73 @@
+# PoC environment: app + MariaDB + Mailpit.
+#   docker compose up --build
+#   site:  http://localhost:8080   (demo logins at /auth/demo)
+#   mail:  http://localhost:8025   (magic links land here)
+# Reset the demo:  docker compose exec app flask seed-demo --reset
+name: createur-poc
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    ports:
+      - "${APP_PORT:-8080}:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-poc-change-me}
+      BASE_URL: ${POC_BASE_URL:-http://localhost:8080}
+      DATABASE_URL: mysql+pymysql://createur:${DB_PASSWORD:-createur-poc}@db/createur?charset=utf8mb4
+      MAIL_SERVER: mailpit
+      MAIL_PORT: "1025"
+      MAIL_USE_TLS: "0"
+      MAIL_FROM: Broedplaats de Createur <noreply@example.org>
+      DEMO_MODE: "1"
+      # Add the demolabs subdomain here for the remote demo (§10b), e.g. localhost,createur.example.net
+      DEMO_HOSTS: ${DEMO_HOSTS:-localhost,127.0.0.1}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-createur-demo}
+      # Set to 1 when a reverse proxy (Authelia/Caddy/Traefik) sits in front.
+      PROXY_HOPS: ${PROXY_HOPS:-0}
+      SEED_DEMO: "1"
+    volumes:
+      - media:/data/media
+      - private:/data/private
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/robots.txt', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MARIADB_DATABASE: createur
+      MARIADB_USER: createur
+      MARIADB_PASSWORD: ${DB_PASSWORD:-createur-poc}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+
+volumes:
+  db:
+  media:
+  private:

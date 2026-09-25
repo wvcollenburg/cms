@@ -2,7 +2,25 @@
 
 Flask + MariaDB CMS for the collective's website. The plan and all decisions are in [PLAN.md](PLAN.md).
 
-## Local development (PoC)
+## PoC with Docker Compose
+
+App (Gunicorn) + MariaDB + Mailpit, with the demo content loaded on first start:
+
+```bash
+docker compose up --build -d
+```
+
+- Site: http://localhost:8080 (demo logins at `/auth/demo`)
+- Mail inbox: http://localhost:8025 (magic links land here)
+- Reset the demo: `docker compose exec app flask seed-demo --reset`
+- Start from scratch, including the database: `docker compose down -v`
+
+Settings you may want to override in the shell or in `.env`: `APP_PORT`, `MAILPIT_PORT`,
+`POC_BASE_URL` (the public URL, e.g. `https://createur.<demolabs-domain>`), `DEMO_HOSTS` (must
+include that hostname, or the app refuses to start), `PROXY_HOPS=1` behind a reverse proxy,
+`SECRET_KEY`, `DB_PASSWORD`.
+
+## Local development without Docker
 
 Tonight's setup runs on SQLite; the STRATO-like VM with MariaDB comes next (PLAN §10b).
 

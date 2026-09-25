@@ -21,6 +21,9 @@ dependencies = [
 
 [dependency-groups]
 dev = ["pytest>=8", "freezegun>=1.4"]
+server = [
+    "gunicorn>=26.2.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
