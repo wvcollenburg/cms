@@ -6,7 +6,7 @@ if [ "${DEV_RELOAD:-0}" = "1" ]; then
   # so the container never writes into your checkout.
   rm -rf /tmp/translations
   cp -r app/translations /tmp/translations
-  pybabel compile -q -d /tmp/translations
+  pybabel -q compile -d /tmp/translations
   export BABEL_TRANSLATION_DIRECTORIES=/tmp/translations
 fi
 flask db upgrade
