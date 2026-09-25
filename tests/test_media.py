@@ -45,7 +45,7 @@ def test_upload_rejects_non_images(make_user, make_space, login):
 
 def test_gallery_form_cannot_pull_in_other_spaces_media(make_user, make_space, login):
     jan, sanne = make_user("jan"), make_user("sanne")
-    s_jan, s_sanne = make_space("jan-hout", [jan]), make_space("sanne-klei", [sanne])
+    s_jan, s_sanne = make_space("jan-hout", [jan]), make_space("sanne-nerf", [sanne])
     cs = login(sanne)
     cs.post(f"/beheer/space/{s_sanne.id}/blocks", data={"type": "gallery"})
     g_sanne = db.session.scalar(select(Block).where(Block.type == "gallery", Block.owner_id == s_sanne.id))

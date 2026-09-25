@@ -15,7 +15,7 @@ def world(make_user, make_space, make_page):
     web = make_user("web", roles=("webmaster",))
     boss = make_user("boss", roles=("superadmin",))
     s_jan = make_space("jan-hout", [jan])
-    s_sanne = make_space("sanne-klei", [sanne])
+    s_sanne = make_space("sanne-nerf", [sanne])
     page = make_page("home")
     return dict(jan=jan, sanne=sanne, web=web, boss=boss, s_jan=s_jan, s_sanne=s_sanne, page=page)
 

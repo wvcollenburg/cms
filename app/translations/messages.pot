@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-25 11:06+0200\n"
+"POT-Creation-Date: 2026-09-25 15:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -903,19 +903,19 @@ msgid "wood"
 msgstr ""
 
 #: app/templates/public/_marquee.html:2
-msgid "clay"
+msgid "cutting boards"
 msgstr ""
 
 #: app/templates/public/_marquee.html:2
-msgid "textiles"
+msgid "custom furniture"
 msgstr ""
 
 #: app/templates/public/_marquee.html:2
-msgid "metal"
+msgid "art"
 msgstr ""
 
 #: app/templates/public/_marquee.html:2
-msgid "craft"
+msgid "craftsmanship"
 msgstr ""
 
 #: app/templates/public/_marquee.html:2

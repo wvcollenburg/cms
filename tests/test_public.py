@@ -40,10 +40,10 @@ def test_front_page_languages(make_page, client):
 
 
 def test_maker_page_uses_space_lang_but_visitor_ui(make_user, make_space, client):
-    s = make_space("studio-klei", [make_user("sanne")])
+    s = make_space("studio-nerf", [make_user("sanne")])
     s.lang = "en"
     db.session.commit()
-    r = client.get("/studio-klei", headers={"Accept-Language": "nl"})
+    r = client.get("/studio-nerf", headers={"Accept-Language": "nl"})
     assert b'<html lang="en">' in r.data
     assert "Inloggen voor makers" in r.get_data(as_text=True)  # interface follows the visitor
 

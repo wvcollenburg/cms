@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-25 11:06+0200\n"
+"POT-Creation-Date: 2026-09-25 15:36+0200\n"
 "PO-Revision-Date: 2026-09-23 10:58+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -900,19 +900,19 @@ msgid "wood"
 msgstr "hout"
 
 #: app/templates/public/_marquee.html:2
-msgid "clay"
-msgstr "klei"
+msgid "cutting boards"
+msgstr "snijplanken"
 
 #: app/templates/public/_marquee.html:2
-msgid "textiles"
-msgstr "textiel"
+msgid "custom furniture"
+msgstr "meubels op maat"
 
 #: app/templates/public/_marquee.html:2
-msgid "metal"
-msgstr "metaal"
+msgid "art"
+msgstr "kunst"
 
 #: app/templates/public/_marquee.html:2
-msgid "craft"
+msgid "craftsmanship"
 msgstr "vakmanschap"
 
 #: app/templates/public/_marquee.html:2

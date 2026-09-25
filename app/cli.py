@@ -49,7 +49,7 @@ def seed_demo(reset, if_empty):
 # ------------------------------------------------------------------ demo images
 
 def _wood_image(seed: int, base: tuple[int, int, int], size=(1600, 1200)) -> io.BytesIO:
-    """A generated wood-grain / glaze texture, so the demo needs no third-party photos."""
+    """A generated wood-grain texture, so the demo needs no third-party photos."""
     from PIL import Image, ImageDraw, ImageFilter
 
     rnd = random.Random(seed)
@@ -100,7 +100,7 @@ def _seed():
 
     jan = user("jan", "Jan de Schaaf")
     sanne = user("sanne", "Sanne Draaijer", lang="en")
-    bo = user("bo", "Bo Kleiweg")
+    bo = user("bo", "Bo Eikelenboom")
     noor = user("noor", "Noor Weverink", roles=("webmaster",))
     sleutel = user("sleutel", "Demo sleutelhouder", roles=("superadmin",))
     pieter = user("pieter", "Pieter Smid", active=False)
@@ -115,8 +115,8 @@ def _seed():
         ("site_name", "", "Broedplaats de Createur"),
         ("address", "", "Voorbeeldstraat 12, 1234 AB Voorbeeldstad"),
         ("contact_email", "", "info@example.org"),
-        ("tagline", "nl", "Een werkplaats vol makers: hout, klei, textiel en metaal."),
-        ("tagline", "en", "A workshop full of makers: wood, clay, textiles and metal."),
+        ("tagline", "nl", "Makers in hout: van snijplank tot meubel op maat en kunst."),
+        ("tagline", "en", "Makers in wood: from cutting boards to custom furniture and art."),
     ]:
         db.session.add(SiteSetting(key=key, lang=lang, value=value))
 
@@ -130,18 +130,18 @@ def _seed():
         db.session.flush()
         return p
 
-    home = page("home", False, 0, ("Broedplaats de Createur", "Makers in hout, klei, textiel en metaal."),
-                ("Broedplaats de Createur", "Makers in wood, clay, textiles and metal."))
+    home = page("home", False, 0, ("Broedplaats de Createur", "Houtbewerkers onder één dak: snijplanken, meubels op maat en kunst."),
+                ("Broedplaats de Createur", "Woodworkers under one roof: cutting boards, custom furniture and art."))
     workshop = _upload("page", home.id, noor, 7, (150, 105, 70), "De werkplaats", size=(2000, 1000))
     block("page", home.id, "text", {"html": (
         "<h2>Welkom bij de Broedplaats</h2><p>Wij zijn een groep makers die samen een werkplaats delen. "
-        "Hier maken we meubels, keramiek, textiel en smeedwerk. Kom kijken, of neem contact op met een maker.</p>")},
+        "Hier maken we snijplanken, meubels op maat en kunst van hout. Kom kijken, of neem contact op met een maker.</p>")},
         1, lang="nl")
     block("page", home.id, "image", {"media_id": workshop.id, "caption": "Onze werkplaats"}, 2, lang="nl")
     block("page", home.id, "cta", {"label": "Bekijk alle makers", "url": "/makers"}, 3, lang="nl")
     block("page", home.id, "text", {"html": (
         "<h2>Welcome to the Broedplaats</h2><p>We are a group of makers sharing one workshop. "
-        "We make furniture, ceramics, textiles and ironwork. Come and visit, or get in touch with a maker.</p>")},
+        "We make cutting boards, custom furniture and art from wood. Come and visit, or get in touch with a maker.</p>")},
         1, lang="en")
     block("page", home.id, "image", {"media_id": workshop.id, "caption": "Our workshop"}, 2, lang="en")
     block("page", home.id, "cta", {"label": "See all makers", "url": "/en/makers"}, 3, lang="en")
@@ -207,29 +207,33 @@ def _seed():
         {"platform": "email", "url": "jan@example.org"}]}, 4, by=jan.id)
     block("space", s_jan.id, "cta", {"label": "Een meubel laten maken", "url": "mailto:jan@example.org"}, 5, by=jan.id)
 
-    s_klei = space("studio-klei", "Studio Klei", [sanne, bo], lang="en", tagline="Stoneware for everyday use",
-                   discipline="Ceramics", accent="#4f6d7a", order=2, base=(120, 140, 150), seed=30,
-                   bio="<p>We are Sanne and Bo. We throw and glaze stoneware tableware in small batches.</p>")
-    block("space", s_klei.id, "gallery", gallery(s_klei, sanne, 5, (125, 145, 155), 40,
-                                                 ["Bowls", "Glaze tests", "Mugs", "The kiln", "Plates"]), 1, by=sanne.id)
-    block("space", s_klei.id, "video", {"url": "https://vimeo.com/76979871", "provider": "vimeo",
-                                        "video_id": "76979871", "caption": "Throwing a bowl"}, 2, by=bo.id)
-    block("space", s_klei.id, "social", {"links": [
+    s_nerf = space("studio-nerf", "Studio Nerf", [sanne, bo], lang="en",
+                   tagline="Cutting boards and kitchenware from local hardwood",
+                   discipline="Cutting boards", accent="#2f6f5e", order=2, base=(110, 72, 45), seed=30,
+                   bio="<p>We are Sanne and Bo. We make end-grain cutting boards, spoons and serving boards "
+                       "from offcuts of local oak, walnut and cherry.</p>")
+    block("space", s_nerf.id, "gallery", gallery(s_nerf, sanne, 5, (115, 76, 48), 40,
+                                                 ["End-grain board", "Walnut serving board", "Spoons", "Oiling day", "Cherry board"]), 1, by=sanne.id)
+    block("space", s_nerf.id, "video", {"url": "https://vimeo.com/76979871", "provider": "vimeo",
+                                        "video_id": "76979871", "caption": "Gluing up an end-grain board"}, 2, by=bo.id)
+    block("space", s_nerf.id, "social", {"links": [
         {"platform": "instagram", "url": "https://www.instagram.com/"},
         {"platform": "tiktok", "url": "https://www.tiktok.com/"}]}, 3, by=bo.id)
+    block("space", s_nerf.id, "cta", {"label": "Order a custom board", "url": "mailto:nerf@example.org"}, 4, by=sanne.id)
 
-    s_noor = space("noor-weeft", "Noor Weverink", [noor], tagline="Handgeweven textiel en wandkleden",
-                   discipline="Weefster", accent="#8e4b6b", order=3, base=(150, 90, 115), seed=60,
-                   bio="<p>Ik weef op een oud getouw met wol en linnen van Nederlandse schapen en vlas.</p>")
-    block("space", s_noor.id, "text", {"html": "<p>Op zaterdag geef ik workshops. Neem gerust contact op.</p>"}, 1, by=noor.id)
-    block("space", s_noor.id, "gallery", {**gallery(s_noor, noor, 4, (155, 95, 120), 70,
-                                                    ["Wandkleed", "Getouw", "Garens", "Detail"]), "layout": "masonry"}, 2, by=noor.id)
+    s_noor = space("noor-esch", "Noor Esch", [noor], tagline="Beelden en wandobjecten van gevonden hout",
+                   discipline="Houtkunstenaar", accent="#8e4b6b", order=3, base=(205, 172, 128), seed=60,
+                   bio="<p>Ik maak beelden en wandobjecten van hout dat ik vind: oude balken, omgewaaide bomen "
+                       "en restjes uit de werkplaats.</p>")
+    block("space", s_noor.id, "text", {"html": "<p>Op zaterdag geef ik workshops houtsnijden. Neem gerust contact op.</p>"}, 1, by=noor.id)
+    block("space", s_noor.id, "gallery", {**gallery(s_noor, noor, 4, (200, 168, 125), 70,
+                                                    ["Wandobject", "Beeld in eiken", "Gevonden hout", "Detail"]), "layout": "masonry"}, 2, by=noor.id)
     block("space", s_noor.id, "social", {"links": [{"platform": "instagram", "url": "https://www.instagram.com/"}]}, 3, by=noor.id)
 
     # Hidden (removed 10 days ago) so the "no longer active" page can be shown.
-    s_pieter = space("pieter-smid", "Pieter Smid", [pieter], tagline="Smeedwerk", discipline="Smid",
-                     accent="#555555", order=4, base=(90, 90, 95), seed=80)
-    block("space", s_pieter.id, "text", {"html": "<p>Hekken, haken en messen.</p>"}, 1, by=pieter.id)
+    s_pieter = space("pieter-smid", "Pieter Smid", [pieter], tagline="Schalen en kommen van de draaibank",
+                     discipline="Houtdraaier", accent="#555555", order=4, base=(150, 100, 62), seed=80)
+    block("space", s_pieter.id, "text", {"html": "<p>Schalen, kommen en kandelaars, gedraaid uit één stuk hout.</p>"}, 1, by=pieter.id)
     s_pieter.status = "hidden"
     s_pieter.hidden_at = now - timedelta(days=10)
     s_pieter.purge_at = s_pieter.hidden_at + timedelta(days=60)

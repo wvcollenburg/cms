@@ -1,5 +1,5 @@
 {# Moving word strip. Decorative, so hidden from screen readers; stops when motion is reduced. #}
-{% set words = setting('marquee', ui_lang) or [_('wood'), _('clay'), _('textiles'), _('metal'), _('craft'), _('workshop')] %}
+{% set words = setting('marquee', ui_lang) or [_('wood'), _('cutting boards'), _('custom furniture'), _('art'), _('craftsmanship'), _('workshop')] %}
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
     {% for copy in range(2) %}<div class="marquee-set">{% for w in words %}<span>{{ w }}</span>{% endfor %}</div>{% endfor %}

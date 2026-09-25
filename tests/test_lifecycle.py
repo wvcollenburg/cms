@@ -76,12 +76,12 @@ def test_removal_revokes_sessions(setup, login, app):
 def test_shared_space_stays_live(make_user, make_space, login, client):
     sanne, bo = make_user("sanne"), make_user("bo")
     web = make_user("web", roles=("webmaster",))
-    s = make_space("studio-klei", [sanne, bo])
+    s = make_space("studio-nerf", [sanne, bo])
     _remove(login(web), s, bo)
     s = db.session.get(MakerSpace, s.id)
     assert s.status == "published"
     assert [m.user_id for m in s.members] == [sanne.id]
-    assert client.get("/studio-klei").status_code == 200
+    assert client.get("/studio-nerf").status_code == 200
     assert outbox == []  # no page went offline
 
 
