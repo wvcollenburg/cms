@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-25 15:36+0200\n"
+"POT-Creation-Date: 2026-09-25 15:40+0200\n"
 "PO-Revision-Date: 2026-09-23 10:58+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -425,7 +425,11 @@ msgstr "Offline"
 msgid "Me"
 msgstr "Ik"
 
-#: app/templates/admin/layout.html:25
+#: app/templates/admin/layout.html:23
+msgid "View the website"
+msgstr "Bekijk de website"
+
+#: app/templates/admin/layout.html:26
 msgid "Log out"
 msgstr "Uitloggen"
 

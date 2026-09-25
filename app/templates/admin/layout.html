@@ -20,6 +20,7 @@
     {% endif %}
     {% if policy.can_manage_lifecycle(current_user) %}<a href="{{ url_for('admin.offline') }}">{{ _('Offline') }}</a>{% endif %}
     <a href="{{ url_for('admin.profile') }}">{{ _('Me') }}</a>
+    <a class="to-site" href="{{ front_url('home') }}">{{ _('View the website') }}</a>
     <form method="post" action="{{ url_for('auth.logout') }}" class="inline">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit" class="linklike">{{ _('Log out') }}</button>

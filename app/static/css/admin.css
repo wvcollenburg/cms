@@ -5,6 +5,8 @@
 .admin-nav { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem 1rem; }
 .admin-nav a, .admin-nav .linklike { color: #d7e6ec; text-decoration: none; padding: .35em 0; }
 .admin-nav a:hover { text-decoration: underline; }
+.admin-nav .to-site { border: 1.5px solid rgb(255 255 255 / .35); border-radius: 999px; padding: .3em .9em; }
+.admin-nav .to-site:hover { border-color: #fff; text-decoration: none; }
 .admin-main { max-width: 820px; margin: 0 auto; padding: 1.2rem 16px 4rem; }
 .admin-main h1 { font-size: clamp(1.5rem, 5vw, 2rem); }
 
