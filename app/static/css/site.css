@@ -24,6 +24,8 @@
 .site-nav a:hover { color: var(--brand); text-decoration: underline; text-decoration-color: var(--brand-blue); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .lang-toggle { font-size: .85rem; font-weight: 700; letter-spacing: .06em; border: 1.5px solid var(--line); border-radius: 999px; padding: .3em .9em !important; }
 .lang-toggle:hover { border-color: var(--brand); text-decoration: none !important; }
+/* Visitors who asked their system for less transparency get a solid header, no blur. */
+@media (prefers-reduced-transparency: reduce) { .site-header { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; } }
 /* On phones the header wraps to two rows: let it scroll away instead of eating the screen. */
 @media (max-width: 560px) { .site-header { position: relative; } .brand img { height: 38px; } .site-nav { gap: .2rem 1rem; } }
 .preview-banner { background: var(--dark); color: #fff; text-align: center; padding: .5em 16px; }
