@@ -10,7 +10,7 @@ import nh3
 from flask_babel import lazy_gettext as _l
 from pydantic import BaseModel, Field, ValidationError, field_validator
 
-__all__ = ["BLOCK_TYPES", "ValidationError", "sanitize_html", "parse_video_url", "safe_url"]
+__all__ = ["BLOCK_TYPES", "ValidationError", "sanitize_html", "trix_html", "parse_video_url", "safe_url"]
 
 
 # ------------------------------------------------------------------ helpers
@@ -29,7 +29,19 @@ def sanitize_html(html: str) -> str:
         url_schemes={"http", "https", "mailto"},
         link_rel="noopener nofollow",
     )
-    return re.sub(r"(<p>\s*</p>)+$", "", clean.strip())
+    # Drop <br>s hugging a block's edges and empty blocks at either end: blank lines that
+    # earlier round trips through Trix added (see trix_html).
+    clean = re.sub(r"(<(p|h2|h3|li|blockquote)>)(\s*<br>)+", r"\1", clean)
+    clean = re.sub(r"(\s*<br>)+(</(p|h2|h3|li|blockquote)>)", r"\2", clean)
+    clean = re.sub(r"^(\s*<p>\s*</p>)+|(<p>\s*</p>\s*)+$", "", clean.strip())
+    return clean
+
+
+def trix_html(html: str) -> str:
+    """Stored HTML back into Trix's own dialect. Trix reads a <p>'s margins as extra blank
+    lines, so feeding it <p> adds whitespace on every save."""
+    html = re.sub(r"<(/?)p>", r"<\1div>", html or "")
+    return re.sub(r"<(/?)h2>", r"<\1h1>", html)
 
 
 def safe_url(url: str) -> str:

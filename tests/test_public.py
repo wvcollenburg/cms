@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import pytest
 
-from app.blocks import parse_video_url, safe_url, sanitize_html
+from app.blocks import parse_video_url, safe_url, sanitize_html, trix_html
 from app.extensions import db
 from app.models import SlugRedirect, SpaceTombstone, utcnow
 from app.slugs import check_space_slug
@@ -86,6 +86,16 @@ def test_sanitize_html():
     clean = sanitize_html(dirty)
     assert "<script" not in clean and "javascript:" not in clean and "<img" not in clean
     assert "<p>Hi" in clean and "<h2>Title</h2>" in clean
+
+
+def test_trix_round_trip_adds_no_whitespace():
+    # What Trix posts; stored HTML goes back into Trix as <div>, so saving again is a no-op.
+    posted = "<div>Een<br><br>Twee</div><h1>Kop</h1>"
+    stored = sanitize_html(posted)
+    assert stored == "<p>Een<br><br>Twee</p><h2>Kop</h2>"
+    assert trix_html(stored) == posted
+    # Blank lines earlier round trips added are cleaned up on the next save.
+    assert sanitize_html("<div><br>Een<br><br>Twee<br></div><div><br></div>") == "<p>Een<br><br>Twee</p>"
 
 
 def test_safe_url():

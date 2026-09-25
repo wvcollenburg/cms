@@ -76,7 +76,7 @@ def _register_template_helpers(app: Flask) -> None:
 
     from app import media
     from app.auth import policy
-    from app.blocks import BLOCK_TYPES, SOCIAL_PLATFORMS
+    from app.blocks import BLOCK_TYPES, SOCIAL_PLATFORMS, trix_html
 
     @app.context_processor
     def inject():
@@ -91,6 +91,7 @@ def _register_template_helpers(app: Flask) -> None:
     app.jinja_env.globals.update(
         media_url=media.media_url, srcset=media.srcset, img_src=media.src, img_fallback=media.fallback,
     )
+    app.jinja_env.filters["trix"] = trix_html
 
 
 def _register_security_headers(app: Flask) -> None:

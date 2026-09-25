@@ -29,7 +29,7 @@
   <label>{{ _('What you make, in a few words') }}<input name="discipline" value="{{ space.discipline }}" maxlength="80" placeholder="{{ _('e.g. Furniture maker') }}"></label>
   <label>{{ _('One sentence about your work') }}<input name="tagline" value="{{ space.tagline }}" maxlength="200"></label>
   <label for="bio">{{ _('Short introduction') }}</label>
-  <input type="hidden" name="bio_html" id="bio" value="{{ space.bio_html }}">
+  <input type="hidden" name="bio_html" id="bio" value="{{ space.bio_html | trix }}">
   <trix-editor input="bio" class="rich"></trix-editor>
   <fieldset><legend>{{ _('Language you write your page in') }}</legend>
     <label class="radio"><input type="radio" name="lang" value="nl" {{ 'checked' if space.lang == 'nl' }}> Nederlands</label>
