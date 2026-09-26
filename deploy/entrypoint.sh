@@ -10,6 +10,8 @@ if [ "${DEV_RELOAD:-0}" = "1" ]; then
   export BABEL_TRANSLATION_DIRECTORIES=/tmp/translations
 fi
 flask db upgrade
+# New code may bring new templates: never serve pages rendered by the previous version.
+flask page-cache clear
 if [ "${SEED_DEMO:-0}" = "1" ]; then
   flask seed-demo --if-empty
 fi

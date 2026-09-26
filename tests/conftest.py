@@ -32,6 +32,7 @@ def app(tmp_path):
         "MAIL_SUPPRESS": True,
         "MEDIA_ROOT": str(tmp_path / "media"),
         "PRIVATE_ROOT": str(tmp_path / "private"),
+        "PAGE_CACHE_ROOT": str(tmp_path / "cache"),
         "DEMO_MODE": False,
         "BASE_URL": "http://localhost",
         "SERVER_NAME": "localhost",

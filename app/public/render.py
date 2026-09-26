@@ -1,5 +1,6 @@
 """Rendering shared by the public site and the admin preview (§6: preview uses the real template)."""
-from flask import render_template
+from flask import g, render_template
+from flask_babel import refresh
 from sqlalchemy import select
 
 from app.blocks import media_ids_in
@@ -51,10 +52,14 @@ def published_spaces() -> list[MakerSpace]:
 
 
 def render_space(space: MakerSpace, *, preview: bool = False):
+    # The whole page, interface included, is in the maker's language (D27): visitors read the
+    # maker's language, and contact the maker in a language they understand.
+    g.lang = space.lang
+    refresh()
     blocks, media = load_blocks("space", space.id, None)
     others = [s for s in published_spaces() if s.id != space.id][:8]
     return render_template("public/space.html", space=space, blocks=blocks, media=media, preview=preview,
-                           others=others)
+                           others=others, hide_lang_toggle=True)
 
 
 def render_page(page: Page, lang: str, *, preview: bool = False):

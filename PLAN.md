@@ -1,6 +1,6 @@
 # Broedplaats de Createur: CMS plan
 
-Status: v1.2 (22 Sep 2026): manuals moved to after go-live; William onboards makers in person
+Status: v1.3 (26 Sep 2026): maker pages entirely in the maker's language (D27); static page cache built (§8)
 Stack: Flask + MariaDB, built in-house; two deployment profiles (VPS/self-host, or STRATO shared hosting)
 Owner: William van Collenburg
 
@@ -36,6 +36,7 @@ Owner: William van Collenburg
 | D24 | Superadmins | **William** and **Arwin**. Arwin's role is continuity: when William leaves, Arwin gives William's roles to a successor. Arwin doesn't need to be a maker or webmaster |
 | D25 | William's roles | William has **all three roles**: maker (with his own maker space), webmaster and superadmin. He can edit his own space only as its member. Being webmaster or superadmin gives him no rights over other makers' spaces (D3) |
 | D26 | Manuals | A **separate manual for each role**: maker, webmaster, superadmin. They're written for woodworkers, not IT people: plain Dutch, screenshots, one task per page. **Written after go-live.** At launch, William helps makers get their first introduction online in person. The plain-language word list does apply to the website's own text from day one (§6a) |
+| D27 | Language of maker pages | A maker page is **entirely in the maker's language**, interface included (menu, footer, buttons). Visitors read the maker's language, so when they get in touch, they do it in a language the maker understands. Only NL and EN are offered: most Dutch visitors understand English. Replaces the earlier "interface follows the visitor" rule (§2). It also means every public page depends only on its URL, which keeps the page cache simple (§8) |
 
 ---
 
@@ -72,7 +73,8 @@ Webshop and payments, comments, member-only content, newsletters (link out to a 
 
 - **Front section:** Dutch lives at the root and English under `/en/`. Each front page and collective article has an NL version, and optionally an EN version. When no EN version exists, the NL content is shown with EN interface text and a small "only available in Dutch" notice. `hreflang` links connect the two versions.
 - **Maker pages have no language prefix.** Each maker space has a `lang` (`nl` or `en`) chosen by the maker, and each article can override it. That value sets `<html lang>`, so screen readers and search engines get it right. There's no translation workflow for makers.
-- **Interface text** on maker pages (menu, footer, buttons) and the **"no longer active" 404** follow the visitor's language. It's picked from the language-toggle cookie first, then the `Accept-Language` header, then NL. The cookie is functional, so it doesn't need a cookie banner.
+- **Interface text** on maker pages (menu, footer, buttons) is in the **maker's language** too (D27), and maker pages have no language toggle.
+- The **"no longer active" 404** follows the visitor's language. It's picked from the language-toggle cookie first, then the `Accept-Language` header, then NL. The cookie is functional, so it doesn't need a cookie banner.
 - **Admin UI** is also bilingual. Each user chooses their own language in their profile.
 - All interface strings go through **Flask-Babel** (`.po` files) from the first commit.
 
@@ -311,7 +313,7 @@ invites            id, email, space_id (nullable), grants_webmaster, token_hash,
 - Additional tables for Profile B (also used on A):
   - `task_runs (task, last_started_at, last_finished_at, status)` records when each scheduled task last ran.
   - `rate_limits (key, window_start, count)` holds login throttling, because there's no Redis or in-memory store under CGI.
-  - `page_cache (path, lang, file, generated_at, depends_on)` tracks which static files exist for which content.
+  - ~~`page_cache (path, lang, file, generated_at, depends_on)`~~: not needed. The cache is cleared as a whole on every content change, and the files on disk are the only record (§8).
 - **Polymorphic ownership** (`owner_type` + `owner_id`) means one editor and one code path serve both the maker spaces and the front section.
 - **Front-page translations:** each language has its own block list (`blocks.lang`). A webmaster can build the EN page by copying the NL blocks and then translating them. Maker spaces don't use `lang` on blocks.
 
@@ -444,12 +446,15 @@ The manuals live in the repo (`docs/manuals/`) as Markdown with screenshots, and
   - `sitemap.xml` covering only live content.
   - Canonical URLs.
   - JSON-LD: `Organization` for the collective, `Person` for each maker.
-- **Static page cache (D18):**
-  - When content is published, the affected pages are rendered to static HTML files: the maker home, the `/makers` page and, where relevant, the front page.
-  - The web server serves those files directly. On Profile B, `.htaccess` rewrite rules check for the file first and only fall back to CGI when it isn't there.
-  - Any change to a space deletes or rebuilds that space's files. The `page_cache` table tracks which files depend on which content.
-  - Hidden spaces are **never** cached, so their requests reach Python and get the proper 404 status.
-  - The same mechanism runs on Profile A, where it's simply faster.
+- **Static page cache (D18)**, built 26 Sep 2026 (`app/public/cache.py`):
+  - The first visit to a public page renders it as usual and stores the HTML as `<PAGE_CACHE_ROOT>/<url path>/index.html` (`/` → `index.html`, `/en/makers` → `en/makers/index.html`, `/jan` → `jan/index.html`). Later visits get the file.
+  - The web server serves those files directly. On Profile B, `.htaccess` rewrite rules check for the file first and only fall back to CGI when it isn't there, so `PAGE_CACHE_ROOT` is `<web root>/_cache`. Under Gunicorn the app itself serves the file before touching the database.
+  - Only plain `GET`s without a query string that return 200 are stored. 404s, the "no longer active" page and redirects never are, so hidden spaces always reach Python and get the proper 404 status.
+  - **Invalidation: any committed change to content clears the whole cache.** This hooks into the database commit, so no save action can forget it. Logins, invites, memberships, the audit log, rate limits and task runs don't count as content. With fewer than 15 makers a full rebuild takes seconds, so the `page_cache` dependency table from the original plan isn't needed.
+  - A generation token makes sure a page rendered during a change is never stored with the old content.
+  - Every deploy clears the cache (`flask page-cache clear`, in the container entrypoint and `deploy.sh`), because templates may have changed. `flask page-cache warm` renders all pages ahead of visitors; the task runner calls it (D17).
+  - Public pages contain nothing per visitor or per session: no CSRF token, and the interface language follows the URL or the maker (D27).
+  - `PAGE_CACHE=0` switches it off. With `TEMPLATES_AUTO_RELOAD=1` (development), an edited template clears the cache on the next visit.
 
 ### Privacy (AVG/GDPR)
 
@@ -741,7 +746,7 @@ The STRATO-specific facts (S1–S9 in §10a) can only be verified on STRATO itse
 - Magic-link login, invites (the webmaster sets the slug at invite), the RBAC policy with matrix tests
 - Blocks: text, gallery, image, video (click-to-load), social icons, cta
 - Removing a maker → hide → "no longer active" 404 → restore by the superadmin
-- Static page cache, client-side image resize, the media pipeline
+- Static page cache (built), client-side image resize, the media pipeline
 - Privacy page, nightly backups, uptime check
 - Plain-language website text (the word list in §6a)
 

@@ -9,9 +9,45 @@ from app.extensions import db
 from app.i18n import LANG_COOKIE, visitor_lang
 from app.media import storage
 from app.models import MakerSpace, Page, SlugRedirect, SpaceTombstone
+from app.public import cache as page_cache
 from app.public.render import nav_pages, published_spaces, render_page, render_space, setting
 
 bp = Blueprint("public", __name__)
+
+# Pages whose HTML depends only on the URL and the content (D18). Anything that isn't a plain
+# 200 (404s, the "no longer active" page, redirects) is never stored.
+CACHEABLE_ENDPOINTS = frozenset({
+    "public.home", "public.home_en", "public.makers", "public.makers_en", "public.page_en", "public.resolve",
+})
+
+
+@bp.before_request
+def serve_cached():
+    if (not current_app.config["PAGE_CACHE"] or request.endpoint not in CACHEABLE_ENDPOINTS
+            or request.method not in ("GET", "HEAD") or request.query_string):
+        return None
+    if current_app.config["TEMPLATES_AUTO_RELOAD"]:
+        page_cache.clear_if_code_changed()
+    hit = page_cache.lookup(request.path)
+    if hit is not None:
+        resp = send_file(hit, mimetype="text/html", conditional=True, max_age=0)
+        resp.headers["Cache-Control"] = "no-cache"
+        resp.headers["X-Page-Cache"] = "HIT"
+        return resp
+    if request.method == "GET":
+        g.page_cache_token = page_cache.generation()
+    return None
+
+
+@bp.after_request
+def store_cached(resp):
+    token = g.pop("page_cache_token", None)
+    if token is None or resp.status_code != 200 or resp.direct_passthrough or resp.mimetype != "text/html":
+        return resp
+    page_cache.store(request.path, resp.get_data(), token)
+    resp.headers["Cache-Control"] = "no-cache"
+    resp.headers["X-Page-Cache"] = "MISS"
+    return resp
 
 
 def front_url(what: str = "home", lang: str | None = None) -> str:

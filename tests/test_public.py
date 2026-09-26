@@ -39,13 +39,16 @@ def test_front_page_languages(make_page, client):
     assert b"only available in Dutch" in fallback.data
 
 
-def test_maker_page_uses_space_lang_but_visitor_ui(make_user, make_space, client):
+def test_maker_page_is_entirely_in_space_lang(make_user, make_space, client):
     s = make_space("studio-nerf", [make_user("sanne")])
     s.lang = "en"
     db.session.commit()
+    client.set_cookie("lang", "nl", domain="localhost")
     r = client.get("/studio-nerf", headers={"Accept-Language": "nl"})
-    assert b'<html lang="en">' in r.data
-    assert "Inloggen voor makers" in r.get_data(as_text=True)  # interface follows the visitor
+    html = r.get_data(as_text=True)
+    assert '<html lang="en">' in html
+    assert "Log in for makers" in html and "Inloggen voor makers" not in html  # D27: not the visitor's
+    assert "lang-toggle" not in html
 
 
 def test_language_cookie(client, make_page):

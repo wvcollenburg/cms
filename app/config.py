@@ -16,6 +16,9 @@ class Config:
     MEDIA_ROOT = os.environ.get("MEDIA_ROOT", "instance/media")
     PRIVATE_ROOT = os.environ.get("PRIVATE_ROOT", "instance/private")
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 15 MB image + form overhead
+    # Static page cache (D18). On STRATO this must be `<web root>/_cache`, so Apache can serve it.
+    PAGE_CACHE = _bool("PAGE_CACHE", "1")
+    PAGE_CACHE_ROOT = os.environ.get("PAGE_CACHE_ROOT", os.path.join(os.environ.get("INSTANCE_PATH", "instance"), "cache"))
 
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "localhost")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", "1025"))

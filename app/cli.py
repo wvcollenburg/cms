@@ -14,6 +14,34 @@ from app.extensions import db
 def register_cli(app):
     app.cli.add_command(init_db)
     app.cli.add_command(seed_demo)
+    app.cli.add_command(page_cache_cli)
+
+
+@click.group("page-cache")
+def page_cache_cli():
+    """Static page cache (D18)."""
+
+
+@page_cache_cli.command("clear")
+@with_appcontext
+def page_cache_clear():
+    """Delete all cached pages. Run after every deploy: templates may have changed."""
+    from app.public import cache
+    cache.clear()
+    click.echo(f"Page cache cleared ({cache.root()}).")
+
+
+@page_cache_cli.command("warm")
+@with_appcontext
+def page_cache_warm():
+    """Render every public page into the cache, so the first visitors don't wait."""
+    from app.public import cache
+    client = current_app.test_client()
+    stored = 0
+    for url in cache.public_urls():
+        resp = client.get(url)
+        stored += resp.headers.get("X-Page-Cache") in ("MISS", "HIT")
+    click.echo(f"{stored} pages in the cache.")
 
 
 @click.command("init-db")
@@ -31,10 +59,12 @@ def init_db():
 def seed_demo(reset, if_empty):
     """Load demo content (§10b): front pages NL/EN, 3 live maker spaces, one hidden, one tombstone."""
     from app.media import storage
+    from app.public import cache
     if reset:
         db.drop_all()
         for root in (storage.media_root(), storage.hidden_root()):
             shutil.rmtree(root, ignore_errors=True)
+        cache.clear()
     db.create_all()
     from app.models import User
     if db.session.query(User).count():

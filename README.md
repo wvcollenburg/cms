@@ -79,6 +79,21 @@ Seeded states: `/pieter-smid` is hidden (named "no longer active" 404), `/henk-h
 tombstone with a name, `/oud-atelier` one without (deletion request), and `/en/contact` has no
 English version, so it shows the Dutch page with a notice.
 
+### Page cache
+
+Public pages are stored as HTML files on their first visit and served from there afterwards
+(PLAN §8). Every content change clears the whole cache, and so does every container start.
+The `X-Page-Cache` response header says `MISS` (just rendered) or `HIT` (served from the file).
+
+```bash
+flask page-cache clear    # after a deploy: templates may have changed
+flask page-cache warm     # render every public page ahead of visitors
+```
+
+It lives in `$INSTANCE_PATH/cache` unless `PAGE_CACHE_ROOT` says otherwise; `PAGE_CACHE=0`
+switches it off. With `TEMPLATES_AUTO_RELOAD=1` (compose.dev.yaml) edited code or templates
+clear it on the next visit, so a `git pull` needs no extra step.
+
 ### Tests
 
 ```bash
