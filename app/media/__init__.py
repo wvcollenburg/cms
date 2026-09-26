@@ -137,3 +137,11 @@ def src(media: Media, width: int = 800) -> str:
 
 def fallback(media: Media) -> str:
     return media_url(media.variants["jpeg"])
+
+
+def focus_style(media: Media) -> str:
+    """Inline style that centres every crop (object-fit: cover) on the photo's focal point."""
+    x, y = media.focus_x, media.focus_y
+    if x is None or y is None or (x, y) == (50, 50):
+        return ""  # the browser's default
+    return f"object-position: {x}% {y}%"

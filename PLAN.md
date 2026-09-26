@@ -328,6 +328,7 @@ invites            id, email, space_id (nullable), grants_webmaster, token_hash,
 - Storage is a **local volume** behind a small storage interface, so moving to S3-compatible storage later is only a config change.
 - Quota: 1 GB per space.
 - Alt text is prompted on upload, but not required.
+- **Focal point** (26 Sep 2026): each photo has a spot that must stay in view (`media.focus_x/focus_y`, in %, default the middle). Every cropped photo (hero, cover, cards, gallery squares, admin thumbnails) uses it as `object-position`. Next to each photo in the beheeromgeving: *"Kies wat in beeld blijft"*: tap the spot on the full photo, with live previews for a wide screen, a phone and a small box.
 - **Video: no self-hosting.** YouTube and Vimeo links only.
 
 ---

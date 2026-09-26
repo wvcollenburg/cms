@@ -8,7 +8,8 @@
 <section class="card photos">
   <div>
     <h2>{{ _('Profile photo') }}</h2>
-    {% if space.avatar %}<img class="avatar-preview" src="{{ img_src(space.avatar, 400) }}" alt="">{% endif %}
+    {% if space.avatar %}<img class="avatar-preview" src="{{ img_src(space.avatar, 400) }}" alt="" style="{{ focus_style(space.avatar) }}">
+    <a class="focus-link small" href="{{ url_for('admin.media_focus', kind='space', oid=space.id, mid=space.avatar.id, next=request.path) }}">{{ _('Choose what stays in view') }}</a>{% endif %}
     {% set upload_url = url_for('admin.space_photo', space_id=space.id, which='avatar') %}{% set multiple = false %}{% set then = 'reload' %}
     {% set label = _('Choose a photo') %}{% set secondary = space.avatar %}
     {% include 'admin/blocks/_upload.html' %}
@@ -16,7 +17,8 @@
   <div>
     <h2>{{ _('Cover photo') }}</h2>
     <p class="small">{{ _('A wide photo across the top of your page.') }}</p>
-    {% if space.cover %}<img class="cover-preview" src="{{ img_src(space.cover, 800) }}" alt="">{% endif %}
+    {% if space.cover %}<img class="cover-preview" src="{{ img_src(space.cover, 800) }}" alt="" style="{{ focus_style(space.cover) }}">
+    <a class="focus-link small" href="{{ url_for('admin.media_focus', kind='space', oid=space.id, mid=space.cover.id, next=request.path) }}">{{ _('Choose what stays in view') }}</a>{% endif %}
     {% set upload_url = url_for('admin.space_photo', space_id=space.id, which='cover') %}
     {% set secondary = space.cover %}
     {% include 'admin/blocks/_upload.html' %}

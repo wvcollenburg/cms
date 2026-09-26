@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-25 16:03+0200\n"
+"POT-Creation-Date: 2026-09-26 22:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,8 +29,8 @@ msgstr ""
 msgid "Choose a password of at least 10 characters."
 msgstr ""
 
-#: app/admin/dashboard.py:43 app/admin/editor.py:166 app/admin/site.py:61
-#: app/admin/site.py:107 app/admin/space.py:48
+#: app/admin/dashboard.py:43 app/admin/editor.py:161 app/admin/editor.py:278
+#: app/admin/site.py:59 app/admin/site.py:105 app/admin/space.py:47
 msgid "Saved."
 msgstr ""
 
@@ -50,89 +50,89 @@ msgstr ""
 msgid "Your page is full (1 GB). Remove some photos first."
 msgstr ""
 
-#: app/admin/editor.py:177
+#: app/admin/editor.py:172
 msgid ""
 "We don't recognise this video link. Copy the link from YouTube or Vimeo "
 "(the address bar or the Share button)."
 msgstr ""
 
-#: app/admin/editor.py:179
+#: app/admin/editor.py:174
 msgid ""
 "One of the web addresses isn't valid. Check for typos, e.g. "
 "https://www.example.nl"
 msgstr ""
 
-#: app/admin/editor.py:180
+#: app/admin/editor.py:175
 msgid "Something in this form isn't right. Please check it."
 msgstr ""
 
-#: app/admin/editor.py:207
+#: app/admin/editor.py:200
 msgid "Removed."
 msgstr ""
 
-#: app/admin/editor.py:276
+#: app/admin/editor.py:291
 msgid "The English version already has content."
 msgstr ""
 
-#: app/admin/editor.py:286
+#: app/admin/editor.py:301
 msgid "Copied the Dutch version. Now translate each part."
 msgstr ""
 
-#: app/admin/site.py:130
+#: app/admin/site.py:128
 msgid "Use 3 to 40 lowercase letters, digits or hyphens, e.g. jan-de-vries."
 msgstr ""
 
-#: app/admin/site.py:131
+#: app/admin/site.py:129
 msgid "This web address is reserved for the website itself. Choose another."
 msgstr ""
 
-#: app/admin/site.py:132
+#: app/admin/site.py:130
 msgid "This web address is already in use. Choose another."
 msgstr ""
 
-#: app/admin/site.py:147 app/admin/site.py:149
+#: app/admin/site.py:145 app/admin/site.py:147
 msgid "Please fill this in."
 msgstr ""
 
-#: app/admin/site.py:151
+#: app/admin/site.py:149
 msgid "This doesn't look like an e-mail address."
 msgstr ""
 
-#: app/admin/site.py:155
+#: app/admin/site.py:153
 msgid "This person was taken offline. A key holder can put them back."
 msgstr ""
 
-#: app/admin/site.py:169 app/admin/site.py:189
+#: app/admin/site.py:167 app/admin/site.py:187
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr ""
 
-#: app/admin/site.py:200
+#: app/admin/site.py:198
 msgid "Invitation withdrawn."
 msgstr ""
 
-#: app/admin/site.py:218
+#: app/admin/site.py:216
 msgid "Type the web address exactly as shown."
 msgstr ""
 
-#: app/admin/site.py:220 app/admin/site.py:253
+#: app/admin/site.py:218 app/admin/site.py:251
 msgid "Please give a reason."
 msgstr ""
 
-#: app/admin/site.py:229
+#: app/admin/site.py:227
 msgid "Your page at Broedplaats de Createur is offline"
 msgstr ""
 
-#: app/admin/site.py:231
+#: app/admin/site.py:229
 #, python-format
 msgid "%(name)s is offline."
 msgstr ""
 
-#: app/admin/site.py:262
+#: app/admin/site.py:260
 msgid "Your page at Broedplaats de Createur is back"
 msgstr ""
 
-#: app/admin/site.py:263
+#: app/admin/site.py:261
 #, python-format
 msgid "%(name)s is back. The page is not visible yet: the maker decides when."
 msgstr ""
@@ -141,11 +141,11 @@ msgstr ""
 msgid "Your page needs a name."
 msgstr ""
 
-#: app/admin/space.py:92
+#: app/admin/space.py:89
 msgid "Your page is now visible to everyone."
 msgstr ""
 
-#: app/admin/space.py:93
+#: app/admin/space.py:90
 msgid "Your page is hidden from visitors for now."
 msgstr ""
 
@@ -191,27 +191,27 @@ msgid ""
 "when it's ready."
 msgstr ""
 
-#: app/blocks/__init__.py:199 app/templates/admin/blocks/text.html:1
+#: app/blocks/__init__.py:211 app/templates/admin/blocks/text.html:1
 msgid "Text"
 msgstr ""
 
-#: app/blocks/__init__.py:200
+#: app/blocks/__init__.py:212
 msgid "Photo album"
 msgstr ""
 
-#: app/blocks/__init__.py:201
+#: app/blocks/__init__.py:213
 msgid "Photo"
 msgstr ""
 
-#: app/blocks/__init__.py:202
+#: app/blocks/__init__.py:214
 msgid "Video"
 msgstr ""
 
-#: app/blocks/__init__.py:203
+#: app/blocks/__init__.py:215
 msgid "Social media buttons"
 msgstr ""
 
-#: app/blocks/__init__.py:204
+#: app/blocks/__init__.py:216
 msgid "Button"
 msgstr ""
 
@@ -309,7 +309,7 @@ msgstr ""
 #: app/templates/admin/dashboard.html:31 app/templates/admin/layout.html:19
 #: app/templates/admin/makers.html:2 app/templates/admin/makers.html:5
 #: app/templates/admin/new_maker.html:5 app/templates/admin/remove.html:4
-#: app/templates/public/layout.html:17 app/templates/public/layout.html:38
+#: app/templates/public/layout.html:27 app/templates/public/layout.html:48
 #: app/templates/public/makers.html:3 app/templates/public/makers.html:12
 msgid "Makers"
 msgstr ""
@@ -339,9 +339,9 @@ msgid "You don't have a page yet. Ask a webmaster."
 msgstr ""
 
 #: app/templates/admin/edit_block.html:11 app/templates/admin/editor.html:53
-#: app/templates/admin/profile.html:18
+#: app/templates/admin/focus.html:27 app/templates/admin/profile.html:18
 #: app/templates/admin/site_settings.html:27
-#: app/templates/admin/space_settings.html:40
+#: app/templates/admin/space_settings.html:42
 msgid "Save"
 msgstr ""
 
@@ -358,7 +358,7 @@ msgid "Remove this part"
 msgstr ""
 
 #: app/templates/admin/editor.html:9 app/templates/admin/new_maker.html:13
-#: app/templates/admin/space_settings.html:39
+#: app/templates/admin/space_settings.html:41
 msgid "Web address"
 msgstr ""
 
@@ -456,6 +456,42 @@ msgstr ""
 
 #: app/templates/admin/editor.html:89
 msgid "Add a part"
+msgstr ""
+
+#: app/templates/admin/focus.html:2 app/templates/admin/focus.html:5
+msgid "What should stay in view?"
+msgstr ""
+
+#: app/templates/admin/focus.html:4 app/templates/errors/403.html:8
+#: app/templates/public/layout.html:33
+msgid "Back"
+msgstr ""
+
+#: app/templates/admin/focus.html:6
+msgid ""
+"On a phone or in a small box, your photo is cut off at the edges. Tap the"
+" most important spot, for example a face or your work. That spot then "
+"always stays in view."
+msgstr ""
+
+#: app/templates/admin/focus.html:17
+msgid "This is how it looks"
+msgstr ""
+
+#: app/templates/admin/focus.html:19
+msgid "Wide screen"
+msgstr ""
+
+#: app/templates/admin/focus.html:19
+msgid "Phone"
+msgstr ""
+
+#: app/templates/admin/focus.html:19
+msgid "Small box"
+msgstr ""
+
+#: app/templates/admin/focus.html:28
+msgid "Back to the middle"
 msgstr ""
 
 #: app/templates/admin/layout.html:14
@@ -723,48 +759,55 @@ msgstr ""
 msgid "Profile photo"
 msgstr ""
 
-#: app/templates/admin/blocks/image.html:4
-#: app/templates/admin/space_settings.html:13
+#: app/templates/admin/blocks/gallery.html:10
+#: app/templates/admin/blocks/image.html:3
+#: app/templates/admin/space_settings.html:12
+#: app/templates/admin/space_settings.html:21
+msgid "Choose what stays in view"
+msgstr ""
+
+#: app/templates/admin/blocks/image.html:5
+#: app/templates/admin/space_settings.html:14
 msgid "Choose a photo"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:17
+#: app/templates/admin/space_settings.html:18
 msgid "Cover photo"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:18
+#: app/templates/admin/space_settings.html:19
 msgid "A wide photo across the top of your page."
 msgstr ""
 
-#: app/templates/admin/space_settings.html:28
+#: app/templates/admin/space_settings.html:30
 msgid "Name on your page"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:29
+#: app/templates/admin/space_settings.html:31
 msgid "What you make, in a few words"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:29
+#: app/templates/admin/space_settings.html:31
 msgid "e.g. Furniture maker"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:30
+#: app/templates/admin/space_settings.html:32
 msgid "One sentence about your work"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:31
+#: app/templates/admin/space_settings.html:33
 msgid "Short introduction"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:34
+#: app/templates/admin/space_settings.html:36
 msgid "Language you write your page in"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:38
+#: app/templates/admin/space_settings.html:40
 msgid "Your colour"
 msgstr ""
 
-#: app/templates/admin/space_settings.html:39
+#: app/templates/admin/space_settings.html:41
 msgid "want a different one? Ask a webmaster."
 msgstr ""
 
@@ -817,37 +860,37 @@ msgstr ""
 msgid "You can choose several photos at once. Drag photos to change the order."
 msgstr ""
 
-#: app/templates/admin/blocks/gallery.html:10
-#: app/templates/admin/blocks/image.html:6
+#: app/templates/admin/blocks/gallery.html:11
+#: app/templates/admin/blocks/image.html:7
 #: app/templates/admin/blocks/video.html:4
 msgid "Caption"
 msgstr ""
 
-#: app/templates/admin/blocks/gallery.html:11
+#: app/templates/admin/blocks/gallery.html:12
 msgid "Remove"
 msgstr ""
 
-#: app/templates/admin/blocks/gallery.html:15
+#: app/templates/admin/blocks/gallery.html:16
 msgid "How to show the photos"
 msgstr ""
 
-#: app/templates/admin/blocks/gallery.html:16
+#: app/templates/admin/blocks/gallery.html:17
 msgid "Grid"
 msgstr ""
 
-#: app/templates/admin/blocks/gallery.html:16
+#: app/templates/admin/blocks/gallery.html:17
 msgid "Mosaic"
 msgstr ""
 
-#: app/templates/admin/blocks/gallery.html:16
+#: app/templates/admin/blocks/gallery.html:17
 msgid "Swipe one by one"
 msgstr ""
 
-#: app/templates/admin/blocks/image.html:4
+#: app/templates/admin/blocks/image.html:5
 msgid "Choose another photo"
 msgstr ""
 
-#: app/templates/admin/blocks/image.html:7
+#: app/templates/admin/blocks/image.html:8
 msgid "Link (not required)"
 msgstr ""
 
@@ -1036,10 +1079,6 @@ msgid ""
 "that. Ask the maker if something needs to change."
 msgstr ""
 
-#: app/templates/errors/403.html:8 app/templates/public/layout.html:23
-msgid "Back"
-msgstr ""
-
 #: app/templates/errors/404.html:3 app/templates/errors/404.html:6
 msgid "Page not found"
 msgstr ""
@@ -1194,23 +1233,23 @@ msgstr ""
 msgid "See all makers"
 msgstr ""
 
-#: app/templates/public/layout.html:16
+#: app/templates/public/layout.html:26
 msgid "Main menu"
 msgstr ""
 
-#: app/templates/public/layout.html:23
+#: app/templates/public/layout.html:33
 msgid "Preview: this is how visitors will see it."
 msgstr ""
 
-#: app/templates/public/layout.html:37
+#: app/templates/public/layout.html:47
 msgid "More"
 msgstr ""
 
-#: app/templates/public/layout.html:40
+#: app/templates/public/layout.html:50
 msgid "Privacy"
 msgstr ""
 
-#: app/templates/public/layout.html:41
+#: app/templates/public/layout.html:51
 msgid "Log in for makers"
 msgstr ""
 

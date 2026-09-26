@@ -1,0 +1,31 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ _('What should stay in view?') }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{{ back }}">← {{ _('Back') }}</a></p>
+<h1>{{ _('What should stay in view?') }}</h1>
+<p>{{ _('On a phone or in a small box, your photo is cut off at the edges. Tap the most important spot, for example a face or your work. That spot then always stays in view.') }}</p>
+
+<form method="post" class="card stack focus-picker">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="next" value="{{ back }}">
+  <input type="hidden" name="x" value="{{ m.focus_x }}">
+  <input type="hidden" name="y" value="{{ m.focus_y }}">
+  <div class="focus-photo">
+    <img src="{{ img_src(m, 1600) }}" alt="{{ m.alt_text }}" draggable="false">
+    <span class="focus-dot" style="left: {{ m.focus_x }}%; top: {{ m.focus_y }}%" aria-hidden="true"></span>
+  </div>
+  <h2>{{ _('This is how it looks') }}</h2>
+  <div class="focus-previews">
+    {% for cls, label in [('wide', _('Wide screen')), ('phone', _('Phone')), ('square', _('Small box'))] %}
+    <figure class="focus-preview focus-{{ cls }}">
+      <img src="{{ img_src(m, 800) }}" alt="" style="object-position: {{ m.focus_x }}% {{ m.focus_y }}%">
+      <figcaption class="small">{{ label }}</figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+  <div class="row-actions">
+    <button class="button" type="submit">{{ _('Save') }}</button>
+    <button class="button button-secondary" type="button" data-focus-reset>{{ _('Back to the middle') }}</button>
+  </div>
+</form>
+{% endblock %}

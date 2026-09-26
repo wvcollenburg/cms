@@ -58,6 +58,20 @@ trix-toolbar .trix-button-group--file-tools { display: none; }
 .avatar-preview { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: .5rem; }
 .cover-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: .5rem; }
 .photos { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.focus-link { display: inline-block; margin: 0 0 .5rem; }
+
+/* Focal point picker: tap the full photo, see the crops update. */
+.focus-photo { position: relative; align-self: flex-start; max-width: 100%; cursor: crosshair; touch-action: manipulation; }
+.focus-photo img { display: block; max-width: 100%; max-height: 70vh; width: auto; border-radius: 8px; user-select: none; }
+.focus-dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; pointer-events: none;
+  border: 3px solid #fff; box-shadow: 0 0 0 2px rgb(0 0 0 / .55), inset 0 0 0 2px rgb(0 0 0 / .55); background: rgb(255 255 255 / .2); }
+.focus-previews { display: grid; grid-template-columns: 3fr 1fr 1.3fr; gap: .6rem; align-items: end; }
+.focus-preview { margin: 0; }
+.focus-preview img { display: block; width: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); }
+.focus-wide img { aspect-ratio: 21 / 9; }
+.focus-phone img { aspect-ratio: 9 / 16; }
+.focus-square img { aspect-ratio: 1; }
+@media (max-width: 600px) { .focus-previews { grid-template-columns: 1fr 1fr; } .focus-wide { grid-column: 1 / -1; } }
 .upload-status:empty { display: none; }
 .upload-status.error { color: var(--danger); font-weight: 600; }
 .danger-zone { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); }

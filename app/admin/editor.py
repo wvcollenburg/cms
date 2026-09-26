@@ -77,10 +77,6 @@ def get_target(kind: str, oid: int) -> Target:
     abort(404)
 
 
-def _touch(target: Target) -> None:
-    """Hook for the static page cache (Thu 24 Sep): invalidate what depends on this owner."""
-
-
 def referenced_media(target: Target) -> set[int]:
     ids: set[int] = set()
     rows = db.session.scalars(select(Block).where(Block.owner_type == target.kind, Block.owner_id == target.obj.id))
@@ -162,7 +158,6 @@ def edit_block(kind, oid, bid):
             audit("block.updated", "block", block.id, {"owner": f"{kind}:{oid}"})
             cleanup_media(target, before - media_ids_in(block.type, data))
             db.session.commit()
-            _touch(target)
             flash(_("Saved."), "success")
             if request.form.get("then") == "stay":
                 return redirect(target.url("admin.edit_block", bid=block.id))
@@ -189,7 +184,6 @@ def toggle_block(kind, oid, bid):
     block.updated_by = current_user.id
     audit("block.visibility", "block", block.id, {"is_visible": block.is_visible})
     db.session.commit()
-    _touch(target)
     return redirect(target.url("admin.editor") + f"#block-{block.id}")
 
 
@@ -203,7 +197,6 @@ def delete_block(kind, oid, bid):
     db.session.delete(block)
     cleanup_media(target, used)
     db.session.commit()
-    _touch(target)
     flash(_("Removed."), "success")
     return redirect(target.url("admin.editor"))
 
@@ -219,7 +212,6 @@ def order_blocks(kind, oid):
     for pos, bid in enumerate(ids, start=1):
         blocks[bid].position = pos
     db.session.commit()
-    _touch(target)
     return jsonify(ok=True)
 
 
@@ -251,7 +243,6 @@ def upload_to_block(kind, oid, bid):
             cleanup_media(target, {old})
     block.updated_by = current_user.id
     db.session.commit()
-    _touch(target)
     return jsonify(ok=True, media_id=m.id)
 
 
@@ -263,6 +254,30 @@ def set_alt(kind, oid, mid):
     m.alt_text = request.form.get("alt", "")[:300]
     db.session.commit()
     return jsonify(ok=True)
+
+
+def _percent(value) -> int:
+    try:
+        return min(100, max(0, round(float(value))))
+    except (TypeError, ValueError):
+        abort(400)
+
+
+@bp.route(K + "/media/<int:mid>/focus", methods=["GET", "POST"])
+@login_required
+def media_focus(kind, oid, mid):
+    """Pick the spot that must stay in view when a photo is cropped (phone, card, cover)."""
+    target = get_target(kind, oid)
+    m = get_owned(mid, *target.owner) or abort(404)
+    back = request.values.get("next", "")
+    if not back.startswith("/beheer/") or "//" in back:
+        back = target.url("admin.editor")
+    if request.method == "POST":
+        m.focus_x, m.focus_y = _percent(request.form.get("x")), _percent(request.form.get("y"))
+        db.session.commit()
+        flash(_("Saved."), "success")
+        return redirect(back)
+    return render_template("admin/focus.html", target=target, m=m, back=back)
 
 
 @bp.post(K + "/copy-nl")

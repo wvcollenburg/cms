@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from flask_login import UserMixin
 from sqlalchemy import (
-    JSON, Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, String,
+    JSON, Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, SmallInteger, String,
     Text, UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -253,6 +253,9 @@ class Media(db.Model):
     height: Mapped[int] = mapped_column(Integer)
     bytes: Mapped[int] = mapped_column(Integer)
     alt_text: Mapped[str] = mapped_column(String(300), default="")
+    # Focal point, in % from the left and top: where every crop centres (CSS object-position).
+    focus_x: Mapped[int] = mapped_column(SmallInteger, default=50, server_default="50")
+    focus_y: Mapped[int] = mapped_column(SmallInteger, default=50, server_default="50")
     # {"webp": {"400": "3/abc_400.webp", ...}, "jpeg": "3/abc_1600.jpg"}
     variants: Mapped[dict] = mapped_column(JSON, default=dict)
     uploaded_by: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))

@@ -7,7 +7,6 @@ from flask_login import current_user, login_required
 from sqlalchemy import select
 
 from app.admin import bp
-from app.admin.editor import Target, _touch
 from app.audit import audit
 from app.auth import policy
 from app.extensions import db
@@ -57,7 +56,6 @@ def page_meta(page_id):
         page.show_in_nav = request.form.get("show_in_nav") == "1"
     audit("page.meta", "page", page.id, {"lang": lang})
     db.session.commit()
-    _touch(Target("page", page, lang))
     flash(_("Saved."), "success")
     return redirect(url_for("admin.editor", kind="page", oid=page.id, lang=lang))
 

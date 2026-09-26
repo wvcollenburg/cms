@@ -6,7 +6,7 @@ from flask_babel import gettext as _
 from flask_login import current_user, login_required
 
 from app.admin import bp
-from app.admin.editor import UPLOAD_ERRORS, Target, _touch, cleanup_media
+from app.admin.editor import UPLOAD_ERRORS, Target, cleanup_media
 from app.audit import audit
 from app.auth import policy
 from app.blocks import sanitize_html
@@ -44,7 +44,6 @@ def space_settings(space_id):
             space.accent_color = color.lower()
         audit("space.settings", "space", space.id)
         db.session.commit()
-        _touch(Target("space", space, None))
         flash(_("Saved."), "success")
         return redirect(url_for("admin.space_settings", space_id=space.id))
     return render_template("admin/space_settings.html", space=space)
@@ -73,7 +72,6 @@ def space_photo(space_id, which):
         cleanup_media(target, {old})
     audit(f"space.{which}", "space", space.id)
     db.session.commit()
-    _touch(target)
     if request.form.get("remove"):
         return redirect(url_for("admin.space_settings", space_id=space.id))
     return jsonify(ok=True)
@@ -88,7 +86,6 @@ def space_visibility(space_id):
         audit("space.status", "space", space.id, {"old": space.status, "new": new})
         space.status = new
         db.session.commit()
-        _touch(Target("space", space, None))
     flash(_("Your page is now visible to everyone.") if new == "published"
           else _("Your page is hidden from visitors for now."), "success")
     return redirect(request.form.get("back") or url_for("admin.editor", kind="space", oid=space.id))

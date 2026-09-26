@@ -2,11 +2,11 @@
   <p class="small">{{ (b.data.html | striptags | truncate(140)) or _('(empty)') }}</p>
 {% elif b.type == 'gallery' %}
   {% set its = b.data['items'] %}
-  <div class="thumbs">{% for it in its[:6] %}{% set m = media.get(it.media_id) %}{% if m %}<img src="{{ img_src(m, 400) }}" alt="" loading="lazy">{% endif %}{% endfor %}</div>
+  <div class="thumbs">{% for it in its[:6] %}{% set m = media.get(it.media_id) %}{% if m %}<img src="{{ img_src(m, 400) }}" alt="" loading="lazy" style="{{ focus_style(m) }}">{% endif %}{% endfor %}</div>
   <p class="small">{{ ngettext('%(num)s photo', '%(num)s photos', its|length) }}</p>
 {% elif b.type == 'image' %}
   {% set m = media.get(b.data.media_id) %}
-  {% if m %}<div class="thumbs"><img src="{{ img_src(m, 400) }}" alt=""></div>{% else %}<p class="small">{{ _('(no photo yet)') }}</p>{% endif %}
+  {% if m %}<div class="thumbs"><img src="{{ img_src(m, 400) }}" alt="" style="{{ focus_style(m) }}"></div>{% else %}<p class="small">{{ _('(no photo yet)') }}</p>{% endif %}
 {% elif b.type == 'video' %}
   <p class="small">{{ b.data.caption or b.data.url or _('(no video yet)') }}</p>
 {% elif b.type == 'social' %}

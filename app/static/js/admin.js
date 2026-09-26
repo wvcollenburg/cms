@@ -91,6 +91,29 @@
     });
   }
 
+  // Focal point: tap the photo; the dot, the hidden fields and the crop previews follow.
+  var picker = document.querySelector(".focus-picker");
+  if (picker) {
+    var photo = picker.querySelector(".focus-photo");
+    var dot = picker.querySelector(".focus-dot");
+    var setFocus = function (x, y) {
+      x = Math.round(Math.min(100, Math.max(0, x)));
+      y = Math.round(Math.min(100, Math.max(0, y)));
+      picker.elements.x.value = x;
+      picker.elements.y.value = y;
+      dot.style.left = x + "%";
+      dot.style.top = y + "%";
+      picker.querySelectorAll(".focus-preview img").forEach(function (img) {
+        img.style.objectPosition = x + "% " + y + "%";
+      });
+    };
+    photo.addEventListener("click", function (e) {
+      var r = photo.querySelector("img").getBoundingClientRect();
+      setFocus((e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100);
+    });
+    picker.querySelector("[data-focus-reset]").addEventListener("click", function () { setFocus(50, 50); });
+  }
+
   // No file attachments in rich text: photos go in a photo album instead.
   document.addEventListener("trix-file-accept", function (e) { e.preventDefault(); });
 })();

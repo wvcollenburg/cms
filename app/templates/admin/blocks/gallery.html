@@ -6,7 +6,8 @@
   {% for it in block.data['items'] %}{% set m = media.get(it.media_id) %}{% if m %}
   <li>
     <input type="hidden" name="item_id" value="{{ it.media_id }}">
-    <img src="{{ img_src(m, 400) }}" alt="">
+    <img src="{{ img_src(m, 400) }}" alt="" style="{{ focus_style(m) }}">
+    <a class="focus-link small" href="{{ target.url('admin.media_focus', mid=m.id, next=request.full_path.rstrip('?')) }}">{{ _('Choose what stays in view') }}</a>
     <label class="small">{{ _('Caption') }}<input name="item_caption" value="{{ it.caption }}" maxlength="300"></label>
     <label class="radio small"><input type="checkbox" name="remove" value="{{ it.media_id }}"> {{ _('Remove') }}</label>
   </li>

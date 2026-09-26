@@ -2,8 +2,9 @@
   {%- if m -%}
   <picture>
     <source type="image/webp" srcset="{{ srcset(m) }}" sizes="{{ sizes }}">
+    {%- set focus = focus_style(m) %}
     <img src="{{ img_fallback(m) }}" alt="{{ m.alt_text }}" width="{{ m.width }}" height="{{ m.height }}"
-         loading="{{ loading }}" decoding="async"{% if cls %} class="{{ cls }}"{% endif %}>
+         loading="{{ loading }}" decoding="async"{% if cls %} class="{{ cls }}"{% endif %}{% if focus %} style="{{ focus }}"{% endif %}>
   </picture>
   {%- endif -%}
 {%- endmacro %}

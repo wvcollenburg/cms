@@ -1,5 +1,6 @@
 {% set m = media.get(block.data.media_id) %}
-{% if m %}<img class="edit-preview" src="{{ img_src(m, 800) }}" alt="">{% endif %}
+{% if m %}<img class="edit-preview" src="{{ img_src(m, 800) }}" alt="">
+<a class="focus-link small" href="{{ target.url('admin.media_focus', mid=m.id, next=request.full_path.rstrip('?')) }}">{{ _('Choose what stays in view') }}</a>{% endif %}
 {% set upload_url = target.url('admin.upload_to_block', bid=block.id) %}{% set multiple = false %}{% set then = 'submit' %}
 {% set label = _('Choose another photo') if m else _('Choose a photo') %}{% set secondary = m %}
 {% include 'admin/blocks/_upload.html' %}
