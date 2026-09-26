@@ -3,11 +3,8 @@
    Browsers without scroll-driven animations simply show everything, unanimated. */
 
 /* ---------------------------------------------------------------- page transitions */
-@view-transition { navigation: auto; }
+/* The @view-transition opt-in is inline in public/layout.html, so it's there before this file loads. */
 ::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--ease-out); }
-@media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
-}
 
 /* ---------------------------------------------------------------- header */
 .site-header {

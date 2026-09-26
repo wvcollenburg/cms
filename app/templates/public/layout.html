@@ -3,7 +3,15 @@
 {# Public pages are cached and served to everyone (D18): nothing per visitor or per session. #}
 {% block csrf %}{% endblock %}
 {% block head %}
-  <link rel="preload" href="{{ url_for('static', filename='fonts/outfit-latin-wght-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+  {# Page transitions: the opt-in is inline so the browser sees it on the new page before any
+     stylesheet has loaded; otherwise it sometimes aborts with "opt-in disabled". A skipped
+     transition is harmless, so its promises are caught instead of showing up as errors. The
+     script must be inline and not deferred: pagereveal fires before deferred scripts run. #}
+  <style>@view-transition { navigation: auto; } @media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }</style>
+  <script>(function () {
+    function quiet(e) { var t = e.viewTransition; if (!t) return; var n = function () {}; t.ready.catch(n); t.finished.catch(n); t.updateCallbackDone.catch(n); }
+    addEventListener("pageswap", quiet); addEventListener("pagereveal", quiet);
+  })();</script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
   <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
 {% endblock %}
