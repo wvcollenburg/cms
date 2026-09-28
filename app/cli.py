@@ -58,13 +58,10 @@ def init_db():
 @with_appcontext
 def seed_demo(reset, if_empty):
     """Load demo content (§10b): front pages NL/EN, 3 live maker spaces, one hidden, one tombstone."""
-    from app.media import storage
-    from app.public import cache
     if reset:
-        db.drop_all()
-        for root in (storage.media_root(), storage.hidden_root()):
-            shutil.rmtree(root, ignore_errors=True)
-        cache.clear()
+        reset_demo()
+        click.echo("Demo data loaded. Demo password for all demo users: " + current_app.config["DEMO_PASSWORD"])
+        return
     db.create_all()
     from app.models import User
     if db.session.query(User).count():
@@ -74,6 +71,22 @@ def seed_demo(reset, if_empty):
         raise click.ClickException("Database isn't empty. Use --reset to start over.")
     _seed()
     click.echo("Demo data loaded. Demo password for all demo users: " + current_app.config["DEMO_PASSWORD"])
+
+
+def reset_demo() -> None:
+    """Drop all data, media and cached pages, then load the demo content again (§10b)."""
+    from app.media import storage
+    from app.public import cache
+    # No open transaction may hold a lock while the tables are dropped: on MariaDB the DROP would
+    # wait for it forever.
+    db.session.commit()
+    db.session.close()
+    db.drop_all()
+    for root in (storage.media_root(), storage.hidden_root()):
+        shutil.rmtree(root, ignore_errors=True)
+    cache.clear()
+    db.create_all()
+    _seed()
 
 
 # ------------------------------------------------------------------ demo images

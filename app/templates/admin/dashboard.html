@@ -41,6 +41,16 @@
   {% else %}<p>{{ _('No maker pages are offline.') }}</p>{% endif %}
   <p><a class="button button-secondary" href="{{ url_for('admin.offline') }}">{{ _('Offline makers') }}</a></p>
 </section>
+{% if demo_mode %}
+<section class="card">
+  <h2>{{ _('Demo') }}</h2>
+  <p>{{ _('Put the demo back to how it started: all pages, photos and accounts. Everything testers changed is gone, and everyone has to log in again.') }}</p>
+  <form method="post" action="{{ url_for('admin.demo_reset') }}" data-confirm="{{ _('Put the whole demo back to how it started?') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="button button-secondary" type="submit">{{ _('Reset the demo') }}</button>
+  </form>
+</section>
+{% endif %}
 {% endif %}
 
 {% if not spaces and not policy.can_edit_site(current_user) and not policy.can_manage_lifecycle(current_user) %}

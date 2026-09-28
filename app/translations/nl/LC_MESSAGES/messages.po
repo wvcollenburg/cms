@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-26 22:57+0200\n"
+"POT-Creation-Date: 2026-09-28 11:37+0200\n"
 "PO-Revision-Date: 2026-09-23 10:58+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
@@ -26,16 +26,20 @@ msgstr "Log eerst in."
 msgid "Your own page at Broedplaats de Createur"
 msgstr "Je eigen pagina bij Broedplaats de Createur"
 
-#: app/admin/dashboard.py:39
+#: app/admin/dashboard.py:37
+msgid "The demo is back to how it started. Log in again to continue."
+msgstr "De demo staat weer zoals hij begon. Log opnieuw in om verder te gaan."
+
+#: app/admin/dashboard.py:56
 msgid "Choose a password of at least 10 characters."
 msgstr "Kies een wachtwoord van minstens 10 tekens."
 
-#: app/admin/dashboard.py:43 app/admin/editor.py:161 app/admin/editor.py:278 app/admin/site.py:59
+#: app/admin/dashboard.py:60 app/admin/editor.py:161 app/admin/editor.py:278 app/admin/site.py:59
 #: app/admin/site.py:105 app/admin/space.py:47
 msgid "Saved."
 msgstr "Opgeslagen."
 
-#: app/admin/dashboard.py:53
+#: app/admin/dashboard.py:70
 msgid "You are logged out on all devices."
 msgstr "Je bent op alle apparaten uitgelogd."
 
@@ -333,7 +337,27 @@ msgstr "Er staan geen makerspagina’s offline."
 msgid "Offline makers"
 msgstr "Makers die offline staan"
 
+#: app/templates/admin/dashboard.html:46
+msgid "Demo"
+msgstr "Demo"
+
 #: app/templates/admin/dashboard.html:47
+msgid ""
+"Put the demo back to how it started: all pages, photos and accounts. Everything testers changed "
+"is gone, and everyone has to log in again."
+msgstr ""
+"Zet de demo terug zoals hij begon: alle pagina’s, foto’s en accounts. Alles wat testers hebben "
+"veranderd is dan weg, en iedereen moet opnieuw inloggen."
+
+#: app/templates/admin/dashboard.html:48
+msgid "Put the whole demo back to how it started?"
+msgstr "De hele demo terugzetten zoals hij begon?"
+
+#: app/templates/admin/dashboard.html:50
+msgid "Reset the demo"
+msgstr "Demo terugzetten"
+
+#: app/templates/admin/dashboard.html:57
 msgid "You don't have a page yet. Ask a webmaster."
 msgstr "Je hebt nog geen pagina. Vraag het een webmaster."
 

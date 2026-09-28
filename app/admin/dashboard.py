@@ -1,6 +1,6 @@
-from flask import current_app, flash, redirect, render_template, request, url_for
+from flask import abort, current_app, flash, redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, logout_user
 
 from app.admin import bp
 from app.auth import policy
@@ -19,6 +19,23 @@ def dashboard():
         spaces=spaces,
         hidden=hidden_spaces() if policy.can_manage_lifecycle(current_user) else [],
     )
+
+
+@bp.post("/demo/reset")
+@login_required
+def demo_reset():
+    """Demo only (§10b): put all demo content back, after remote testers changed and deleted things."""
+    if not current_app.config["DEMO_MODE"]:
+        abort(404)
+    if not policy.can_manage_lifecycle(current_user):
+        abort(403)
+    from app.cli import reset_demo
+    # Every account is created anew, so nobody's login survives, including this one.
+    logout_user()
+    session.clear()
+    reset_demo()
+    flash(_("The demo is back to how it started. Log in again to continue."), "success")
+    return redirect(url_for("auth.demo"))
 
 
 @bp.route("/profiel", methods=["GET", "POST"])

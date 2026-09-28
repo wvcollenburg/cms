@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-26 22:57+0200\n"
+"POT-Creation-Date: 2026-09-28 11:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,16 +25,20 @@ msgstr ""
 msgid "Your own page at Broedplaats de Createur"
 msgstr ""
 
-#: app/admin/dashboard.py:39
+#: app/admin/dashboard.py:37
+msgid "The demo is back to how it started. Log in again to continue."
+msgstr ""
+
+#: app/admin/dashboard.py:56
 msgid "Choose a password of at least 10 characters."
 msgstr ""
 
-#: app/admin/dashboard.py:43 app/admin/editor.py:161 app/admin/editor.py:278
+#: app/admin/dashboard.py:60 app/admin/editor.py:161 app/admin/editor.py:278
 #: app/admin/site.py:59 app/admin/site.py:105 app/admin/space.py:47
 msgid "Saved."
 msgstr ""
 
-#: app/admin/dashboard.py:53
+#: app/admin/dashboard.py:70
 msgid "You are logged out on all devices."
 msgstr ""
 
@@ -334,7 +338,25 @@ msgstr ""
 msgid "Offline makers"
 msgstr ""
 
+#: app/templates/admin/dashboard.html:46
+msgid "Demo"
+msgstr ""
+
 #: app/templates/admin/dashboard.html:47
+msgid ""
+"Put the demo back to how it started: all pages, photos and accounts. "
+"Everything testers changed is gone, and everyone has to log in again."
+msgstr ""
+
+#: app/templates/admin/dashboard.html:48
+msgid "Put the whole demo back to how it started?"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:50
+msgid "Reset the demo"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:57
 msgid "You don't have a page yet. Ask a webmaster."
 msgstr ""
 

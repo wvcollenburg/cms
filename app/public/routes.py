@@ -145,6 +145,28 @@ def robots():
     return resp
 
 
+@bp.get("/sitemap.xml")
+def sitemap():
+    """Only what visitors can see (§8): published front pages and maker pages. An /en/ URL only
+    when an English version exists; otherwise it's the Dutch page again with a notice."""
+    base = current_app.config["BASE_URL"]
+    entries = [  # (url, {lang: url} alternates)
+        *[(url, {"nl": base + "/", "en": base + "/en/"}) for url in (base + "/", base + "/en/")],
+        *[(url, {"nl": base + "/makers", "en": base + "/en/makers"}) for url in (base + "/makers", base + "/en/makers")],
+    ]
+    for page in db.session.scalars(select(Page).where(Page.status == "published", Page.slug != "home")):
+        nl = base + f"/{page.slug}"
+        if page.translation("en"):
+            alternates = {"nl": nl, "en": base + f"/en/{page.slug}"}
+            entries += [(nl, alternates), (alternates["en"], alternates)]
+        else:
+            entries.append((nl, {}))
+    entries += [(base + f"/{s.slug}", {}) for s in published_spaces()]
+    resp = make_response(render_template("public/sitemap.xml", entries=entries))
+    resp.mimetype = "application/xml"
+    return resp
+
+
 def _inactive(display_name: str | None):
     """The "no longer active" 404 (D8), in the visitor's language, never indexed."""
     g.lang = visitor_lang()

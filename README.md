@@ -12,7 +12,7 @@ docker compose up --build -d
 
 - Site: http://localhost:8080 (demo logins at `/auth/demo`)
 - Mail inbox: http://localhost:8025 (magic links land here)
-- Reset the demo: `docker compose exec app flask seed-demo --reset`
+- Reset the demo: `docker compose exec app flask seed-demo --reset` (or log in as Sleutelhouder: *Demo terugzetten* on the start page)
 - Start from scratch, including the database: `docker compose down -v`
 
 On a machine other than your own, put at least this in the `.env` next to `compose.yaml` (login
