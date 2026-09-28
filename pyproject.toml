@@ -30,3 +30,12 @@ testpaths = ["tests"]
 
 [tool.uv]
 package = false
+# STRATO shared hosting (Profile B) runs Python 3.11 on glibc 2.17 with no compiler, so every
+# package needs a manylinux_2_17 (manylinux2014) wheel. These are the last versions that ship one.
+# Check before lifting: uv pip install --target /tmp/x --python-version 3.11
+#   --python-platform x86_64-manylinux_2_17 --only-binary :all: -r <(uv export --no-dev)
+constraint-dependencies = [
+    "pillow<12.3",
+    "argon2-cffi-bindings<22",
+    "greenlet<3.3",  # SQLAlchemy pulls it in for asyncio, which we don't use
+]

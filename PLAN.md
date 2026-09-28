@@ -646,6 +646,11 @@ Profile B depends on details STRATO doesn't document well, so verify these on a 
 | S8 | SMTP from a STRATO mailbox, and SPF/DKIM/DMARC on the domain | Magic links must reach Gmail and Outlook inboxes |
 | S9 | MariaDB version and `CHECK` constraint support | CHECK enforced (MariaDB ≥ 10.2) |
 
+**Early results (28 Sep 2026, on William's own STRATO account; the collective's package was still being set up):**
+- **S1 looks OK:** `python3` is 3.11.6 (`python` is 2.7, so the CGI script must name `python3`).
+- **S2 looks OK, with three version caps.** The system is glibc 2.17, so only `manylinux2014` wheels install. Pillow 12.3, argon2-cffi-bindings 26 and greenlet 3.3+ no longer ship those, so `pyproject.toml` caps them (`constraint-dependencies`). With the caps, the full set installs for Python 3.11 / glibc 2.17, and all tests pass in the `manylinux2014` image (glibc 2.17, Python 3.11).
+- **Risk to keep in mind:** more packages will drop glibc 2.17 over time, so security updates may eventually stop reaching Profile B. Fallback stays Profile A (STRATO VPS).
+
 **If S1, S2, S3 or S5 fails, Profile B is off the table** and the plan falls back to Profile A (a STRATO VPS or William's own infrastructure).
 
 ### Backups on Profile B
