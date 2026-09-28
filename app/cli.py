@@ -15,6 +15,28 @@ def register_cli(app):
     app.cli.add_command(init_db)
     app.cli.add_command(seed_demo)
     app.cli.add_command(page_cache_cli)
+    app.cli.add_command(run_tasks)
+
+
+@click.command("run-tasks")
+@click.option("--task", "names", multiple=True, help="Only this task (repeatable). Default: all.")
+@click.option("--if-due", is_flag=True, help="Only when the last run is over a day old.")
+@with_appcontext
+def run_tasks(names, if_due):
+    """Run the daily tasks (D17). Exit code 1 when a task failed, 2 when another run is busy."""
+    import json
+
+    from app import tasks
+    try:
+        summary = tasks.run("cli", list(names) or None, due_only=if_due)
+    except ValueError as exc:
+        raise click.UsageError(str(exc))
+    if summary is None:
+        click.echo("Not run: another run is busy, or (with --if-due) it already ran today.")
+        raise SystemExit(2)
+    click.echo(json.dumps(summary, indent=2))
+    if not summary["ok"]:
+        raise SystemExit(1)
 
 
 @click.group("page-cache")

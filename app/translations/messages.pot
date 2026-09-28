@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-28 11:37+0200\n"
+"POT-Creation-Date: 2026-09-29 00:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,20 +25,20 @@ msgstr ""
 msgid "Your own page at Broedplaats de Createur"
 msgstr ""
 
-#: app/admin/dashboard.py:37
+#: app/admin/dashboard.py:45
 msgid "The demo is back to how it started. Log in again to continue."
 msgstr ""
 
-#: app/admin/dashboard.py:56
+#: app/admin/dashboard.py:64
 msgid "Choose a password of at least 10 characters."
 msgstr ""
 
-#: app/admin/dashboard.py:60 app/admin/editor.py:161 app/admin/editor.py:278
+#: app/admin/dashboard.py:68 app/admin/editor.py:161 app/admin/editor.py:278
 #: app/admin/site.py:59 app/admin/site.py:105 app/admin/space.py:47
 msgid "Saved."
 msgstr ""
 
-#: app/admin/dashboard.py:70
+#: app/admin/dashboard.py:78
 msgid "You are logged out on all devices."
 msgstr ""
 
@@ -338,25 +338,64 @@ msgstr ""
 msgid "Offline makers"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:46
+#: app/templates/admin/dashboard.html:43
+msgid "the daily call"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:43
+msgid "by hand"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:43
+msgid "during a visit"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:45
+#, python-format
+msgid "Daily maintenance last ran on %(when)s (%(how)s): %(result)s."
+msgstr ""
+
+#: app/templates/admin/dashboard.html:48
+msgid "all went well"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:48
+msgid "still busy"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:48
+msgid "something went wrong"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:49
+msgid "Daily maintenance has not run yet."
+msgstr ""
+
+#: app/templates/admin/dashboard.html:50
+msgid ""
+"Daily maintenance has not run for more than 2 days. Check the daily call "
+"(see the runbook)."
+msgstr ""
+
+#: app/templates/admin/dashboard.html:54
 msgid "Demo"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:47
+#: app/templates/admin/dashboard.html:55
 msgid ""
 "Put the demo back to how it started: all pages, photos and accounts. "
 "Everything testers changed is gone, and everyone has to log in again."
 msgstr ""
 
-#: app/templates/admin/dashboard.html:48
+#: app/templates/admin/dashboard.html:56
 msgid "Put the whole demo back to how it started?"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:50
+#: app/templates/admin/dashboard.html:58
 msgid "Reset the demo"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:57
+#: app/templates/admin/dashboard.html:65
 msgid "You don't have a page yet. Ask a webmaster."
 msgstr ""
 

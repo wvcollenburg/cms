@@ -48,6 +48,14 @@ class Config:
     TEMPLATES_AUTO_RELOAD = _bool("TEMPLATES_AUTO_RELOAD")
     LANGUAGES = ("nl", "en")
 
+    BABEL_DEFAULT_TIMEZONE = "Europe/Amsterdam"  # times are stored in UTC, shown in local time
+
+    # Daily task runner (D17, D21). Without TASK_SECRET the task API is switched off.
+    TASK_SECRET = os.environ.get("TASK_SECRET", "")
+    TASK_FALLBACK = _bool("TASK_FALLBACK", "1")  # a normal request runs overdue tasks (safety net)
+    HEALTHCHECK_URL = os.environ.get("HEALTHCHECK_URL", "")  # e.g. https://hc-ping.com/<uuid>
+    DEMO_NIGHTLY_RESET = _bool("DEMO_NIGHTLY_RESET")  # demo only: the task run resets the demo
+
     MAGIC_LINK_MINUTES = 15
     HIDE_DAYS = 60
     MAX_POSTPONE_DAYS = 365

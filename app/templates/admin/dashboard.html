@@ -40,6 +40,14 @@
   <p>{{ ngettext('%(num)s maker page is offline.', '%(num)s maker pages are offline.', hidden|length) }}</p>
   {% else %}<p>{{ _('No maker pages are offline.') }}</p>{% endif %}
   <p><a class="button button-secondary" href="{{ url_for('admin.offline') }}">{{ _('Offline makers') }}</a></p>
+  {% set how = {'api': _('the daily call'), 'cli': _('by hand'), 'fallback': _('during a visit')} %}
+  <p class="small">{% if last_run and last_run.last_started_at %}
+    {{ _('Daily maintenance last ran on %(when)s (%(how)s): %(result)s.',
+         when=last_run.last_started_at | datetimeformat('d MMMM, HH:mm'),
+         how=how.get(last_run.trigger, last_run.trigger),
+         result=_('all went well') if last_run.status == 'ok' else (_('still busy') if last_run.status == 'running' else _('something went wrong'))) }}
+  {%- else %}{{ _('Daily maintenance has not run yet.') }}{% endif %}</p>
+  {% if tasks_late %}<p class="flash flash-error">{{ _('Daily maintenance has not run for more than 2 days. Check the daily call (see the runbook).') }}</p>{% endif %}
 </section>
 {% if demo_mode %}
 <section class="card">

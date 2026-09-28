@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from flask import abort, current_app, flash, redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from flask_login import current_user, login_required, logout_user
@@ -7,17 +9,22 @@ from app.auth import policy
 from app.auth.routes import ph
 from app.extensions import db
 from app.lifecycle import hidden_spaces
-from app.models import new_session_token
+from app.models import new_session_token, utcnow
 
 
 @bp.get("/")
 @login_required
 def dashboard():
+    from app import tasks
     spaces = [m.space for m in current_user.memberships]
+    key_holder = policy.can_manage_lifecycle(current_user)
+    last = tasks.last_run() if key_holder else None
     return render_template(
         "admin/dashboard.html",
         spaces=spaces,
-        hidden=hidden_spaces() if policy.can_manage_lifecycle(current_user) else [],
+        hidden=hidden_spaces() if key_holder else [],
+        last_run=last,
+        tasks_late=bool(last and last.last_started_at and last.last_started_at < utcnow() - timedelta(hours=48)),
     )
 
 

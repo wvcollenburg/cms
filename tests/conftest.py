@@ -33,6 +33,7 @@ def app(tmp_path):
         "MEDIA_ROOT": str(tmp_path / "media"),
         "PRIVATE_ROOT": str(tmp_path / "private"),
         "PAGE_CACHE_ROOT": str(tmp_path / "cache"),
+        "TASK_FALLBACK": False,  # tests of the fallback switch it on themselves
         "DEMO_MODE": False,
         "BASE_URL": "http://localhost",
         "SERVER_NAME": "localhost",

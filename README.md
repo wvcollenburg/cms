@@ -94,6 +94,30 @@ It lives in `$INSTANCE_PATH/cache` unless `PAGE_CACHE_ROOT` says otherwise; `PAG
 switches it off. With `TEMPLATES_AUTO_RELOAD=1` (compose.dev.yaml) edited code or templates
 clear it on the next visit, so a `git pull` needs no extra step.
 
+### Daily tasks
+
+All periodic jobs run in one go (PLAN D17): today the page cache warm-up, and the nightly demo
+reset when `DEMO_NIGHTLY_RESET=1`; the purge of removed makers joins after the opening.
+
+```bash
+flask run-tasks                    # all tasks; exit 1 if one failed, 2 if another run is busy
+flask run-tasks --task cache_rebuild
+flask run-tasks --if-due           # only when the last run is over a day old
+```
+
+In production a cron job on another server calls the signed task API once a day (STRATO Basic
+has no cron). `deploy/call-tasks.sh` is that caller; it needs the site's `TASK_SECRET`:
+
+```bash
+CREATEUR_TASK_SECRET=... deploy/call-tasks.sh https://<domain>            # all tasks
+CREATEUR_TASK_SECRET=... deploy/call-tasks.sh https://<domain> cache_rebuild
+```
+
+Safety net: when the last run is over a day old, the next request that reaches Python runs the
+tasks after its response has gone out (`TASK_FALLBACK=0` switches that off). Set
+`HEALTHCHECK_URL` to get an e-mail from Healthchecks.io when a daily run fails or doesn't happen.
+The key holder's start page shows when it last ran.
+
 ### Tests
 
 ```bash

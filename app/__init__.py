@@ -52,11 +52,15 @@ def create_app(overrides: dict | None = None) -> Flask:
     _register_security_headers(app)
 
     from app.admin import bp as admin_bp
+    from app.api import bp as api_bp
     from app.auth.routes import bp as auth_bp
     from app.public.routes import bp as public_bp
+    csrf.exempt(api_bp)  # machine-to-machine, authenticated by its HMAC signature instead
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(api_bp)
     app.register_blueprint(public_bp)  # last: it owns the /<slug> catch-all
+    _register_task_fallback(app)
 
     @app.errorhandler(403)
     def forbidden(e):
@@ -93,6 +97,34 @@ def _register_template_helpers(app: Flask) -> None:
         focus_style=media.focus_style,
     )
     app.jinja_env.filters["trix"] = trix_html
+
+
+def _register_task_fallback(app: Flask) -> None:
+    """Safety net for the daily tasks (§10a): if the last run is over a day old, the next request
+    that reaches Python runs them, after its response has gone out."""
+    from app import tasks
+
+    def run_overdue():
+        with app.app_context():
+            try:
+                tasks.run("fallback", due_only=True)
+            except Exception:
+                app.logger.exception("fallback task run failed")
+
+    @app.after_request
+    def maybe_run_tasks(resp):
+        if (not app.config["TASK_FALLBACK"] or request.environ.get(tasks.INTERNAL)
+                or request.path.startswith(("/static/", "/media/", "/api/"))
+                or resp.headers.get("X-Page-Cache") == "HIT"):
+            return resp
+        try:
+            due = tasks.is_due()
+        except Exception:  # e.g. the database isn't migrated yet: never break the page for this
+            app.logger.warning("could not check whether tasks are due", exc_info=True)
+            return resp
+        if due:
+            resp.call_on_close(run_overdue)
+        return resp
 
 
 def _register_security_headers(app: Flask) -> None:

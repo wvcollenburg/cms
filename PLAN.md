@@ -26,7 +26,7 @@ Owner: William van Collenburg
 | D14 | Tombstone after a deletion request | Name is removed, and the slug stays reserved for 1 year. A superadmin can release it early |
 | D15 | Deployment profiles | One codebase that runs as **Profile A** (VPS/self-host: compose, Gunicorn, Caddy) or **Profile B** (STRATO shared hosting: Apache + CGI). See §10a |
 | D16 | Database | **MariaDB** (MySQL-compatible) for **both** profiles. Using one database engine everywhere means migrations and tests run against a single engine |
-| D17 | Scheduled work | All periodic jobs go through one idempotent **task runner** (`flask run-tasks` / `POST /api/tasks/run`). Profile A calls it from cron. Profile B calls it from an external scheduler, with a time-based fallback that runs it during a normal page request (§10a) |
+| D17 | Scheduled work | All periodic jobs go through one idempotent **task runner** (`flask run-tasks` / `POST /api/tasks/run`). Profile A calls it from cron. Profile B calls it from an external scheduler, with a time-based fallback that runs it during a normal page request (§10a). **Built 29 Sep 2026** (`app/tasks.py`, `app/api.py`, `deploy/call-tasks.sh`) |
 | D18 | Public page performance | Published pages are **rendered to static HTML** and served directly by the web server. Python only runs for admin, login and pages not yet cached |
 | D19 | Proof of concept | Built on a **local VM that mimics STRATO Basic** (Apache + CGI + MariaDB, no root, no cron), so it costs nothing. Deployed to STRATO once the collective approves (§10b) |
 | D20 | Launch date | The website goes **live on STRATO and is announced at the opening, Sun 18 Oct 2026**. Timeline and go/no-go on 14 Oct in §11 |
@@ -609,6 +609,7 @@ According to STRATO's FAQ, cron jobs are available on the legacy platform only f
    - The ping URL goes in `.env` (`HEALTHCHECK_URL`). The Healthchecks.io account belongs to the collective, and alert recipients are managed there. It's part of the handover in the runbook.
    - The admin dashboard still shows the last successful run and what triggered it, for a quick look.
    - A second check can watch William's nightly backup script the same way.
+   - **As built (29 Sep 2026):** the fallback runs *after* the response has been sent (WSGI `call_on_close`), so the visitor who triggers it doesn't wait. Tasks today: `demo_reset` (demo only, `DEMO_NIGHTLY_RESET=1`, and only from the API or CLI, never during someone's visit) and `cache_rebuild`. Checked on MariaDB 11.4 with Gunicorn: 10 simultaneous claims give exactly one winner; `call-tasks.sh` gets 200, a wrong secret 401, a busy run 409.
 5. **The fallback only runs when traffic reaches Python**, meaning uncached pages or admin logins. In a quiet week with no edits, it may not fire for several days. That's fine as a safety net (a purge could run a few days late, never early), but it's why the API caller is the primary mechanism.
 6. **Handover:** if William leaves the collective, the cron job moves to someone else's server or to a free scheduler such as cron-job.org, and the HMAC secret is rotated. Rotating the secret means changing it in `.env` and giving the new value to the new caller. `RUNBOOK.md` has a "Task caller" section with the script above and these steps. Until the handover, the fallback keeps the tasks running.
 
@@ -649,6 +650,7 @@ Profile B depends on details STRATO doesn't document well, so verify these on a 
 **Early results (28 Sep 2026, on William's own STRATO account; the collective's package was still being set up):**
 - **S1 looks OK:** `python3` is 3.11.6 (`python` is 2.7, so the CGI script must name `python3`).
 - **S2 looks OK, with three version caps.** The system is glibc 2.17, so only `manylinux2014` wheels install. Pillow 12.3, argon2-cffi-bindings 26 and greenlet 3.3+ no longer ship those, so `pyproject.toml` caps them (`constraint-dependencies`). With the caps, the full set installs for Python 3.11 / glibc 2.17, and all tests pass in the `manylinux2014` image (glibc 2.17, Python 3.11).
+- **S7: no cron**, as expected: no cron option in the STRATO web interface, and `crontab` doesn't exist over SSH. The task API called from William's server stays the primary trigger.
 - **Risk to keep in mind:** more packages will drop glibc 2.17 over time, so security updates may eventually stop reaching Profile B. Fallback stays Profile A (STRATO VPS).
 
 **If S1, S2, S3 or S5 fails, Profile B is off the table** and the plan falls back to Profile A (a STRATO VPS or William's own infrastructure).
