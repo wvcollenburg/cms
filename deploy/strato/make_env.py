@@ -29,7 +29,7 @@ settings = {
     "MAIL_USE_TLS": "1",
     "MAIL_USERNAME": a["MAIL_USER"],
     "MAIL_PASSWORD": a["MAIL_PASSWORD"],
-    "MAIL_FROM": f"Broedplaats de Createur <{a['MAIL_USER']}>",
+    "MAIL_FROM": f"Broedplaats de Createur <{a.get('MAIL_FROM_ADDR') or a['MAIL_USER']}>",
     "DEMO_MODE": "0",
     "DEMO_NIGHTLY_RESET": "0",
     "TASK_SECRET": secrets.token_hex(32),

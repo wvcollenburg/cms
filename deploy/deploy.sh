@@ -7,7 +7,8 @@
 #
 # deploy/deploy.conf holds:
 #   STRATO_SSH=user@ssh.strato.de    # or an ssh alias
-#   DOMAIN_DIR=example.nl            # the web root folder in the STRATO home (usually the domain)
+#   SITE_DOMAIN=example.nl           # the address the site runs on (BASE_URL)
+#   DOMAIN_DIR=example.nl            # the folder in the STRATO home that address points at
 #   CGI_DIR=cgi-bin                  # optional: folder for the CGI script, if cgi-bin is taken
 #
 # What a deploy does:
@@ -35,13 +36,15 @@ ask() {  # ask VAR "question" [default]; a trailing "secret" hides the typing
 
 if [ ! -f deploy/deploy.conf ]; then
   echo "First deploy: a few questions (the answers are kept in deploy/deploy.conf)."
-  ask DOMAIN_DIR "The website's domain, e.g. createur.nl"
-  ask STRATO_SSH "SSH login from the STRATO panel, as user@host" "$DOMAIN_DIR@ssh.strato.de"
-  printf 'STRATO_SSH=%s\nDOMAIN_DIR=%s\n' "$STRATO_SSH" "$DOMAIN_DIR" > deploy/deploy.conf
+  ask SITE_DOMAIN "Address the website runs on (where a redirect ends up), e.g. createur.nl"
+  ask DOMAIN_DIR "Folder in your STRATO home that this address points at" "$SITE_DOMAIN"
+  ask STRATO_SSH "SSH login from the STRATO panel, as user@host (e.g. user@ssh.strato.de)"
+  printf 'STRATO_SSH=%s\nSITE_DOMAIN=%s\nDOMAIN_DIR=%s\n' "$STRATO_SSH" "$SITE_DOMAIN" "$DOMAIN_DIR" > deploy/deploy.conf
 fi
 . deploy/deploy.conf
 : "${STRATO_SSH:?set STRATO_SSH in deploy/deploy.conf}"
 : "${DOMAIN_DIR:?set DOMAIN_DIR in deploy/deploy.conf}"
+SITE_DOMAIN=${SITE_DOMAIN:-$DOMAIN_DIR}
 CGI_DIR=${CGI_DIR:-cgi-bin}
 UV=${UV:-$(command -v uv || echo "$HOME/.local/bin/uv")}
 # One SSH connection for the whole run, so the password is asked once. Tests swap in a stand-in.
@@ -63,7 +66,7 @@ remote "test ! -e '$APP_DIR' || test -f '$APP_DIR/flask'" || {
   echo "$APP_DIR exists but wasn't made by this script. Move it away first." >&2; exit 1; }
 if ! remote "test -d '$WEBROOT'"; then
   remote "mkdir -p '$WEBROOT'"
-  echo "    made the folder $WEBROOT: in the STRATO panel, point the domain at the folder $DOMAIN_DIR"
+  echo "    made the folder $WEBROOT: in the STRATO panel, point $SITE_DOMAIN at the folder $DOMAIN_DIR"
 fi
 
 FIRST_RUN=0
@@ -74,10 +77,11 @@ if ! remote "test -f '$PRIVATE_DIR/.env'"; then
   ask DB_NAME "  Database name"
   ask DB_USER "  Database user" "$DB_NAME"
   ask DB_PASSWORD "  Database password" "" secret
-  ask MAIL_USER "  Mailbox that sends the login links" "noreply@$DOMAIN_DIR"
+  ask MAIL_USER "  Mailbox that sends the login links (its login, not an alias)"
   ask MAIL_PASSWORD "  Password of that mailbox" "" secret
-  DOMAIN=$DOMAIN_DIR DOMAIN_DIR=$DOMAIN_DIR DB_HOST=$DB_HOST DB_NAME=$DB_NAME DB_USER=$DB_USER \
-    DB_PASSWORD=$DB_PASSWORD MAIL_USER=$MAIL_USER MAIL_PASSWORD=$MAIL_PASSWORD \
+  ask MAIL_FROM_ADDR "  Sender address people see (may be an alias of that mailbox)" "$MAIL_USER"
+  DOMAIN=$SITE_DOMAIN DOMAIN_DIR=$DOMAIN_DIR DB_HOST=$DB_HOST DB_NAME=$DB_NAME DB_USER=$DB_USER \
+    DB_PASSWORD=$DB_PASSWORD MAIL_USER=$MAIL_USER MAIL_PASSWORD=$MAIL_PASSWORD MAIL_FROM_ADDR=$MAIL_FROM_ADDR \
     python3 deploy/strato/make_env.py | $SSH "$STRATO_SSH" \
     "umask 077 && mkdir -p '$PRIVATE_DIR' && cat > '$PRIVATE_DIR/.env'"
   echo "    settings written to $PRIVATE_DIR/.env (with fresh secret keys)"
@@ -151,4 +155,4 @@ if [ "$FIRST_RUN" = 1 ]; then
   remote "'$APP_DIR/flask' create-superadmin '${ADMIN_EMAIL//\'/}' '${ADMIN_NAME//\'/}'"
 fi
 
-echo "==> Done: https://$DOMAIN_DIR/  (log in at https://$DOMAIN_DIR/auth/login)"
+echo "==> Done: https://$SITE_DOMAIN/  (log in at https://$SITE_DOMAIN/auth/login)"
