@@ -10,6 +10,8 @@ APP_DIR = "@APP_DIR@"
 PRIVATE_DIR = "@PRIVATE_DIR@"
 
 sys.path[0:0] = [APP_DIR, os.path.join(APP_DIR, "lib")]
+# Apache on STRATO starts us without HOME, so `~/` in the .env paths wouldn't expand.
+os.environ.setdefault("HOME", os.path.dirname(PRIVATE_DIR))
 os.environ.setdefault("CREATEUR_ENV_FILE", os.path.join(PRIVATE_DIR, ".env"))
 os.environ.setdefault("INSTANCE_PATH", os.path.join(PRIVATE_DIR, "instance"))
 LOG_DIR = os.path.join(PRIVATE_DIR, "logs")

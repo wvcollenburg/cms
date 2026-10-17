@@ -47,7 +47,8 @@ def _cgi(tmp_path, uri, env_lines):
                       .replace("@PYTHON@", sys.executable)
                       .replace("@APP_DIR@", str(REPO))
                       .replace("@PRIVATE_DIR@", str(private)))
-    env = {k: v for k, v in os.environ.items() if k not in ("CREATEUR_ENV_FILE", "INSTANCE_PATH")}
+    # Like Apache on STRATO: no HOME in the environment.
+    env = {k: v for k, v in os.environ.items() if k not in ("CREATEUR_ENV_FILE", "INSTANCE_PATH", "HOME")}
     env.update({
         "GATEWAY_INTERFACE": "CGI/1.1", "REQUEST_METHOD": "GET", "REQUEST_URI": uri,
         "QUERY_STRING": uri.partition("?")[2], "SCRIPT_NAME": "/cgi-bin/createur.cgi", "PATH_INFO": "",
@@ -71,6 +72,16 @@ def test_cgi_wrapper_serves_the_app_at_the_site_root(tmp_path):
     # Links the app builds must not carry the script's path (SCRIPT_NAME is reset).
     out, _ = _cgi(tmp_path, "/_lang/en?next=/makers", _base_env(tmp_path))
     assert out.startswith("Status: 302") and "Location: /makers" in out
+
+
+def test_cgi_wrapper_expands_home_paths_without_HOME(tmp_path):
+    # PRIVATE_DIR is <tmp>/private, so the wrapper takes <tmp> as home.
+    photo = tmp_path / "media" / "site" / "x.webp"
+    photo.parent.mkdir(parents=True)
+    photo.write_bytes(b"RIFF")
+    env = [line for line in _base_env(tmp_path) if not line.startswith("MEDIA_ROOT")] + ["MEDIA_ROOT=~/media"]
+    out, _ = _cgi(tmp_path, "/media/site/x.webp", env)
+    assert out.startswith("Status: 200"), out[:200]
 
 
 def test_cgi_wrapper_logs_a_startup_failure(tmp_path):
