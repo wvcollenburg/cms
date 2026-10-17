@@ -118,6 +118,11 @@ tasks after its response has gone out (`TASK_FALLBACK=0` switches that off). Set
 `HEALTHCHECK_URL` to get an e-mail from Healthchecks.io when a daily run fails or doesn't happen.
 The key holder's start page shows when it last ran.
 
+### Deploying to STRATO
+
+`deploy/deploy.sh` builds and uploads the site to STRATO shared hosting (CGI + `.htaccess`).
+Setup, the spike checklist, logs, rollback and backups are in [RUNBOOK.md](RUNBOOK.md).
+
 ### Tests
 
 ```bash

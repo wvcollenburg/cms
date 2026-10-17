@@ -1,0 +1,53 @@
+# Web root .htaccess on STRATO (PLAN §10a, D18). deploy.sh installs this as <web root>/.htaccess
+# and fills in @WEBROOT@ and @CGI_DIR@; don't edit the copy on the server.
+#
+# Order: files Apache can serve itself first (static, media, cached pages), everything else
+# goes to the app through CGI.
+
+Options -Indexes
+RewriteEngine On
+
+# Internals are never requested directly: the cache and the CGI script are only reached through
+# the rules below, and dotfiles (.htaccess, the cache's .generation) stay private.
+RewriteCond %{THE_REQUEST} \s/+(_cache|@CGI_DIR@)(/|\s|\?) [NC]
+RewriteRule ^ - [R=404,L]
+RewriteRule (^|/)\.(?!well-known/) - [R=404,L]
+
+# Static files and uploaded photos: straight from disk. A photo of a hidden space isn't here
+# any more (moved to ~/private), so it falls through to the app, which answers 404.
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(static|media|\.well-known)/ - [END]
+
+# Cached public pages (D18), the same mapping as app/public/cache.py:
+#   /  → _cache/index.html     /en/ → _cache/en/index.html
+#   /x → _cache/x/index.html   /en/x → _cache/en/x/index.html
+# Only plain GET/HEAD without a query string, like the app itself.
+RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+RewriteCond %{QUERY_STRING} ^$
+RewriteCond @WEBROOT@/_cache/$1index.html -f
+RewriteRule ^(en/)?$ _cache/$1index.html [END]
+
+RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+RewriteCond %{QUERY_STRING} ^$
+RewriteCond @WEBROOT@/_cache/$1/index.html -f
+RewriteRule ^((?:en/)?(?!en$)[a-z0-9-]+)$ _cache/$1/index.html [END]
+
+# Everything else: the app.
+RewriteRule ^ @CGI_DIR@/createur.cgi [END]
+
+<IfModule mod_headers.c>
+  # The same values the app sends, so they also cover the files Apache serves without it.
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  # Cached pages: always check for a newer version (a change clears the cache at once).
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <If "%{REQUEST_URI} =~ m#^/static/#">
+    Header set Cache-Control "no-cache"
+  </If>
+  <If "%{REQUEST_URI} =~ m#^/media/#">
+    Header set Cache-Control "public, max-age=31536000"
+  </If>
+</IfModule>

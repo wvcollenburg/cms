@@ -6,6 +6,11 @@ def _bool(name, default="0"):
     return os.environ.get(name, default).strip().lower() in ("1", "true", "yes", "on")
 
 
+def _path(name, default):
+    """A path setting; `~/` means the home folder (handy in the STRATO .env)."""
+    return os.path.expanduser(os.environ.get(name, default))
+
+
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-insecure")
     BASE_URL = os.environ.get("BASE_URL", "http://localhost:5000").rstrip("/")
@@ -13,12 +18,12 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///dev.db")
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
 
-    MEDIA_ROOT = os.environ.get("MEDIA_ROOT", "instance/media")
-    PRIVATE_ROOT = os.environ.get("PRIVATE_ROOT", "instance/private")
+    MEDIA_ROOT = _path("MEDIA_ROOT", "instance/media")
+    PRIVATE_ROOT = _path("PRIVATE_ROOT", "instance/private")
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 15 MB image + form overhead
     # Static page cache (D18). On STRATO this must be `<web root>/_cache`, so Apache can serve it.
     PAGE_CACHE = _bool("PAGE_CACHE", "1")
-    PAGE_CACHE_ROOT = os.environ.get("PAGE_CACHE_ROOT", os.path.join(os.environ.get("INSTANCE_PATH", "instance"), "cache"))
+    PAGE_CACHE_ROOT = _path("PAGE_CACHE_ROOT", os.path.join(os.environ.get("INSTANCE_PATH", "instance"), "cache"))
 
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "localhost")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", "1025"))

@@ -16,6 +16,35 @@ def register_cli(app):
     app.cli.add_command(seed_demo)
     app.cli.add_command(page_cache_cli)
     app.cli.add_command(run_tasks)
+    app.cli.add_command(create_superadmin)
+
+
+@click.command("create-superadmin")
+@click.argument("email")
+@click.argument("name")
+@click.option("--lang", type=click.Choice(["nl", "en"]), default="nl", help="Language of the admin screens.")
+@with_appcontext
+def create_superadmin(email, name, lang):
+    """Make EMAIL a key holder (superadmin), creating the user if needed. For the very first login
+    on a new site; after that, key holders manage roles in the admin."""
+    from app.models import User, UserRole
+
+    email = email.strip().lower()
+    if "@" not in email:
+        raise click.UsageError("That doesn't look like an e-mail address.")
+    user = db.session.query(User).filter_by(email=email).one_or_none()
+    if user is None:
+        user = User(email=email, display_name=name.strip(), ui_lang=lang)
+        db.session.add(user)
+        click.echo(f"Created user {email}.")
+    elif not user.is_active:
+        raise click.ClickException(f"{email} exists but is deactivated; restore them in the admin instead.")
+    if user.is_superadmin:
+        click.echo(f"{email} is already a key holder.")
+        return
+    user.roles.append(UserRole(role="superadmin"))
+    db.session.commit()
+    click.echo(f"{email} is now a key holder. Log in at {current_app.config['BASE_URL']}/auth/login")
 
 
 @click.command("run-tasks")
