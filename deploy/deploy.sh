@@ -13,7 +13,7 @@
 #
 # What a deploy does:
 #   1. builds locally: the code, compiled translations, and every dependency as a wheel for
-#      STRATO's Python on glibc 2.17 (no compiler there), in lib/
+#      the server's processor, glibc and Python (read over ssh; no compiler there), in lib/
 #   2. uploads one tarball over ssh (no rsync needed on either side)
 #   3. runs `flask db upgrade` with the NEW code; if that fails, the live site is untouched
 #   4. swaps ~/app and <web root>/static in one move each, installs .htaccess and the CGI script
@@ -56,12 +56,17 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 echo "==> Checking the server (STRATO may ask for your SSH password)"
-read -r REMOTE_HOME PYTHON PY_VERSION < <(remote \
-  'P=$(command -v python3) && echo "$HOME $P $($P -c "import sys; print(\"%d.%d\" % sys.version_info[:2])")"')
+# STRATO runs both x86_64 (glibc 2.17) and arm64 (Debian 12, glibc 2.36) hosting, so the
+# libraries are built for whatever this server turns out to be.
+read -r REMOTE_HOME PYTHON PY_VERSION WHEEL_PLATFORM < <(remote 'P=$(command -v python3) && echo "$HOME $P $($P -c "
+import platform, sys
+glibc = platform.libc_ver()[1].split(\".\")
+print(\"%d.%d\" % sys.version_info[:2], \"%s-manylinux_%s_%s\" % (platform.machine(), glibc[0], glibc[1]))
+")"')
 APP_DIR="$REMOTE_HOME/app"
 PRIVATE_DIR="$REMOTE_HOME/private"
 WEBROOT="$REMOTE_HOME/$DOMAIN_DIR"
-echo "    home $REMOTE_HOME, $PYTHON ($PY_VERSION), web root $WEBROOT"
+echo "    home $REMOTE_HOME, $PYTHON ($PY_VERSION, $WHEEL_PLATFORM), web root $WEBROOT"
 remote "test ! -e '$APP_DIR' || test -f '$APP_DIR/flask'" || {
   echo "$APP_DIR exists but wasn't made by this script. Move it away first." >&2; exit 1; }
 if ! remote "test -d '$WEBROOT'"; then
@@ -95,7 +100,7 @@ tar -c --exclude=__pycache__ --exclude='*.pyc' --exclude='*.mo' app migrations |
 "$UV" run --frozen pybabel -q compile -d "$BUILD/app/app/translations"
 "$UV" export --frozen --no-dev --no-emit-project --no-hashes --quiet -o "$BUILD/requirements.txt"
 "$UV" pip install --quiet --target "$BUILD/app/lib" --python-version "$PY_VERSION" \
-  --python-platform x86_64-manylinux_2_17 --only-binary :all: -r "$BUILD/requirements.txt"
+  --python-platform "$WHEEL_PLATFORM" --only-binary :all: -r "$BUILD/requirements.txt"
 mv "$BUILD/app/app/static" "$BUILD/web/static"  # Apache serves these; the app only builds the URLs
 mkdir "$BUILD/app/app/static"
 
