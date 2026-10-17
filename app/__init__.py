@@ -70,6 +70,22 @@ def create_app(overrides: dict | None = None) -> Flask:
     def not_found(e):
         return render_template("errors/404.html"), 404
 
+    from flask_wtf.csrf import CSRFError
+
+    @app.errorhandler(CSRFError)
+    def form_expired(e):
+        """A form from an old tab, the Back button or an expired session: send the person back to
+        try again instead of showing a bare 400 page."""
+        from urllib.parse import urlsplit
+
+        from flask import flash, redirect, url_for
+        from flask_babel import gettext as _
+        flash(_("This page had expired, so nothing was saved. Please try again."), "error")
+        ref = urlsplit(request.referrer or "")
+        if request.path.startswith("/auth/") or ref.netloc != request.host or not ref.path.startswith("/"):
+            return redirect(url_for("auth.login"))
+        return redirect(ref.path + (f"?{ref.query}" if ref.query else ""))
+
     from app.cli import register_cli
     register_cli(app)
     return app

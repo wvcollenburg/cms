@@ -85,3 +85,19 @@ def test_next_param_cannot_redirect_offsite(make_user, client):
     client.post("/auth/login", data={"email": "jan@example.org"})
     r = client.post(_link_from_mail())
     assert r.headers["Location"].endswith("/beheer/")
+
+
+def test_a_stale_form_sends_you_back_instead_of_a_bad_request(app, make_user, client):
+    # E.g. a login page opened before logging out, the Back button, or an expired session.
+    app.config["WTF_CSRF_ENABLED"] = True
+    make_user("jan")
+    r = client.post("/auth/password", data={"csrf_token": "stale", "email": "jan@example.org", "password": "x"})
+    assert r.status_code == 302 and r.location.endswith("/auth/login")
+    assert "Deze pagina was verlopen" in client.get("/auth/login").get_data(as_text=True)
+
+    # Elsewhere: back to the page the form was on (same site only).
+    r = client.post("/beheer/profiel", data={"csrf_token": "stale"},
+                    headers={"Referer": "http://localhost/beheer/profiel"})
+    assert r.status_code == 302 and r.location.endswith("/beheer/profiel")
+    r = client.post("/beheer/profiel", data={"csrf_token": "stale"}, headers={"Referer": "https://evil.example/x"})
+    assert r.location.endswith("/auth/login")

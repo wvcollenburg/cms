@@ -1317,3 +1317,7 @@ msgstr "De pagina’s van de makers komen binnenkort."
 msgid "More makers"
 msgstr "Meer makers"
 
+
+#: app/__init__.py
+msgid "This page had expired, so nothing was saved. Please try again."
+msgstr "Deze pagina was verlopen, dus er is niets opgeslagen. Probeer het nog een keer."
