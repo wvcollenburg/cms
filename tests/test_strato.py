@@ -199,6 +199,8 @@ def test_set_intro_from_plain_text(app, client):
     assert "<p>In november 2014<br>maakte ik mijn eerste lamp.</p>" in page
     assert "Lampen met liefde gemaakt" in page and "Kalebaslampen" in page
     assert "No maker page" in run(app.cli, ["set-intro", "niemand", "-"], input="x").output
+    assert run(app.cli, ["set-intro", "lobi-lampu", "--name", "Lobi Lampu Studio"]).exit_code == 0
+    assert "Lobi Lampu Studio" in client.get("/lobi-lampu").get_data(as_text=True)
 
 
 def test_welcome_e_mail_on_set_email_and_resend(app):

@@ -178,8 +178,9 @@ def _text_to_html(text: str) -> str:
 @click.argument("textfile", type=click.File("r", encoding="utf-8"), required=False)
 @click.option("--tagline", help="Short line under the name (max 200 characters).")
 @click.option("--discipline", help="What they do, shown above the name, e.g. 'Lampen van kalebas'.")
+@click.option("--name", help="The name of the page, e.g. the business name.")
 @with_appcontext
-def set_intro(slug, textfile, tagline, discipline):
+def set_intro(slug, textfile, tagline, discipline, name):
     """Fill in the introduction of the maker page /SLUG from plain text: a file, or `-` to paste it
     and end with Ctrl-D. A blank line starts a new paragraph. Replaces the current introduction;
     the maker can edit it afterwards like any other text."""
@@ -191,14 +192,16 @@ def set_intro(slug, textfile, tagline, discipline):
     space = db.session.scalar(select(MakerSpace).where(MakerSpace.slug == slug.strip("/").lower()))
     if space is None:
         raise click.ClickException(f"No maker page at /{slug}. See `flask list-makers`.")
-    if textfile is None and tagline is None and discipline is None:
-        raise click.UsageError("Give a text file (or - to paste), --tagline and/or --discipline.")
+    if textfile is None and tagline is None and discipline is None and name is None:
+        raise click.UsageError("Give a text file (or - to paste), --tagline, --discipline and/or --name.")
     if textfile is not None:
         space.bio_html = sanitize_html(_text_to_html(textfile.read()))
     if tagline is not None:
         space.tagline = tagline.strip()[:200]
     if discipline is not None:
         space.discipline = discipline.strip()[:80]
+    if name is not None and name.strip():
+        space.name = name.strip()[:120]
     db.session.commit()
     click.echo(f"/{space.slug}: introduction updated. Check {current_app.config['BASE_URL']}/{space.slug}")
 
