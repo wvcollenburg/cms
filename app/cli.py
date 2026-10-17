@@ -17,6 +17,71 @@ def register_cli(app):
     app.cli.add_command(page_cache_cli)
     app.cli.add_command(run_tasks)
     app.cli.add_command(create_superadmin)
+    app.cli.add_command(init_site)
+
+
+# Starter front pages for a new site: (slug, status, in nav, order, {lang: (title, description, html)}).
+# Webmasters can edit and publish pages but not create them, so a new site needs these once.
+# Over ons and Contact start as drafts, so no placeholder text is public before they're filled.
+STARTER_PAGES = (
+    ("home", "published", False, 0, {
+        "nl": ("Broedplaats de Createur", "Makers onder één dak.",
+               "<h2>Welkom bij de Broedplaats</h2><p>Wij zijn een groep makers die samen een werkplaats delen. "
+               "Bekijk hun werk en neem contact op met een maker.</p>"),
+        "en": ("Broedplaats de Createur", "Makers under one roof.",
+               "<h2>Welcome to the Broedplaats</h2><p>We are a group of makers sharing one workshop. "
+               "See their work and get in touch with a maker.</p>"),
+    }),
+    ("over", "draft", True, 1, {
+        "nl": ("Over ons", "Wie we zijn en hoe de Broedplaats werkt.", "<p>Hier komt het verhaal van de Broedplaats.</p>"),
+        "en": ("About us", "Who we are and how the Broedplaats works.", "<p>The story of the Broedplaats goes here.</p>"),
+    }),
+    ("contact", "draft", True, 2, {
+        "nl": ("Contact", "Zo bereik je ons.", "<p>Hier komen het adres en hoe je ons bereikt.</p>"),
+    }),
+    ("privacy", "published", False, 3, {
+        "nl": ("Privacy", "Wat we bewaren en hoe lang.",
+               "<h2>Wat we bewaren</h2><p>Deze website gebruikt geen tracking en geen advertentiecookies. We bewaren "
+               "alleen een cookie voor je taalkeuze. Video's laden pas als je erop klikt.</p>"
+               "<h2>Als een maker vertrekt</h2><p>Haalt een maker de pagina offline, dan wordt alles na 60 dagen "
+               "definitief verwijderd. Kopieën in onze back-ups verdwijnen binnen 30 dagen daarna.</p>"),
+        "en": ("Privacy", "What we store and for how long.",
+               "<h2>What we store</h2><p>This website uses no tracking and no advertising cookies. We only keep a "
+               "cookie for your language choice. Videos only load when you click them.</p>"
+               "<h2>When a maker leaves</h2><p>When a maker's page goes offline, everything is deleted for good "
+               "after 60 days. Copies in our backups disappear within 30 days after that.</p>"),
+    }),
+)
+
+
+@click.command("init-site")
+@with_appcontext
+def init_site():
+    """Create the front pages a new site needs (home, over, contact, privacy). Pages that already
+    exist are left alone, so it's safe to run again."""
+    from sqlalchemy import select
+
+    from app.blocks import validate
+    from app.models import Block, Page, PageTranslation
+
+    for slug, status, nav, order, langs in STARTER_PAGES:
+        if db.session.scalar(select(Page).where(Page.slug == slug)) is not None:
+            click.echo(f"/{slug}: already there, left alone.")
+            continue
+        page = Page(slug=slug, status=status, show_in_nav=nav, nav_order=order)
+        page.translations = [PageTranslation(lang=lang, title=t, meta_description=d) for lang, (t, d, _) in langs.items()]
+        db.session.add(page)
+        db.session.flush()
+        for lang, (_, _, html) in langs.items():
+            db.session.add(Block(owner_type="page", owner_id=page.id, lang=lang, type="text", position=1,
+                                 data=validate("text", {"html": html})))
+            if slug == "home":
+                url = "/en/makers" if lang == "en" else "/makers"
+                label = "See all makers" if lang == "en" else "Bekijk alle makers"
+                db.session.add(Block(owner_type="page", owner_id=page.id, lang=lang, type="cta", position=2,
+                                     data=validate("cta", {"label": label, "url": url})))
+        click.echo(f"/{slug}: created ({'live' if status == 'published' else 'draft: publish it in the admin'}).")
+    db.session.commit()
 
 
 @click.command("create-superadmin")

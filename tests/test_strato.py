@@ -98,3 +98,23 @@ def test_htaccess_cache_rules_match_the_app_cache(app):
             assert _htaccess_cache_target(url) == f"_cache/{expected}", url
     for url in ["/en", "/jan/", "/Jan", "/beheer/", "/static/x.css", "/jan/foo", "/en/a/b"]:
         assert _htaccess_cache_target(url) is None, url
+
+
+def test_init_site_makes_the_front_pages_once(app, client):
+    run = CliRunner().invoke
+    assert client.get("/").status_code == 404  # a new site has no front page
+    result = run(app.cli, ["init-site"])
+    assert result.exit_code == 0, result.output
+    assert client.get("/").status_code == 200 and "Bekijk alle makers" in client.get("/").get_data(as_text=True)
+    assert client.get("/en/").status_code == 200
+    assert client.get("/privacy").status_code == 200
+    assert client.get("/over").status_code == 404  # drafts until the webmasters fill them
+    assert client.get("/contact").status_code == 404
+
+    from app.models import Page
+    with app.app_context():
+        db.session.get(Page, 1).status = "draft"  # a webmaster's change survives a second run
+        db.session.commit()
+    assert "already there" in run(app.cli, ["init-site"]).output
+    with app.app_context():
+        assert db.session.query(Page).count() == 4 and db.session.get(Page, 1).status == "draft"
