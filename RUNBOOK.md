@@ -88,6 +88,13 @@ Then log in at `https://<domain>/auth/login` and invite the others from the admi
   `static/`.
 - **Commands on the server:** `~/app/flask <command>`, for example `page-cache warm`,
   `run-tasks`, `create-superadmin`.
+- **Maker pages before you have their e-mail address:**
+  `~/app/flask add-maker "Lobi Lampu" Willemieke` (a duo: `add-maker "Name" Jaber Wassem --slug jaber-en-wassem`).
+  Later: `~/app/flask set-email willemieke@nog-geen-adres.invalid real@address.nl`, and they log in
+  with a link. `~/app/flask list-makers` shows every page and address.
+- **Another web address for a maker page:** `~/app/flask set-slug sander sander-houtwerk`. The old
+  address keeps redirecting, so links and QR codes keep working. Add `--no-redirect` only for a
+  page nobody has a link to yet.
 - **Errors:** `tail -50 ~/private/logs/app.log`. If the site shows "De website heeft even een
   storing", the app couldn't start: see `~/private/logs/cgi-error.log`.
 - **Change a setting:** edit `~/private/.env`, then `~/app/flask page-cache clear`. There's no

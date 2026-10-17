@@ -21,6 +21,7 @@ def register_cli(app):
     app.cli.add_command(add_maker)
     app.cli.add_command(set_email)
     app.cli.add_command(list_makers)
+    app.cli.add_command(set_slug)
 
 
 PLACEHOLDER_DOMAIN = "nog-geen-adres.invalid"  # .invalid never receives mail, so nobody can log in
@@ -90,6 +91,37 @@ def set_email(old, new):
     db.session.commit()
     click.echo(f"{user.display_name}: {old} → {new}. They can now log in at "
                f"{current_app.config['BASE_URL']}/auth/login")
+
+
+@click.command("set-slug")
+@click.argument("old")
+@click.argument("new")
+@click.option("--no-redirect", is_flag=True,
+              help="Don't keep OLD as a redirect (only for a page nobody has a link to yet); OLD becomes free.")
+@with_appcontext
+def set_slug(old, new, no_redirect):
+    """Move a maker page from /OLD to /NEW, keeping everything on it. By default /OLD keeps
+    working as a permanent redirect, so links and QR codes don't break."""
+    from sqlalchemy import select
+
+    from app.models import MakerSpace, SlugRedirect
+    from app.slugs import check_space_slug
+
+    old, new = old.strip().strip("/").lower(), new.strip().strip("/").lower()
+    space = db.session.scalar(select(MakerSpace).where(MakerSpace.slug == old))
+    if space is None:
+        raise click.ClickException(f"No maker page at /{old}. See `flask list-makers`.")
+    problem = check_space_slug(new, ignore_space_id=space.id)
+    if problem:
+        raise click.ClickException(f"Web address '{new}' can't be used ({problem}).")
+    back = db.session.get(SlugRedirect, new)  # moving back to an address it had before
+    if back is not None:
+        db.session.delete(back)
+    if not no_redirect:
+        db.session.merge(SlugRedirect(old_slug=old, target_type="space", target_id=space.id))
+    space.slug = new
+    db.session.commit()
+    click.echo(f"/{old} → /{new}" + ("" if no_redirect else f" (/{old} now redirects there)"))
 
 
 @click.command("list-makers")

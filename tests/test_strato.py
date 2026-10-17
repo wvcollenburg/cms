@@ -156,3 +156,32 @@ def test_add_maker_before_the_e_mail_address_is_known(app, client, login):
         space_id = space.id
     login(wil)
     assert client.get(f"/beheer/space/{space_id}/", follow_redirects=True).status_code == 200
+
+
+def test_set_slug_moves_a_page_and_keeps_old_links_working(app, client):
+    run = CliRunner().invoke
+    run(app.cli, ["add-maker", "Sander", "Sander"])
+    run(app.cli, ["add-maker", "Bert", "Bert"])
+    assert client.get("/sander").status_code == 200  # also fills the page cache
+
+    r = run(app.cli, ["set-slug", "/sander", "Sander-Houtwerk"])
+    assert r.exit_code == 0, r.output
+    assert client.get("/sander-houtwerk").status_code == 200
+    r = client.get("/sander")  # the cached copy is gone too
+    assert r.status_code == 301 and r.location.endswith("/sander-houtwerk")
+    assert client.get("/sander/iets").location.endswith("/sander-houtwerk/iets")
+
+    assert "taken" in run(app.cli, ["set-slug", "bert", "sander"]).output  # a redirect keeps it reserved
+    assert "taken" in run(app.cli, ["set-slug", "bert", "sander-houtwerk"]).output
+    assert "No maker page" in run(app.cli, ["set-slug", "niemand", "iets"]).output
+    assert "reserved" in run(app.cli, ["set-slug", "bert", "makers"]).output
+
+    # Back to the old address: allowed, and the redirect goes away.
+    assert run(app.cli, ["set-slug", "sander-houtwerk", "sander"]).exit_code == 0
+    assert client.get("/sander").status_code == 200
+    assert client.get("/sander-houtwerk").status_code == 301
+
+    # --no-redirect frees the old address (for pages nobody links to yet).
+    assert run(app.cli, ["set-slug", "bert", "bert-meubels", "--no-redirect"]).exit_code == 0
+    assert client.get("/bert").status_code == 404
+    assert run(app.cli, ["add-maker", "Bert", "Bert Twee"]).exit_code == 0
