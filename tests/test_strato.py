@@ -199,3 +199,22 @@ def test_set_intro_from_plain_text(app, client):
     assert "<p>In november 2014<br>maakte ik mijn eerste lamp.</p>" in page
     assert "Lampen met liefde gemaakt" in page and "Kalebaslampen" in page
     assert "No maker page" in run(app.cli, ["set-intro", "niemand", "-"], input="x").output
+
+
+def test_welcome_e_mail_on_set_email_and_resend(app):
+    from app.mail import outbox
+    run = CliRunner().invoke
+    run(app.cli, ["add-maker", "Lobi Lampu", "Willemieke"])
+    assert "placeholder" in run(app.cli, ["send-welcome", "willemieke@nog-geen-adres.invalid"]).output
+    r = run(app.cli, ["set-email", "willemieke@nog-geen-adres.invalid", "wil@example.org", "--welcome"])
+    assert r.exit_code == 0, r.output
+    assert len(outbox) == 1 and outbox[0]["To"] == "wil@example.org"
+    assert outbox[0]["Subject"] == "Je pagina op de website van Broedplaats de Createur"
+    body = outbox[0].get_content()
+    assert "http://localhost/lobi-lampu" in body and "http://localhost/auth/login" in body
+    assert "Je kunt zelf foto's toevoegen" in body
+
+    assert run(app.cli, ["send-welcome", "WIL@example.org"]).exit_code == 0  # lost it: once more
+    assert len(outbox) == 2
+    assert "No active user" in run(app.cli, ["send-welcome", "niemand@example.org"]).output
+    assert "real e-mail" in run(app.cli, ["set-email", "wil@example.org", "x@nog-geen-adres.invalid"]).output

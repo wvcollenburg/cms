@@ -1321,3 +1321,19 @@ msgstr "Meer makers"
 #: app/__init__.py
 msgid "This page had expired, so nothing was saved. Please try again."
 msgstr "Deze pagina was verlopen, dus er is niets opgeslagen. Probeer het nog een keer."
+
+#: app/cli.py
+msgid "Your page on the website of Broedplaats de Createur"
+msgstr "Je pagina op de website van Broedplaats de Createur"
+
+#: app/templates/mail/welcome.txt
+msgid "Your page on the website of Broedplaats de Createur is ready:"
+msgstr "Je pagina op de website van Broedplaats de Createur staat klaar:"
+
+#: app/templates/mail/welcome.txt
+msgid "You can add photos and change the text yourself."
+msgstr "Je kunt zelf foto's toevoegen en de tekst aanpassen."
+
+#: app/templates/mail/welcome.txt
+msgid "How to log in:"
+msgstr "Zo log je in:"

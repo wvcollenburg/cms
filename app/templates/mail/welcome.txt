@@ -1,0 +1,12 @@
+{{ _('Hello %(name)s,', name=user.display_name) }}
+
+{{ _('Your page on the website of Broedplaats de Createur is ready:') }}
+
+{{ page_url }}
+
+{{ _('You can add photos and change the text yourself.') }}
+
+{{ _('How to log in:') }}
+{{ _('Go to %(url)s and fill in your e-mail address. You will get an e-mail with a login link: click it and you are in. You do not need a password.', url=login_url) }}
+
+Broedplaats de Createur

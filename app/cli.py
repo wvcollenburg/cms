@@ -23,6 +23,7 @@ def register_cli(app):
     app.cli.add_command(list_makers)
     app.cli.add_command(set_slug)
     app.cli.add_command(set_intro)
+    app.cli.add_command(send_welcome)
 
 
 PLACEHOLDER_DOMAIN = "nog-geen-adres.invalid"  # .invalid never receives mail, so nobody can log in
@@ -73,16 +74,17 @@ def add_maker(space_name, members, slug, lang):
 @click.command("set-email")
 @click.argument("old")
 @click.argument("new")
+@click.option("--welcome", is_flag=True, help="Also send the welcome e-mail with how to log in.")
 @with_appcontext
-def set_email(old, new):
+def set_email(old, new, welcome):
     """Change a user's e-mail address, e.g. from the placeholder that add-maker gave them."""
     from sqlalchemy import select
 
     from app.models import User
 
     old, new = old.strip().lower(), new.strip().lower()
-    if "@" not in new or "." not in new.split("@")[-1]:
-        raise click.UsageError(f"'{new}' doesn't look like an e-mail address.")
+    if "@" not in new or "." not in new.split("@")[-1] or new.endswith("." + PLACEHOLDER_DOMAIN.split(".")[-1]):
+        raise click.UsageError(f"'{new}' doesn't look like a real e-mail address.")
     user = db.session.scalar(select(User).where(User.email == old))
     if user is None:
         raise click.ClickException(f"No user with {old}. See `flask list-makers`.")
@@ -92,6 +94,42 @@ def set_email(old, new):
     db.session.commit()
     click.echo(f"{user.display_name}: {old} → {new}. They can now log in at "
                f"{current_app.config['BASE_URL']}/auth/login")
+    if welcome:
+        _send_welcome(user)
+
+
+def _send_welcome(user) -> None:
+    """The welcome e-mail: where their page is and how to log in, in their own language."""
+    from flask_babel import lazy_gettext as _l
+
+    from app.mail import send_template
+
+    base = current_app.config["BASE_URL"]
+    slugs = [m.space.slug for m in user.memberships]
+    try:
+        send_template(user, "welcome", lambda: _l("Your page on the website of Broedplaats de Createur"),
+                      page_url=f"{base}/{slugs[0]}" if slugs else base, login_url=f"{base}/auth/login")
+    except Exception as exc:  # the address change itself has been saved already
+        raise click.ClickException(f"Could not send the welcome e-mail to {user.email}: {exc}")
+    click.echo(f"Welcome e-mail sent to {user.email}.")
+
+
+@click.command("send-welcome")
+@click.argument("email")
+@with_appcontext
+def send_welcome(email):
+    """Send the welcome e-mail (again), e.g. when someone lost it."""
+    from sqlalchemy import select
+
+    from app.models import User
+
+    email = email.strip().lower()
+    if email.endswith("@" + PLACEHOLDER_DOMAIN):
+        raise click.ClickException("That's a placeholder address; set the real one first with `set-email`.")
+    user = db.session.scalar(select(User).where(User.email == email))
+    if user is None or not user.is_active:
+        raise click.ClickException(f"No active user with {email}. See `flask list-makers`.")
+    _send_welcome(user)
 
 
 @click.command("set-slug")
