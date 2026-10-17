@@ -73,3 +73,20 @@ def test_removed_photos_are_deleted(make_user, make_space, login):
            data={"layout": "grid", "item_id": [str(mid)], "item_caption": [""], "remove": [str(mid)]})
     assert db.session.get(Media, mid) is None
     assert not (storage.media_root() / key).exists()
+
+
+def test_upload_accepts_phone_mpo_photos(make_user, make_space, login):
+    # Many phones save portrait-mode photos as MPO: a JPEG with extra frames, named .jpg.
+    jan = make_user("jan")
+    s = make_space("jan-hout", [jan])
+    c = login(jan)
+    c.post(f"/beheer/space/{s.id}/blocks", data={"type": "gallery"})
+    block = db.session.scalar(select(Block).where(Block.type == "gallery"))
+    buf = io.BytesIO()
+    Image.new("RGB", (1600, 1200), "red").save(buf, "MPO", save_all=True,
+                                                append_images=[Image.new("RGB", (1600, 1200), "blue")])
+    buf.seek(0)
+    assert Image.open(io.BytesIO(buf.getvalue())).format == "MPO"
+    r = c.post(f"/beheer/space/{s.id}/blocks/{block.id}/upload", data={"file": (buf, "portret.jpg")})
+    assert r.status_code == 200 and r.json["ok"], r.json
+    assert db.session.get(Media, r.json["media_id"]).mime == "image/jpeg"

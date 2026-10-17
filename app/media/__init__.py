@@ -12,7 +12,8 @@ from app.media import storage
 from app.models import Media
 
 WIDTHS = (400, 800, 1600, 2400)
-ALLOWED_FORMATS = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
+# MPO = a JPEG with extra frames (depth map, portrait mode) that many phones save as .jpg.
+ALLOWED_FORMATS = {"JPEG": "image/jpeg", "MPO": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024
 
 
