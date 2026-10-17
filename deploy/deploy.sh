@@ -115,11 +115,14 @@ tar -C "$BUILD" -czf - app web | $SSH "$STRATO_SSH" \
 
 echo "==> Migrating the database (new code, old site still live)"
 if ! remote "cd ~/.deploy-new/app && PYTHONPATH=.:lib CREATEUR_ENV_FILE='$PRIVATE_DIR/.env' \
-  INSTANCE_PATH='$PRIVATE_DIR/instance' '$PYTHON' -m flask --app app db upgrade"; then
-  if [ "$FIRST_RUN" = 1 ]; then
+  INSTANCE_PATH='$PRIVATE_DIR/instance' '$PYTHON' -m flask --app app db upgrade" 2>&1 | tee "$BUILD/migrate.log"; then
+  # Only a refused or unreachable database means the answers were wrong; anything else is ours.
+  if [ "$FIRST_RUN" = 1 ] && grep -qE "OperationalError: \((1044|1045|1049|2003|2005)" "$BUILD/migrate.log"; then
     remote "rm -f '$PRIVATE_DIR/.env'"
     echo "The database didn't accept the settings (see the error above). Check the database" >&2
     echo "details in the STRATO panel and run deploy/deploy.sh again; it will ask once more." >&2
+  else
+    echo "Stopped before switching: the live site is unchanged and the settings are kept." >&2
   fi
   exit 1
 fi
