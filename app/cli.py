@@ -24,6 +24,7 @@ def register_cli(app):
     app.cli.add_command(set_slug)
     app.cli.add_command(set_intro)
     app.cli.add_command(send_welcome)
+    app.cli.add_command(add_photos)
 
 
 PLACEHOLDER_DOMAIN = "nog-geen-adres.invalid"  # .invalid never receives mail, so nobody can log in
@@ -200,6 +201,78 @@ def set_intro(slug, textfile, tagline, discipline):
         space.discipline = discipline.strip()[:80]
     db.session.commit()
     click.echo(f"/{space.slug}: introduction updated. Check {current_app.config['BASE_URL']}/{space.slug}")
+
+
+def _photo_upload(path):
+    """A photo file as the upload handler expects it; shrunk first when it's over the upload limit
+    (the browser does that for normal uploads)."""
+    import io
+    import os
+
+    from werkzeug.datastructures import FileStorage
+
+    from app.media import MAX_UPLOAD_BYTES
+
+    with open(path, "rb") as f:
+        raw = f.read()
+    if len(raw) > MAX_UPLOAD_BYTES:
+        from PIL import Image, ImageOps
+        img = ImageOps.exif_transpose(Image.open(io.BytesIO(raw))).convert("RGB")
+        img.thumbnail((2400, 2400))
+        buf = io.BytesIO()
+        img.save(buf, "JPEG", quality=90)
+        raw = buf.getvalue()
+    return FileStorage(stream=io.BytesIO(raw), filename=os.path.basename(path))
+
+
+@click.command("add-photos")
+@click.argument("slug")
+@click.argument("files", nargs=-1, required=True, type=click.Path(exists=True, dir_okay=False))
+@click.option("--no-profile", is_flag=True, help="Only add the album; leave the profile and page photo as they are.")
+@with_appcontext
+def add_photos(slug, files, no_profile):
+    """Add photos to the maker page /SLUG as a photo album at the end of the page. Unless
+    --no-profile, the first file (alphabetically) becomes the profile photo and the second the
+    page photo at the top. JPEG, PNG or WebP."""
+    import os
+
+    from sqlalchemy import func, select
+
+    from app.blocks import validate
+    from app.media import UploadError, process_upload
+    from app.models import Block, MakerSpace
+
+    space = db.session.scalar(select(MakerSpace).where(MakerSpace.slug == slug.strip("/").lower()))
+    if space is None:
+        raise click.ClickException(f"No maker page at /{slug}. See `flask list-makers`.")
+    if not space.members:
+        raise click.ClickException(f"/{space.slug} has no makers to put the photos under.")
+    owner = space.members[0].user
+    files = sorted(files, key=lambda p: os.path.basename(p).lower())
+    media = []
+    for path in files:
+        try:
+            media.append(process_upload(_photo_upload(path), "space", space.id, owner))
+        except UploadError as exc:
+            db.session.rollback()
+            hint = {"bad_type": "not a JPEG, PNG or WebP photo", "too_big": "too big",
+                    "quota": "the page is full (1 GB)"}.get(exc.code, exc.code)
+            raise click.ClickException(f"{os.path.basename(path)}: {hint}. Nothing was added.")
+        click.echo(f"  {os.path.basename(path)}: {media[-1].width}×{media[-1].height}")
+    if not no_profile:
+        space.avatar_media_id = media[0].id
+        space.cover_media_id = media[1].id if len(media) > 1 else media[0].id
+    position = (db.session.scalar(select(func.max(Block.position)).where(
+        Block.owner_type == "space", Block.owner_id == space.id)) or 0) + 1
+    db.session.add(Block(owner_type="space", owner_id=space.id, lang=None, type="gallery", position=position,
+                         data=validate("gallery", {"layout": "grid",
+                                                   "items": [{"media_id": m.id, "caption": ""} for m in media]}),
+                         updated_by=owner.id))
+    db.session.commit()
+    click.echo(f"/{space.slug}: {len(media)} photos in an album"
+               + ("" if no_profile else f"; profile photo {os.path.basename(files[0])}, "
+                  f"page photo {os.path.basename(files[min(1, len(files) - 1)])}")
+               + f". Check {current_app.config['BASE_URL']}/{space.slug}")
 
 
 @click.command("list-makers")

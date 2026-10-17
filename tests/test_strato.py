@@ -218,3 +218,30 @@ def test_welcome_e_mail_on_set_email_and_resend(app):
     assert len(outbox) == 2
     assert "No active user" in run(app.cli, ["send-welcome", "niemand@example.org"]).output
     assert "real e-mail" in run(app.cli, ["set-email", "wil@example.org", "x@nog-geen-adres.invalid"]).output
+
+
+def test_add_photos_album_profile_and_page_photo(app, client, tmp_path):
+    from PIL import Image
+
+    from app.models import Block, MakerSpace
+    run = CliRunner().invoke
+    run(app.cli, ["add-maker", "Lobi Lampu", "Willemieke"])
+    paths = []
+    for name, colour in [("b.jpg", "red"), ("A.jpg", "blue"), ("c.png", "green")]:
+        p = tmp_path / name
+        Image.new("RGB", (1200, 800), colour).save(p)
+        paths.append(str(p))
+    r = run(app.cli, ["add-photos", "lobi-lampu", *paths])
+    assert r.exit_code == 0, r.output
+    with app.app_context():
+        space = db.session.query(MakerSpace).filter_by(slug="lobi-lampu").one()
+        album = db.session.query(Block).filter_by(owner_type="space", owner_id=space.id, type="gallery").one()
+        ids = [i["media_id"] for i in album.data["items"]]
+        assert len(ids) == 3 and space.avatar_media_id == ids[0] and space.cover_media_id == ids[1]  # A, b, c
+    assert client.get("/lobi-lampu").status_code == 200
+
+    bad = tmp_path / "x.jpg"
+    bad.write_text("not a photo")
+    assert "Nothing was added" in run(app.cli, ["add-photos", "lobi-lampu", "--no-profile", str(bad)]).output
+    with app.app_context():
+        assert db.session.query(Block).filter_by(type="gallery").count() == 1
