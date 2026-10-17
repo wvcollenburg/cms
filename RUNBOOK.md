@@ -30,42 +30,34 @@ for that request.
 
 ## First-time setup
 
-1. **SSH.** In the STRATO panel, switch on SSH and note the user and host. On your own machine,
-   in `~/.ssh/config`, add the following so a deploy asks for the password once, not six times:
-   ```
-   Host strato
-     HostName ssh.strato.de
-     User <strato ssh user>
-     ControlMaster auto
-     ControlPath ~/.ssh/cm-%r@%h-%p
-     ControlPersist 10m
-   ```
-   Add your public key to `~/.ssh/authorized_keys` on STRATO if the package allows it.
-2. **Database.** STRATO panel → Databases → new MariaDB database. Note the host, database name,
-   user and password.
-3. **Mailbox and DNS.** Create `noreply@<domain>` (or similar) and set SPF, DKIM and DMARC for the
-   domain. DNS takes hours, so do this first.
-4. **SSL.** Switch on the certificate for the domain, and point the domain at the folder `<domain>`
-   in the home folder.
-5. **Settings.** On STRATO: `mkdir -p ~/private`, then create `~/private/.env` from
-   [deploy/strato/env.example](deploy/strato/env.example) and fill it in. Make a fresh `SECRET_KEY`
-   and `TASK_SECRET` with `python3 -c "import secrets; print(secrets.token_hex(32))"`.
-6. **Deploy settings.** On your own machine, create `deploy/deploy.conf` (not in git):
-   ```
-   STRATO_SSH=strato
-   DOMAIN_DIR=<domain>
-   ```
-7. **Deploy:** `deploy/deploy.sh`. The first run creates the tables.
-8. **First key holder.** Over SSH: `~/app/flask create-superadmin you@example.org "Your Name"`,
-   then log in at `https://<domain>/auth/login`. Invite everyone else from the admin.
-9. **Daily tasks.** On William's server, add `/etc/cron.d/createur-tasks`:
-   ```
-   15 3 * * * createur CREATEUR_TASK_SECRET=<TASK_SECRET from .env> /opt/createur/call-tasks.sh https://<domain>
-   ```
-   Then create a check on Healthchecks.io (period 1 day, grace 1 day), put its ping URL in
-   `HEALTHCHECK_URL` in `~/private/.env`, and add the superadmins as alert recipients.
-10. **Backups.** See "Backups" below.
-11. Remove STRATO's placeholder `index.html` from the web root, if there is one (deploy.sh warns).
+**A. In the STRATO panel** (only you can do these; about 10 minutes):
+
+1. **SSH:** switch it on, and note the SSH login and password.
+2. **Database:** create a MariaDB database, and note the host, database name, user and password.
+3. **Mailbox:** create e.g. `noreply@<domain>` with a password, and switch on **SPF, DKIM and
+   DMARC** for the domain. DNS takes hours, so do this first.
+4. **Domain:** switch on the SSL certificate, and point the domain at the folder `<domain>` in
+   the home folder. (The deploy creates the folder if it isn't there yet.)
+
+**B. On your own machine,** in the project folder: `deploy/deploy.sh`
+
+The first time, it asks for the domain, the SSH login, the database details, the mailbox and its
+password, and your e-mail address and name. It then writes the settings (with fresh secret keys)
+to `~/private/.env` on STRATO, uploads the site, creates the tables, moves STRATO's placeholder
+page aside and makes you the first key holder. If a database detail was wrong, it says so and
+asks again on the next run. After that, `deploy/deploy.sh` asks nothing and just deploys.
+
+Then log in at `https://<domain>/auth/login` and invite the others from the admin.
+
+**C. Can wait until after the opening** (the site runs its daily tasks itself in the meantime):
+
+- **Daily task caller.** On William's server, add `/etc/cron.d/createur-tasks`:
+  ```
+  15 3 * * * createur CREATEUR_TASK_SECRET=<TASK_SECRET from ~/private/.env> /opt/createur/call-tasks.sh https://<domain>
+  ```
+- **Alarm.** Create a check on Healthchecks.io (period 1 day, grace 1 day), put its ping URL in
+  `HEALTHCHECK_URL` in `~/private/.env`, and add the key holders as alert recipients.
+- **Backups.** See "Backups" below. Do this in the first week, before makers add much.
 
 ## Spike: check these on the real package (PLAN §10a)
 

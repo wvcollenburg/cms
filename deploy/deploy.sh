@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-# Deploy to STRATO shared hosting (PLAN §10a). Run from the repository root:
-#   deploy/deploy.sh                 # uses deploy/deploy.conf
-# deploy/deploy.conf (not in git) holds:
-#   STRATO_SSH=strato                # an ssh alias or user@host (key login, see RUNBOOK.md)
-#   DOMAIN_DIR=example.nl            # the web root folder in the STRATO home
+# Deploy to STRATO shared hosting (PLAN §10a). From the repository root, just run:
+#   deploy/deploy.sh
+# The first time, it asks for the SSH login, the domain, the database and the mailbox, writes
+# deploy/deploy.conf (here, not in git) and ~/private/.env (on STRATO), and after the deploy
+# makes you the first key holder. Later runs ask nothing.
+#
+# deploy/deploy.conf holds:
+#   STRATO_SSH=user@ssh.strato.de    # or an ssh alias
+#   DOMAIN_DIR=example.nl            # the web root folder in the STRATO home (usually the domain)
 #   CGI_DIR=cgi-bin                  # optional: folder for the CGI script, if cgi-bin is taken
 #
-# What it does:
+# What a deploy does:
 #   1. builds locally: the code, compiled translations, and every dependency as a wheel for
 #      STRATO's Python on glibc 2.17 (no compiler there), in lib/
 #   2. uploads one tarball over ssh (no rsync needed on either side)
@@ -17,30 +21,67 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-[ -f deploy/deploy.conf ] && . deploy/deploy.conf
+ask() {  # ask VAR "question" [default]; a trailing "secret" hides the typing
+  local var=$1 question=$2 default=${3:-} answer
+  if [ "${4:-}" = secret ]; then
+    read -rsp "$question: " answer; echo
+  else
+    read -rp "$question${default:+ [$default]}: " answer
+  fi
+  answer=${answer:-$default}
+  [ -n "$answer" ] || { echo "An answer is needed." >&2; exit 1; }
+  printf -v "$var" '%s' "$answer"
+}
+
+if [ ! -f deploy/deploy.conf ]; then
+  echo "First deploy: a few questions (the answers are kept in deploy/deploy.conf)."
+  ask DOMAIN_DIR "The website's domain, e.g. createur.nl"
+  ask STRATO_SSH "SSH login from the STRATO panel, as user@host" "$DOMAIN_DIR@ssh.strato.de"
+  printf 'STRATO_SSH=%s\nDOMAIN_DIR=%s\n' "$STRATO_SSH" "$DOMAIN_DIR" > deploy/deploy.conf
+fi
+. deploy/deploy.conf
 : "${STRATO_SSH:?set STRATO_SSH in deploy/deploy.conf}"
 : "${DOMAIN_DIR:?set DOMAIN_DIR in deploy/deploy.conf}"
 CGI_DIR=${CGI_DIR:-cgi-bin}
 UV=${UV:-$(command -v uv || echo "$HOME/.local/bin/uv")}
-SSH=${SSH:-ssh}  # tests swap this for a stand-in server
+# One SSH connection for the whole run, so the password is asked once. Tests swap in a stand-in.
+SSH=${SSH:-ssh -o ControlMaster=auto -o ControlPath=$HOME/.ssh/cm-createur-%C -o ControlPersist=2m}
+remote() { $SSH "$STRATO_SSH" "$@" </dev/null; }
 
 if [ -n "$(git status --porcelain)" ]; then
   echo "Note: you have uncommitted changes; they are deployed as they are on disk." >&2
 fi
 
-echo "==> Checking the server"
-read -r REMOTE_HOME PYTHON PY_VERSION < <($SSH "$STRATO_SSH" \
+echo "==> Checking the server (STRATO may ask for your SSH password)"
+read -r REMOTE_HOME PYTHON PY_VERSION < <(remote \
   'P=$(command -v python3) && echo "$HOME $P $($P -c "import sys; print(\"%d.%d\" % sys.version_info[:2])")"')
 APP_DIR="$REMOTE_HOME/app"
 PRIVATE_DIR="$REMOTE_HOME/private"
 WEBROOT="$REMOTE_HOME/$DOMAIN_DIR"
 echo "    home $REMOTE_HOME, $PYTHON ($PY_VERSION), web root $WEBROOT"
-$SSH "$STRATO_SSH" "test -f '$PRIVATE_DIR/.env'" || {
-  echo "Missing $PRIVATE_DIR/.env on the server. Create it from deploy/strato/env.example first." >&2; exit 1; }
-$SSH "$STRATO_SSH" "test ! -e '$APP_DIR' || test -f '$APP_DIR/flask'" || {
+remote "test ! -e '$APP_DIR' || test -f '$APP_DIR/flask'" || {
   echo "$APP_DIR exists but wasn't made by this script. Move it away first." >&2; exit 1; }
-$SSH "$STRATO_SSH" "test -d '$WEBROOT'" || {
-  echo "No web root at $WEBROOT. Check DOMAIN_DIR, or create the folder and point the domain at it." >&2; exit 1; }
+if ! remote "test -d '$WEBROOT'"; then
+  remote "mkdir -p '$WEBROOT'"
+  echo "    made the folder $WEBROOT: in the STRATO panel, point the domain at the folder $DOMAIN_DIR"
+fi
+
+FIRST_RUN=0
+if ! remote "test -f '$PRIVATE_DIR/.env'"; then
+  FIRST_RUN=1
+  echo "No settings on the server yet. From the STRATO panel:"
+  ask DB_HOST "  Database host (Datenbankserver)"
+  ask DB_NAME "  Database name"
+  ask DB_USER "  Database user" "$DB_NAME"
+  ask DB_PASSWORD "  Database password" "" secret
+  ask MAIL_USER "  Mailbox that sends the login links" "noreply@$DOMAIN_DIR"
+  ask MAIL_PASSWORD "  Password of that mailbox" "" secret
+  DOMAIN=$DOMAIN_DIR DOMAIN_DIR=$DOMAIN_DIR DB_HOST=$DB_HOST DB_NAME=$DB_NAME DB_USER=$DB_USER \
+    DB_PASSWORD=$DB_PASSWORD MAIL_USER=$MAIL_USER MAIL_PASSWORD=$MAIL_PASSWORD \
+    python3 deploy/strato/make_env.py | $SSH "$STRATO_SSH" \
+    "umask 077 && mkdir -p '$PRIVATE_DIR' && cat > '$PRIVATE_DIR/.env'"
+  echo "    settings written to $PRIVATE_DIR/.env (with fresh secret keys)"
+fi
 
 echo "==> Building"
 BUILD=$(mktemp -d)
@@ -69,8 +110,15 @@ tar -C "$BUILD" -czf - app web | $SSH "$STRATO_SSH" \
   'rm -rf ~/.deploy-new && mkdir ~/.deploy-new && tar -xzf - -C ~/.deploy-new'
 
 echo "==> Migrating the database (new code, old site still live)"
-$SSH "$STRATO_SSH" "cd ~/.deploy-new/app && PYTHONPATH=.:lib CREATEUR_ENV_FILE='$PRIVATE_DIR/.env' \
-  INSTANCE_PATH='$PRIVATE_DIR/instance' '$PYTHON' -m flask --app app db upgrade"
+if ! remote "cd ~/.deploy-new/app && PYTHONPATH=.:lib CREATEUR_ENV_FILE='$PRIVATE_DIR/.env' \
+  INSTANCE_PATH='$PRIVATE_DIR/instance' '$PYTHON' -m flask --app app db upgrade"; then
+  if [ "$FIRST_RUN" = 1 ]; then
+    remote "rm -f '$PRIVATE_DIR/.env'"
+    echo "The database didn't accept the settings (see the error above). Check the database" >&2
+    echo "details in the STRATO panel and run deploy/deploy.sh again; it will ask once more." >&2
+  fi
+  exit 1
+fi
 
 echo "==> Switching to the new version"
 $SSH "$STRATO_SSH" bash -s <<EOF
@@ -91,8 +139,16 @@ cp \$N/web/.htaccess '$WEBROOT/.htaccess'
 rm -rf \$N '$WEBROOT/static.previous'
 '$APP_DIR/flask' page-cache clear
 for f in index.html index.htm index.php; do
-  if [ -e '$WEBROOT/'\$f ]; then echo "WARNING: $WEBROOT/\$f (STRATO's placeholder?) may shadow the site; remove it." >&2; fi
+  # STRATO's "coming soon" placeholder would shadow the site; keep it, but out of the way.
+  if [ -e '$WEBROOT/'\$f ]; then mv '$WEBROOT/'\$f '$WEBROOT/'\$f.strato-placeholder; echo "    moved STRATO's \$f aside"; fi
 done
 EOF
 
-echo "==> Done. Check https://$DOMAIN_DIR/ and, after the first deploy, see RUNBOOK.md."
+if [ "$FIRST_RUN" = 1 ]; then
+  echo "==> Making you the first key holder"
+  ask ADMIN_EMAIL "Your e-mail address"
+  ask ADMIN_NAME "Your name"
+  remote "'$APP_DIR/flask' create-superadmin '${ADMIN_EMAIL//\'/}' '${ADMIN_NAME//\'/}'"
+fi
+
+echo "==> Done: https://$DOMAIN_DIR/  (log in at https://$DOMAIN_DIR/auth/login)"
