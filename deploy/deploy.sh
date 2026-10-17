@@ -25,9 +25,9 @@ cd "$(dirname "$0")/.."
 ask() {  # ask VAR "question" [default]; a trailing "secret" hides the typing
   local var=$1 question=$2 default=${3:-} answer
   if [ "${4:-}" = secret ]; then
-    read -rsp "$question: " answer; echo
+    IFS= read -rsp "$question: " answer; echo  # IFS=: keep spaces at either end of a password
   else
-    read -rp "$question${default:+ [$default]}: " answer
+    IFS= read -rp "$question${default:+ [$default]}: " answer
   fi
   answer=${answer:-$default}
   [ -n "$answer" ] || { echo "An answer is needed." >&2; exit 1; }
