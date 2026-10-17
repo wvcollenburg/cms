@@ -185,3 +185,17 @@ def test_set_slug_moves_a_page_and_keeps_old_links_working(app, client):
     assert run(app.cli, ["set-slug", "bert", "bert-meubels", "--no-redirect"]).exit_code == 0
     assert client.get("/bert").status_code == 404
     assert run(app.cli, ["add-maker", "Bert", "Bert Twee"]).exit_code == 0
+
+
+def test_set_intro_from_plain_text(app, client):
+    run = CliRunner().invoke
+    run(app.cli, ["add-maker", "Lobi Lampu", "Willemieke"])
+    text = "Van kleins af ben ik <creatief> bezig.\n\nIn november 2014\nmaakte ik mijn eerste lamp.\n\n\n"
+    r = run(app.cli, ["set-intro", "lobi-lampu", "-", "--tagline", "Lampen met liefde gemaakt",
+                      "--discipline", "Kalebaslampen"], input=text)
+    assert r.exit_code == 0, r.output
+    page = client.get("/lobi-lampu").get_data(as_text=True)
+    assert "<p>Van kleins af ben ik &lt;creatief&gt; bezig.</p>" in page  # text, never markup
+    assert "<p>In november 2014<br>maakte ik mijn eerste lamp.</p>" in page
+    assert "Lampen met liefde gemaakt" in page and "Kalebaslampen" in page
+    assert "No maker page" in run(app.cli, ["set-intro", "niemand", "-"], input="x").output

@@ -22,6 +22,7 @@ def register_cli(app):
     app.cli.add_command(set_email)
     app.cli.add_command(list_makers)
     app.cli.add_command(set_slug)
+    app.cli.add_command(set_intro)
 
 
 PLACEHOLDER_DOMAIN = "nog-geen-adres.invalid"  # .invalid never receives mail, so nobody can log in
@@ -122,6 +123,45 @@ def set_slug(old, new, no_redirect):
     space.slug = new
     db.session.commit()
     click.echo(f"/{old} → /{new}" + ("" if no_redirect else f" (/{old} now redirects there)"))
+
+
+def _text_to_html(text: str) -> str:
+    """Plain text from a maker → paragraphs: a blank line starts a new one, a single line break stays."""
+    import html
+    import re
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text.replace("\r\n", "\n")) if p.strip()]
+    return "".join("<p>" + "<br>".join(html.escape(line.strip()) for line in p.splitlines()) + "</p>"
+                   for p in paragraphs)
+
+
+@click.command("set-intro")
+@click.argument("slug")
+@click.argument("textfile", type=click.File("r", encoding="utf-8"), required=False)
+@click.option("--tagline", help="Short line under the name (max 200 characters).")
+@click.option("--discipline", help="What they do, shown above the name, e.g. 'Lampen van kalebas'.")
+@with_appcontext
+def set_intro(slug, textfile, tagline, discipline):
+    """Fill in the introduction of the maker page /SLUG from plain text: a file, or `-` to paste it
+    and end with Ctrl-D. A blank line starts a new paragraph. Replaces the current introduction;
+    the maker can edit it afterwards like any other text."""
+    from sqlalchemy import select
+
+    from app.blocks import sanitize_html
+    from app.models import MakerSpace
+
+    space = db.session.scalar(select(MakerSpace).where(MakerSpace.slug == slug.strip("/").lower()))
+    if space is None:
+        raise click.ClickException(f"No maker page at /{slug}. See `flask list-makers`.")
+    if textfile is None and tagline is None and discipline is None:
+        raise click.UsageError("Give a text file (or - to paste), --tagline and/or --discipline.")
+    if textfile is not None:
+        space.bio_html = sanitize_html(_text_to_html(textfile.read()))
+    if tagline is not None:
+        space.tagline = tagline.strip()[:200]
+    if discipline is not None:
+        space.discipline = discipline.strip()[:80]
+    db.session.commit()
+    click.echo(f"/{space.slug}: introduction updated. Check {current_app.config['BASE_URL']}/{space.slug}")
 
 
 @click.command("list-makers")
