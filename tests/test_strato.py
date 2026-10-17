@@ -129,3 +129,30 @@ def test_init_site_makes_the_front_pages_once(app, client):
     assert "already there" in run(app.cli, ["init-site"]).output
     with app.app_context():
         assert db.session.query(Page).count() == 4 and db.session.get(Page, 1).status == "draft"
+
+
+def test_add_maker_before_the_e_mail_address_is_known(app, client, login):
+    from app.models import MakerSpace
+    run = CliRunner().invoke
+    assert run(app.cli, ["add-maker", "Lobi Lampu", "Willemieke"]).exit_code == 0
+    r = run(app.cli, ["add-maker", "Jaber & Wassem", "Jaber", "Wassem", "--slug", "jaber-en-wassem"])
+    assert r.exit_code == 0, r.output
+    assert "taken" in run(app.cli, ["add-maker", "Lobi Lampu", "Iemand"]).output  # same address twice
+    assert "already exists" in run(app.cli, ["add-maker", "Ander", "Willemieke"]).output
+
+    makers = client.get("/makers").get_data(as_text=True)
+    assert "Lobi Lampu" in makers and "Jaber &amp; Wassem" in makers
+    assert client.get("/lobi-lampu").status_code == 200
+    out = run(app.cli, ["list-makers"]).output
+    assert "willemieke@nog-geen-adres.invalid" in out and "wassem@nog-geen-adres.invalid" in out
+
+    # Later: the real address, then the maker owns their page.
+    r = run(app.cli, ["set-email", "Willemieke@nog-geen-adres.invalid", "Wil@Example.org"])
+    assert r.exit_code == 0, r.output
+    assert "already in use" in run(app.cli, ["set-email", "jaber@nog-geen-adres.invalid", "wil@example.org"]).output
+    with app.app_context():
+        wil = db.session.query(User).filter_by(email="wil@example.org").one()
+        space = db.session.query(MakerSpace).filter_by(slug="lobi-lampu").one()
+        space_id = space.id
+    login(wil)
+    assert client.get(f"/beheer/space/{space_id}/", follow_redirects=True).status_code == 200

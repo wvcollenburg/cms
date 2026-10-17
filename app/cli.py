@@ -18,6 +18,91 @@ def register_cli(app):
     app.cli.add_command(run_tasks)
     app.cli.add_command(create_superadmin)
     app.cli.add_command(init_site)
+    app.cli.add_command(add_maker)
+    app.cli.add_command(set_email)
+    app.cli.add_command(list_makers)
+
+
+PLACEHOLDER_DOMAIN = "nog-geen-adres.invalid"  # .invalid never receives mail, so nobody can log in
+
+
+def _slugify(text: str) -> str:
+    import re
+    import unicodedata
+    ascii_text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"-{2,}", "-", re.sub(r"[^a-z0-9]+", "-", ascii_text)).strip("-")[:40]
+
+
+@click.command("add-maker")
+@click.argument("space_name")
+@click.argument("members", nargs=-1, required=True)
+@click.option("--slug", help="Web address after the domain. Default: made from SPACE_NAME.")
+@click.option("--lang", type=click.Choice(["nl", "en"]), default="nl", help="Language of the page and the admin.")
+@with_appcontext
+def add_maker(space_name, members, slug, lang):
+    """Make a published maker page SPACE_NAME for MEMBERS (display names) before their e-mail
+    addresses are known. Each member gets a placeholder address; set the real one later with
+    `set-email`, then they log in with a link as usual.
+
+    Example: flask add-maker "Lobi Lampu" Willemieke --slug lobi-lampu"""
+    from sqlalchemy import func, select
+
+    from app.models import MakerSpace, SpaceMember, User
+    from app.slugs import check_space_slug
+
+    slug = slug or _slugify(space_name)
+    problem = check_space_slug(slug)
+    if problem:
+        raise click.ClickException(f"Web address '{slug}' can't be used ({problem}). Pick another with --slug.")
+    users = []
+    for name in members:
+        email = f"{_slugify(name)}@{PLACEHOLDER_DOMAIN}"
+        if db.session.scalar(select(User).where(User.email == email)) is not None:
+            raise click.ClickException(f"{email} already exists; is {name} already on another page?")
+        users.append(User(email=email, display_name=name.strip()[:120], ui_lang=lang))
+    order = (db.session.scalar(select(func.max(MakerSpace.sort_order))) or 0) + 1
+    space = MakerSpace(slug=slug, name=space_name.strip()[:120], lang=lang, status="published", sort_order=order)
+    space.members = [SpaceMember(user=u, role="owner") for u in users]
+    db.session.add(space)
+    db.session.commit()
+    click.echo(f"/{slug}: {space.name}, for " + ", ".join(f"{u.display_name} ({u.email})" for u in users))
+
+
+@click.command("set-email")
+@click.argument("old")
+@click.argument("new")
+@with_appcontext
+def set_email(old, new):
+    """Change a user's e-mail address, e.g. from the placeholder that add-maker gave them."""
+    from sqlalchemy import select
+
+    from app.models import User
+
+    old, new = old.strip().lower(), new.strip().lower()
+    if "@" not in new or "." not in new.split("@")[-1]:
+        raise click.UsageError(f"'{new}' doesn't look like an e-mail address.")
+    user = db.session.scalar(select(User).where(User.email == old))
+    if user is None:
+        raise click.ClickException(f"No user with {old}. See `flask list-makers`.")
+    if db.session.scalar(select(User).where(User.email == new)) is not None:
+        raise click.ClickException(f"{new} is already in use.")
+    user.email = new
+    db.session.commit()
+    click.echo(f"{user.display_name}: {old} → {new}. They can now log in at "
+               f"{current_app.config['BASE_URL']}/auth/login")
+
+
+@click.command("list-makers")
+@with_appcontext
+def list_makers():
+    """Every maker page with its makers and their e-mail addresses."""
+    from sqlalchemy import select
+
+    from app.models import MakerSpace
+
+    for space in db.session.scalars(select(MakerSpace).order_by(MakerSpace.sort_order, MakerSpace.slug)):
+        people = ", ".join(f"{m.user.display_name} <{m.user.email}>" for m in space.members)
+        click.echo(f"/{space.slug:<20} {space.status:<9} {space.name}: {people or '(nobody yet)'}")
 
 
 # Starter front pages for a new site: (slug, status, in nav, order, {lang: (title, description, html)}).
