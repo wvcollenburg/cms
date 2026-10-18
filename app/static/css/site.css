@@ -138,6 +138,16 @@ figcaption { font-size: .9rem; color: var(--muted); margin-top: .5em; }
 }
 .maker-strip::-webkit-scrollbar { display: none; }
 .maker-strip .maker-card { flex: 0 0 clamp(240px, 27vw, 340px); scroll-snap-align: start; }
+.band-actions { display: flex; align-items: center; gap: 12px; }
+/* Arrows for mouse users; touch screens swipe the strip. site.js unhides them. */
+.strip-nav { display: none; gap: 8px; }
+@media (hover: hover) and (pointer: fine) { .strip-nav:not([hidden]) { display: flex; } }
+.strip-arrow {
+  width: 48px; height: 48px; border-radius: 999px; border: 1.5px solid currentColor; background: transparent;
+  color: var(--accent); font-size: 1.3rem; line-height: 1; cursor: pointer; transition: background .2s, color .2s, opacity .2s;
+}
+.strip-arrow:hover:not(:disabled) { background: var(--accent); color: #fff; }
+.strip-arrow:disabled { opacity: .3; cursor: default; }
 
 .bento {
   list-style: none; display: grid; gap: 16px; margin: 0 auto; padding-bottom: clamp(3rem, 8vw, 6rem);

@@ -1337,3 +1337,11 @@ msgstr "Je kunt zelf foto's toevoegen en de tekst aanpassen."
 #: app/templates/mail/welcome.txt
 msgid "How to log in:"
 msgstr "Zo log je in:"
+
+#: app/templates/public/space.html
+msgid "Previous makers"
+msgstr "Vorige makers"
+
+#: app/templates/public/space.html
+msgid "Next makers"
+msgstr "Volgende makers"

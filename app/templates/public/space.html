@@ -30,9 +30,15 @@
 <section class="band band-soft" aria-labelledby="more-title" lang="{{ ui_lang }}">
   <div class="wrap band-head">
     <h2 id="more-title" class="reveal">{{ _('More makers') }}</h2>
-    <a class="button button-secondary" href="{{ front_url('makers') }}">{{ _('All makers') }} →</a>
+    <div class="band-actions">
+      <div class="strip-nav" data-strip="more-makers" hidden>
+        <button type="button" class="strip-arrow" data-dir="-1" aria-label="{{ _('Previous makers') }}">←</button>
+        <button type="button" class="strip-arrow" data-dir="1" aria-label="{{ _('Next makers') }}">→</button>
+      </div>
+      <a class="button button-secondary" href="{{ front_url('makers') }}">{{ _('All makers') }} →</a>
+    </div>
   </div>
-  <ul class="maker-strip">
+  <ul class="maker-strip" id="more-makers">
     {% for s in others %}{% include 'public/_maker_card.html' %}{% endfor %}
   </ul>
 </section>
